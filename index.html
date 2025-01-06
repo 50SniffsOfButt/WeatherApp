@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/uikit.css" />
+    <script src="js/uikit.js"></script>
+    <script src="js/uikit-icons.js"></script>
+</head>
+
+
+<body>
+    <div class="uk-background-primary" style="background-color: #2d497d;">
+    
+        <div class="uk-container">
+
+            <!-- Header -->
+            <h1 class="uk-heading-line uk-text-center" style="color: white;"><span>Weather</span></h1>
+
+            <!-- Search Button -->
+            <div class="uk-margin">
+                <form class="uk-search uk-search-default">
+                    <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" style="background-color: azure;">
+                    <span class="uk-search-icon-flip" uk-search-icon></span>
+                </form>
+            </div>
+
+            <!-- InfoBoxes -->
+            <div class="uk-child-width-expand@s uk-text-center" uk-grid>
+                <div>
+                    <div class="uk-card uk-card-default uk-card-body">Germany</div>
+                </div>
+                <div> <!-- Outdoor Condition InfoBox -->
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <p>Outdoor Conditions: Poor</p>
+                        <p>Windchill: 9.1 C°</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="uk-child-width-expand@s uk-text-center" uk-grid>
+                <div> <!-- General Description InfoBox -->
+                    <div class="uk-card uk-card-default uk-card-body "> Description: Partly cloudy throughout the day with a chance of rain throughout the day.</div>
+                </div>
+            </div>
+
+            <div uk-grid="masonry: true uk-child-width-expand@s uk-text-center">
+                <div> <!-- Temperature InfoBox -->
+                    <div class="uk-card uk-card-default uk-card-small uk-card-body uk-card-hover">
+                        <p>Temperature: 10.2 C°</p>
+                        <p>Low, 13.4% Decrease</p>
+                    </div>
+                </div>
+
+                <div> <!-- Humidity InfoBox -->
+                    <div class="uk-card uk-card-default uk-card-small uk-card-body uk-card-hover">
+                        <p>Humidity: 76.8%</p>
+                        <p>High, 13.4% Increase</p>
+                    </div>
+                </div>
+
+                <div> <!-- Rainfall InfoBox -->
+                    <div class="uk-card uk-card-default uk-card-small uk-card-body uk-card-hover">
+                        <p>Rainfall: 58.33%</p>
+                        <p>High, 32% Increase</p>
+                    </div>
+                </div>
+
+                <div> <!-- Wind InfoBox -->
+                    <div class="uk-card uk-card-default uk-card-small uk-card-body uk-card-hover">
+                        <p>Windspeed: 36.4 km/h</p>
+                        <p>High, 32% Increase</p>
+                    </div>
+                </div>
+
+                <div> <!-- UV InfoBox -->
+                    <div class="uk-card uk-card-default uk-card-small uk-card-body uk-card-hover">
+                        <p>UV Index: 3</p>
+                        <p>Medium, 32% Increase</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="uk-card uk-card-body" uk-card-ti>
+                
+            </div>
+        </div>
+    </div>
+</body>
+</html>
