@@ -15,10 +15,15 @@ fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/service
         if (!days || days.length === 0) {
             throw new Error('Data format is not as expected');
         }
-
-        // Assuming you need to access the first day data
         const dayData = days[0];
+        
+        const dateParts = dayData.datetime.split('-');
+        const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
 
+        getElement('resolvedAddress').innerHTML = res.resolvedAddress;
+        getElement('datetime').innerHTML = 'Datum: ' + formattedDate;
+        getElement('feelslike').innerHTML = 'Feels Like: ' + dayData.feelslike + '°C';
+        getElement('description').innerHTML = dayData.description;
         getElement('temp').innerHTML = 'Temperature: ' + dayData.temp + '°C';
         getElement('humidity').innerHTML = 'Humidity: ' + dayData.humidity + '%';
         getElement('precipprob').innerHTML = 'Rainfall Probability: ' + dayData.precipprob + '%';
@@ -27,8 +32,7 @@ fetch('https://weather.visualcrossing.com/VisualCrossingWebServices/rest/service
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
-        // You can also show a user-friendly message to the user here.
-        getElement('temp').innerHTML = 'Error fetching data';
+        getElement('Error').innerHTML = 'Error fetching data';
     });
 
 function getElement(id) {

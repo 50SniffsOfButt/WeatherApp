@@ -22,7 +22,7 @@ https://docs.fontawesome.com/
 https://symfony.com/
 
 Visual Studio Code Extension:
-    Live Server Ritwick Dey
+    Live Server Ritwick Dey (MAYBE)
 -->
 
 <body>
@@ -32,6 +32,7 @@ Visual Studio Code Extension:
 
             <!-- Header -->
             <h1 class="uk-heading-line uk-text-center" style="color: white;"><span>Weather</span></h1>
+            <h1 id="Error" style="color: white;"></h1>
 
             <!-- Search Button -->
             <div class="uk-margin">
@@ -44,12 +45,15 @@ Visual Studio Code Extension:
             <!-- InfoBoxes -->
             <div class="uk-child-width-expand uk-text-center" uk-grid>
                 <div>
-                    <div class="uk-card uk-card-default uk-card-body">Germany</div>
+                    <div class="uk-card uk-card-default uk-card-body">
+                        <p id="resolvedAddress"></p>
+                        <p id="datetime"></p>
+                    </div>
                 </div>
                 <div> <!-- Outdoor Condition InfoBox -->
                     <div class="uk-card uk-card-default uk-card-body">
                         <p>Outdoor Conditions: Poor</p>
-                        <p>Windchill: 9.1 C°</p>
+                        <p id="feelslike"></p>
                     </div>
                 </div>
 
@@ -57,7 +61,7 @@ Visual Studio Code Extension:
 
             <div class="uk-child-width-expand uk-text-center" uk-grid>
                 <div> <!-- General Description InfoBox -->
-                    <div class="uk-card uk-card-default uk-card-body "> Description: Partly cloudy throughout the day with a chance of rain throughout the day.</div>
+                    <div id="description" class="uk-card uk-card-default uk-card-body "></div>
                 </div>
             </div>
 

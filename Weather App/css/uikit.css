@@ -1940,7 +1940,7 @@ select.uk-form-width-xsmall {
   text-align: center;
   /* 10 */
   text-decoration: none;
-  text-transform: uppercase;
+/*text-transform: uppercase;*/
   transition: 0.1s ease-in-out;
   transition-property: color, background-color, border-color;
 }
