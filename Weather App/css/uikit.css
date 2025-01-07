@@ -2687,7 +2687,7 @@ select.uk-form-width-xsmall {
 }
 .uk-card-default.uk-card-hover:hover {
   background-color: #fff;
-  box-shadow: 0 14px 25px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 14px 25px rgba(0, 0, 0, 0.56);
 }
 .uk-card-default .uk-card-header {
   border-bottom: 1px solid #e5e5e5;
