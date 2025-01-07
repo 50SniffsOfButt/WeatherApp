@@ -9,7 +9,6 @@
     <link rel="JsonData" href="WeatherAPI.json">
     <script src="js/uikit.js"></script>
     <script src="js/uikit-icons.js"></script>
-    <script src="JsonData.js"></script>
 </head>
 
 <!--
@@ -27,16 +26,14 @@ Visual Studio Code Extension:
 
 <body>
     <div class="uk-background-primary" style="background-color: #2d497d">
-    
         <div class="uk-container">
-
             <!-- Header -->
             <h1 class="uk-heading-line uk-text-center" style="color: white;"><span>Weather</span></h1>
             <h1 id="Error" style="color: white;"></h1>
 
             <!-- Search Button -->
             <div class="uk-margin">
-                <form class="uk-search uk-search-default">
+                <form id="Searchbar" class="uk-search uk-search-default">
                     <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" style="background-color: azure;">
                     <span class="uk-search-icon-flip" uk-search-icon></span>
                 </form>
@@ -115,6 +112,7 @@ Visual Studio Code Extension:
 
         </div>
     </div>
+    <script src="JsonData.js"></script>
 </body>
 
 </html>
