@@ -11,7 +11,10 @@
     <script src="js/uikit-icons.js"></script>
     <style>
         .rounded {
-            border-radius: 10px; /* Adjust the value as needed */
+            border-radius: 10px;
+        }
+        .debug-border {
+            border: 1px solid red;
         }
     </style>
 </head>
@@ -19,6 +22,8 @@
 <!--
 https://docs.tomorrow.io/recipes
 https://getuikit.com/docs/introduction
+https://cssgridgarden.com/#de
+https://flexboxfroggy.com/#de
 
 https://lesscss.org/
 https://www.visualcrossing.com/weather/weather-data-services/germany?v=api#
@@ -53,25 +58,28 @@ Visual Studio Code Extension:
             </div>
 
             <!-- Top InfoBoxes -->
-            <div class="uk-child-width-expand uk-text-center" uk-grid>
+            <div class="uk-child-width-expand" uk-grid>
                 <div> <!-- Location InfoBox Main -->
                     <div class="uk-card uk-card-default uk-card-body uk-flex-column rounded" style="padding: 8px;">
-                        <div class="uk-flex-row" style="display: flex; justify-content: space-between;">
+                        <div class="uk-flex uk-flex-row uk-flex-between">
                             <div class="uk-text-left">Current Weather</div>
                             <div id="datetime" class="uk-text-right">Date</div>
                         </div>
-                        <div class="uk-flex-row" style="display: flex; justify-content: space-between;">
-                            <div id="feelslike" class="uk-text-left"> Temperature</div>
-                            <div id="conditions" class="uk-text-middle">Short description</div>
-                            <div></div>
-                        </div>
-                        <div>
-                            <p id="conditions" class="uk-text-left">Short description</p>
+                        <div class="">
+                            <div class="uk-flex uk-flex-row">
+                                <div>
+                                    <img class="uk-align-left" src="google-weather-icons-main/v4/blizzard.svg" alt="Blizzard Icon" style="width: 64px; height: 64px;">
+                                </div>
+                                <div>
+                                    <div id="feelslike" class=""> Temperature</div>
+                                    <div id="conditions" class="">Short Description</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div> <!-- Outdoor Condition InfoBox -->
-                    <div class="uk-card uk-card-default uk-card-body rounded">
+                    <div class="uk-card uk-card-default uk-card-body uk-text-center rounded">
                         <p id="clothingNeeded">Clothing Needed</p>
                     </div>
                 </div>
