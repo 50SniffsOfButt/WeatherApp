@@ -1,21 +1,18 @@
-function getElement(id) {
-    return document.getElementById(id);
-}
+function getElement(id) { return document.getElementById(id); }
 
-document.querySelector('#Searchbar').addEventListener('submit', function (event) {
-    console.log(window.document.querySelector('.uk-search-input').value);
+document.querySelector('#SearchbarTop').addEventListener('submit', function (event) {
+    console.log(window.document.querySelector('#Searchbar').value);
     event.preventDefault();
-    const searchQuery = document.querySelector('.uk-search-input').value;
+    const searchQuery = document.querySelector('#Searchbar').value;
     fetchWeatherData(searchQuery);
 });
 
-console.log(window.document.querySelector('.uk-search-input').value);
+console.log(window.document.querySelector('#Searchbar').value);
 
 function fetchWeatherData(location) {
-    //const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&include=current&key=JML37MDXVH3FAJWLAJ5M98YCP&contentType=json`; //Includes 15 days, current
-    //const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&include=hours&key=JML37MDXVH3FAJWLAJ5M98YCP&contentType=json`; //Includes 15 days, hours
-    //const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&include=hours%2Cdays%2Cevents%2Calerts&key=JML37MDXVH3FAJWLAJ5M98YCP&contentType=json` //Includes 15 days, hours, alerts and "events"?
-    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&include=days%2Ccurrent%2Chours%2Calerts&key=JML37MDXVH3FAJWLAJ5M98YCP&contentType=json` //Includes 15 days, hours, current and alerts
+
+    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&include=days%2Ccurrent%2Chours%2Calerts&key=JML37MDXVH3FAJWLAJ5M98YCP&contentType=json`
+    // Includes 15 days Forecast, hours, currentconditions and alerts
 
     fetch(url)
         .then(res => {
@@ -39,18 +36,8 @@ function fetchWeatherData(location) {
                 hourDataObject[`hourData${index + 1}`] = hourData;
             });
 
-
             console.log(res); // Debugging: Json in console
-
-            const dateParts = dayData.datetime.split('-'); // Makes Year-Month-Day into Day-Month-Year
-            const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
-
-            const feelslike = dayData.feelslike;
-            let clothing;
-
-
-            // Clear the error message
-            getElement('Error').innerHTML = '';
+            getElement('Error').innerHTML = ''; // Clear the error message
 
             const address = res.resolvedAddress
             getElement('Address').innerHTML = address;
@@ -59,12 +46,14 @@ function fetchWeatherData(location) {
             const currentEpoch = currentConditions.datetimeEpoch;
             const currentTimestamp = new Date(currentEpoch * 1000).toLocaleString();
             getElement('currentTimestamp').innerHTML = 'Data from: ' + currentTimestamp;
+            const dateParts = dayData.datetime.split('-'); // Makes Year-Month-Day into Day-Month-Year
+            const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
             getElement('datetime').innerHTML = 'Datum: ' + formattedDate;
             getElement('feelslike').innerHTML = 'Feels Like: ' + dayData.feelslike + '°C';
             getElement('description').innerHTML = dayData.description;
             getElement('temp').innerHTML = 'Temperature: ' + dayData.temp + '°C';
             getElement('humidity').innerHTML = 'Humidity: ' + dayData.humidity + '%';
-            getElement('precipprob').innerHTML = 'Rainfall Probability: ' + dayData.precipprob + '%';
+            getElement('precipprob').innerHTML = 'Precipitation Probability: ' + dayData.precipprob + '%';
             getElement('windspeed').innerHTML = 'Wind Speed: ' + dayData.windspeed + ' km/h';
             getElement('uvindex').innerHTML = 'UV Index: ' + dayData.uvindex;
             getElement('temp2').innerHTML = 'Temperature: ' + dayData.temp + '°C';
@@ -73,12 +62,22 @@ function fetchWeatherData(location) {
             getElement('windspeed2').innerHTML = 'Wind Speed: ' + dayData.windspeed + ' km/h';
             getElement('uvindex2').innerHTML = 'UV Index: ' + dayData.uvindex;
 
-            // Entire Day Weather Forecast
 
-            /*hourDataArray.forEach((hourData, index) => {
-                getElement('temperatureDay',index).innerHTML = hourData.datetime + ' : ' + hourData.temp + '°C';
-                console.log(`Hour ${index + 1}:`, hourData);
-            });*/
+            const weatherIcon = document.getElementById('weatherIcon');
+            const iconData = currentConditions.icon;
+            if (iconData === 'sunny') {
+                weatherIcon.src = 'icons/clear_day.svg';
+            } else if (iconData === 'rain') {
+                weatherIcon.src = 'icons/drizzle.svg';
+            } else if (iconData === 'snow') {
+                weatherIcon.src = 'icons/showers_snow.svg';
+            } else if (iconData === 'cloudy') {
+                weatherIcon.src = 'icons/cloudy.svg';
+            } else {
+                weatherIcon.src = 'icons/clear_day.svg';
+            }
+
+            // Entire Day Forecast
 
             hourDataArray.forEach((hourData, index) => {
                 const datetime = hourData.datetime;

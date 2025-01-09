@@ -9,6 +9,7 @@
     <link rel="JsonData" href="WeatherAPI.json">
     <script src="js/uikit.js"></script>
     <script src="js/uikit-icons.js"></script>
+    <script src="main.js"></script>
     <style>
         .rounded {
             border-radius: 10px;
@@ -24,7 +25,17 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 -->
 
 <body>
-    <div class="uk-background-primary" style="background-color: #2d497d"> <!-- Background -->
+    <div class="uk-background-primary" style="background-color: #2d497d;"> <!-- Background -->
+        <div class="" style="height:100%;width: 160px; background-color:#41619e; position:fixed!important; z-index:1; overflow:auto"> <!-- Sidebar -->
+            <h2 class="uk-text-center" style="margin: 25px;">Sidebar</h2>
+            <div>
+                <ul class="uk-list uk-list-large uk-list-divider">
+                    <a class="uk-button" style="width: 160px; color: white;" href="index.html">List item 1</a>
+                    <li class="uk-button" style="width: 160px; color: white;">List item 2</li>
+                    <li class="uk-button" style="width: 160px; color: white;">List item 3</li>
+                </ul>
+            </div>
+        </div>
         <div class="uk-container"> <!-- Main Middle Info Box -->
             <!-- Header -->
             <h1 class="uk-heading-line uk-text-center" style="color: white;"><span>Weather</span></h1>
@@ -32,10 +43,10 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 
             <!-- Search Button -->
             <div class="uk-margin">
-                <form id="Searchbar" class="uk-search uk-search-default rounded">
-                    <input class="uk-search-input" minlength="3" type="search" placeholder="Search" aria-label="Search" style="background-color: azure;">
+                <form id="SearchbarTop" class="uk-search uk-search-default rounded">
+                    <input id="Searchbar" class="uk-search-input" minlength="3" type="search" placeholder="Search" aria-label="Search" style="background-color: azure;"> <!-- bug: can submit with 0 letters -->
                     <span class="uk-search-icon-flip" uk-search-icon></span>
-                    <script src="main.js"></script>
+                    <script src="searchbar.js"></script>
                 </form>
             </div>
 
@@ -50,7 +61,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div class="">
                             <div class="uk-flex uk-flex-row">
                                 <div>
-                                    <img class="uk-align-left" src="icons/blizzard.svg" alt="Blizzard Icon" style="width: 80px; height: auto;">
+                                    <img id="weatherIcon" class="uk-align-left" src="icons/clear_day.svg" alt="Weather Icon" style="width: 80px; height: auto;">
                                 </div>
                                 <div class="">
                                     <div id="temp" class=""> Temperature</div>
@@ -60,7 +71,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                             </div>
                             <div class="uk-flex uk-flex-row uk-flex-between">
                                 <div class="uk-width-1-4 uk-card uk-card-small uk-card-body">
-                                    <p id="precipprob">Rainfall</p>
+                                    <p id="precipprob">Precipitation</p>
                                 </div>
                                 <div class="uk-width-1-4 uk-card uk-card-small uk-card-body">
                                     <p id="windspeed">Wind Speed</p>
