@@ -32,16 +32,16 @@ function fetchWeatherData(location) {
             if (!hours || hours.length === 0) {
                 throw new Error('Data format is not as expected');
             }
-            
+
             const hourDataArray = hours.slice(0, 24);
             const hourDataObject = {};
             hourDataArray.forEach((hourData, index) => {
-                hourDataObject[`hourData${index+1}`] = hourData;
+                hourDataObject[`hourData${index + 1}`] = hourData;
             });
 
 
             console.log(res); // Debugging: Json in console
-           
+
             const dateParts = dayData.datetime.split('-'); // Makes Year-Month-Day into Day-Month-Year
             const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
 
@@ -67,6 +67,7 @@ function fetchWeatherData(location) {
             getElement('precipprob').innerHTML = 'Rainfall Probability: ' + dayData.precipprob + '%';
             getElement('windspeed').innerHTML = 'Wind Speed: ' + dayData.windspeed + ' km/h';
             getElement('uvindex').innerHTML = 'UV Index: ' + dayData.uvindex;
+            getElement('temp2').innerHTML = 'Temperature: ' + dayData.temp + '°C';
             getElement('humidity2').innerHTML = 'Humidity: ' + dayData.humidity + '%';
             getElement('precipprob2').innerHTML = 'Rainfall Probability: ' + dayData.precipprob + '%';
             getElement('windspeed2').innerHTML = 'Wind Speed: ' + dayData.windspeed + ' km/h';
@@ -82,51 +83,58 @@ function fetchWeatherData(location) {
             hourDataArray.forEach((hourData, index) => {
                 const datetime = hourData.datetime;
                 const temperature = hourData.temp;
-            
+
                 const elementId = `temperatureDay${index + 1}`;
                 const element = getElement(elementId);
-            
+
                 if (element) {
                     element.innerHTML = `Time: ${datetime}, Temperature: ${temperature}°C`;
                 } else {
                     console.error(`Element with id ${elementId} not found`);
-            }});
+                }
+            });
 
             hourDataArray.forEach((hourData, index) => {
                 const datetime = hourData.datetime;
                 const humidity = hourData.humidity;
-            
+
                 const elementId = `humidityDay${index + 1}`;
                 const element = getElement(elementId);
-            
+
                 if (element) {
                     element.innerHTML = `Time: ${datetime}, Humidity: ${humidity}%`;
                 } else {
                     console.error(`Element with id ${elementId} not found`);
-            }});
+                }
+            });
 
             hourDataArray.forEach((hourData, index) => {
                 const datetime = hourData.datetime;
                 const precipprob = hourData.precipprob;
-            
+
                 const elementId = `rainfallDay${index + 1}`;
                 const element = getElement(elementId);
-            
+
                 if (element) {
-                    element.innerHTML = `Time: ${datetime}, Rainfall Probility: ${precipprob}%,`;
+                    element.innerHTML = `Time: ${datetime}, Rainfall Probility: ${precipprob}%`;
                 } else {
                     console.error(`Element with id ${elementId} not found`);
-            }});
+                }
+            });
 
-            /*
-            days.0.hours.0.datetime
-            datetime
-            temp
-            */
+            hourDataArray.forEach((hourData, index) => {
+                const datetime = hourData.datetime;
+                const windspeed = hourData.windspeed;
 
+                const elementId = `windspeedDay${index + 1}`;
+                const element = getElement(elementId);
 
-
-
+                if (element) {
+                    element.innerHTML = `Time: ${datetime}, Windspeed: ${windspeed}km/h`;
+                } else {
+                    console.error(`Element with id ${elementId} not found`);
+                }
+            });
 
         })
         .catch(error => {

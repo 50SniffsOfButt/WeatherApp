@@ -33,7 +33,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
             <!-- Search Button -->
             <div class="uk-margin">
                 <form id="Searchbar" class="uk-search uk-search-default rounded">
-                    <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" style="background-color: azure;">
+                    <input class="uk-search-input" minlength="3" type="search" placeholder="Search" aria-label="Search" style="background-color: azure;">
                     <span class="uk-search-icon-flip" uk-search-icon></span>
                     <script src="main.js"></script>
                 </form>
@@ -50,11 +50,12 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div class="">
                             <div class="uk-flex uk-flex-row">
                                 <div>
-                                    <img class="uk-align-left" src="icons/blizzard.svg" alt="Blizzard Icon" style="width: 48px; height: auto;">
+                                    <img class="uk-align-left" src="icons/blizzard.svg" alt="Blizzard Icon" style="width: 80px; height: auto;">
                                 </div>
-                                <div>
-                                    <div id="feelslike" class=""> Temperature</div>
+                                <div class="">
+                                    <div id="temp" class=""> Temperature</div>
                                     <div id="conditions" class="">Short Description</div>
+                                    <div id="feelslike" class="">Feels Like</div>
                                 </div>
                             </div>
                             <div class="uk-flex uk-flex-row uk-flex-between">
@@ -92,7 +93,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                 <div class="uk-flex-column uk-child-width-expand uk-text-center" uk-switcher uk-grid>
                     <div> <!-- Temperature InfoBox -->
                         <div class="uk-card uk-card-default uk-card-small uk-card-body uk-card-hover uk-button rounded" href="#">
-                            <p id="temp">Temperature</p>
+                            <p id="temp2">Temperature</p>
                         </div>
                     </div>
 
@@ -121,7 +122,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                     </div>
                 </div>
 
-                <div class="uk-card uk-card-default uk-card-large uk-card-body uk-width-expand uk-switcher rounded" style="margin-left:15px"> <!-- GraphBox -->
+                <div class="uk-card uk-card-default uk-card-small uk-card-body uk-width-expand uk-switcher rounded" style="margin-left:15px"> <!-- GraphBox -->
                     <div id="temperatureContainer">
                         <script>
                             document.addEventListener('DOMContentLoaded', function () {
@@ -164,7 +165,20 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                             });
                         </script>
                     </div> 
-                    <div>Wind</div> <!-- Wind Graph -->
+                    <div id="windspeedContainer">
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const container = document.getElementById('windspeedContainer');
+
+                                for (let i = 1; i <= 24; i++) {
+                                    const div = document.createElement('div');
+                                    div.id = `windspeedDay${i}`;
+                                    div.innerHTML = `Windspeed Day 1 Hour ${i - 1}`;
+                                    container.appendChild(div);
+                                }
+                            });
+                        </script>
+                    </div>
                     <div>UV</div> <!-- UV Graph -->
                 </div>
 
