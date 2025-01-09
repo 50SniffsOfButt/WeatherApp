@@ -20,26 +20,8 @@
 </head>
 
 <!--
-https://docs.tomorrow.io/recipes
-https://getuikit.com/docs/introduction
-https://cssgridgarden.com/#de
-https://flexboxfroggy.com/#de
-
-https://lesscss.org/
-https://www.visualcrossing.com/weather/weather-data-services/germany?v=api#
-https://docs.fontawesome.com/
-https://symfony.com/
-
-Visual Studio Code Extension:
-    Live Server Ritwick Dey (MAYBE)
+https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 -->
-
-<!-- THE ALMIGHTY WHERE IS MY FLEXBOX -->
-<!-- 
- style="border: 2px solid Red;"
--->
-
-
 
 <body>
     <div class="uk-background-primary" style="background-color: #2d497d"> <!-- Background -->
@@ -53,7 +35,7 @@ Visual Studio Code Extension:
                 <form id="Searchbar" class="uk-search uk-search-default rounded">
                     <input class="uk-search-input" type="search" placeholder="Search" aria-label="Search" style="background-color: azure;">
                     <span class="uk-search-icon-flip" uk-search-icon></span>
-                    <script src="JsonData.js"></script>
+                    <script src="main.js"></script>
                 </form>
             </div>
 
@@ -68,11 +50,25 @@ Visual Studio Code Extension:
                         <div class="">
                             <div class="uk-flex uk-flex-row">
                                 <div>
-                                    <img class="uk-align-left" src="google-weather-icons-main/v4/blizzard.svg" alt="Blizzard Icon" style="width: 64px; height: 64px;">
+                                    <img class="uk-align-left" src="icons/blizzard.svg" alt="Blizzard Icon" style="width: 48px; height: auto;">
                                 </div>
                                 <div>
                                     <div id="feelslike" class=""> Temperature</div>
                                     <div id="conditions" class="">Short Description</div>
+                                </div>
+                            </div>
+                            <div class="uk-flex uk-flex-row uk-flex-between">
+                                <div class="uk-width-1-4 uk-card uk-card-small uk-card-body">
+                                    <p id="precipprob">Rainfall</p>
+                                </div>
+                                <div class="uk-width-1-4 uk-card uk-card-small uk-card-body">
+                                    <p id="windspeed">Wind Speed</p>
+                                </div>
+                                <div class="uk-width-1-4 uk-card uk-card-small uk-card-body">
+                                    <p id="humidity">Humidity</p>
+                                </div>
+                                <div class="uk-width-1-4 uk-card uk-card-small uk-card-body">
+                                    <p id="uvindex">UV Index</p>
                                 </div>
                             </div>
                         </div>
@@ -80,7 +76,8 @@ Visual Studio Code Extension:
                 </div>
                 <div> <!-- Outdoor Condition InfoBox -->
                     <div class="uk-card uk-card-default uk-card-body uk-text-center rounded">
-                        <p id="clothingNeeded">Clothing Needed</p>
+                        <p id="Address">Address</p>
+                        <p id="currentTimestamp">Data from :</p>
                     </div>
                 </div>
             </div>
@@ -101,33 +98,72 @@ Visual Studio Code Extension:
 
                     <div> <!-- Humidity InfoBox -->
                         <div class="uk-card uk-card-default uk-card-small uk-card-body uk-card-hover uk-button rounded" href="#">
-                            <p id="humidity">Humidity</p>
+                            <p id="humidity2">Humidity</p>
                         </div>
                     </div>
 
                     <div> <!-- Rainfall InfoBox -->
                         <div class="uk-card uk-card-default uk-card-small uk-card-body uk-card-hover uk-button rounded" href="#">
-                            <p id="precipprob">Rainfall</p>
+                            <p id="precipprob2">Rainfall</p>
                         </div>
                     </div>
 
                     <div> <!-- Wind InfoBox -->
                         <div class="uk-card uk-card-default uk-card-small uk-card-body uk-card-hover uk-button rounded" href="#">
-                            <p id="windspeed">Wind Speed</p>
+                            <p id="windspeed2">Wind Speed</p>
                         </div>
                     </div>
 
                     <div> <!-- UV InfoBox -->
                         <div class="uk-card uk-card-default uk-card-small uk-card-body uk-card-hover uk-button rounded" href="#">
-                            <p id="uvindex">UV Index</p>
+                            <p id="uvindex2">UV Index</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="uk-card uk-card-default uk-card-large uk-card-body uk-width-expand uk-switcher rounded" style="margin-left:15px"> <!-- GraphBox -->
-                    <div id="temperatureDay"></div> <!-- Temperature Graph -->
-                    <div>Humidity</div> <!-- Humidity Graph -->
-                    <div>Rainfall</div> <!-- Rainfall Graph -->
+                    <div id="temperatureContainer">
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const container = document.getElementById('temperatureContainer');
+
+                                for (let i = 1; i <= 24; i++) {
+                                    const div = document.createElement('div');
+                                    div.id = `temperatureDay${i}`;
+                                    div.innerHTML = `Temperature Day 1 Hour ${i - 1}`;
+                                    container.appendChild(div);
+                                }
+                            });
+                        </script>
+                    </div>
+                    <div id="humidityContainer">
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const container = document.getElementById('humidityContainer');
+
+                                for (let i = 1; i <= 24; i++) {
+                                    const div = document.createElement('div');
+                                    div.id = `humidityDay${i}`;
+                                    div.innerHTML = `Humidity Day 1 Hour ${i - 1}`;
+                                    container.appendChild(div);
+                                }
+                            });
+                        </script>
+                    </div>
+                    <div id="rainfallContainer">
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const container = document.getElementById('rainfallContainer');
+
+                                for (let i = 1; i <= 24; i++) {
+                                    const div = document.createElement('div');
+                                    div.id = `rainfallDay${i}`;
+                                    div.innerHTML = `Rainfall Probility Day 1 Hour ${i - 1}`;
+                                    container.appendChild(div);
+                                }
+                            });
+                        </script>
+                    </div> 
                     <div>Wind</div> <!-- Wind Graph -->
                     <div>UV</div> <!-- UV Graph -->
                 </div>
@@ -143,3 +179,18 @@ Visual Studio Code Extension:
     </div>
 </body>
 </html>
+
+<!-- 
+https://docs.tomorrow.io/recipes
+https://getuikit.com/docs/introduction
+https://cssgridgarden.com/#de
+https://flexboxfroggy.com/#de
+
+https://lesscss.org/
+https://www.visualcrossing.com/weather/weather-data-services/germany?v=api#
+https://docs.fontawesome.com/
+https://symfony.com/
+
+Visual Studio Code Extension:
+    Live Server Ritwick Dey (MAYBE)
+-->
