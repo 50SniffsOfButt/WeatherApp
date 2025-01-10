@@ -11,9 +11,6 @@
     <script src="js/uikit-icons.js"></script>
     <script src="main.js"></script>
     <style>
-        .rounded {
-            border-radius: 10px;
-        }
         .debug-border {
             border: 1px solid red;
         }
@@ -26,7 +23,8 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 
 <body>
     <div class="uk-background-primary" style="background-color: #2d497d;"> <!-- Background -->
-        <div class="" style="height:100%;width: 160px; background-color:#41619e; position:fixed!important; z-index:1; overflow:auto"> <!-- Sidebar -->
+        <!-- Sidebar -->
+        <div class="" style="height:100%;width: 160px; background-color:#41619e; position:fixed!important; z-index:1; overflow:auto">
             <h2 class="uk-text-center" style="margin: 25px;">Sidebar</h2>
             <div>
                 <ul class="uk-list uk-list-large uk-list-divider">
@@ -53,7 +51,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
             <!-- Top InfoBoxes -->
             <div class="uk-child-width-expand" uk-grid>
                 <div> <!-- Location InfoBox Main -->
-                    <div class="uk-card uk-card-default uk-card-body uk-flex-column rounded" style="padding: 8px;">
+                    <div class="uk-card uk-card-default uk-card-body uk-flex-column uk-border-rounded" style="padding: 8px;">
                         <div class="uk-flex uk-flex-row uk-flex-between">
                             <div class="uk-text-left">Current Weather</div>
                             <div id="datetime" class="uk-text-right">Date</div>
@@ -64,76 +62,75 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                                     <img id="weatherIcon" class="uk-align-left" src="icons/clear_day.svg" alt="Weather Icon" style="width: 80px; height: auto;">
                                 </div>
                                 <div class="">
-                                    <div id="temp" class=""> Temperature</div>
-                                    <div id="conditions" class="">Short Description</div>
-                                    <div id="feelslike" class="">Feels Like</div>
+                                    <div id="currentTemp" class=""> Temperature</div>
+                                    <div id="currentConditions" class="">Short Description</div>
+                                    <div id="currentFeelslike" class="">Feels Like</div>
                                 </div>
                             </div>
                             <div class="uk-flex uk-flex-row uk-flex-between">
                                 <div class="uk-width-1-4 uk-card uk-card-small uk-card-body">
-                                    <p id="precipprob">Precipitation</p>
+                                    <p id="currentPrecipprob">Precipitation</p>
                                 </div>
                                 <div class="uk-width-1-4 uk-card uk-card-small uk-card-body">
-                                    <p id="windspeed">Wind Speed</p>
+                                    <p id="currentWindspeed">Wind Speed</p>
                                 </div>
                                 <div class="uk-width-1-4 uk-card uk-card-small uk-card-body">
-                                    <p id="humidity">Humidity</p>
+                                    <p id="currentHumidity">Humidity</p>
                                 </div>
                                 <div class="uk-width-1-4 uk-card uk-card-small uk-card-body">
-                                    <p id="uvindex">UV Index</p>
+                                    <p id="currentUVIndex">UV Index</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div> <!-- Outdoor Condition InfoBox -->
-                    <div class="uk-card uk-card-default uk-card-body uk-text-center rounded">
+                    <div class="uk-card uk-card-default uk-card-body uk-text-center uk-border-rounded">
                         <p id="Address">Address</p>
                         <p id="currentTimestamp">Data from :</p>
                     </div>
                 </div>
             </div>
 
-            <div class="uk-child-width-expand uk-text-center" uk-grid>
+            <div class="uk-child-width-expand" uk-grid>
                 <div> <!-- General Description InfoBox -->
-                    <div id="description" class="uk-card uk-card-default uk-card-body rounded"></div>
+                    <div id="description" class="uk-card uk-card-default uk-card-body uk-border-rounded uk-text-center"></div>
                 </div>
             </div>
 
-            <div uk-grid>
-                <div class="uk-flex-column uk-child-width-expand uk-text-center" uk-switcher uk-grid>
-                    <div> <!-- Temperature InfoBox -->
-                        <div class="uk-card uk-card-default uk-card-small uk-card-body uk-card-hover uk-button rounded" href="#">
-                            <p id="temp2">Temperature</p>
-                        </div>
+            <div uk-grid class="">
+                <!-- Temperature InfoBox -->
+                <div class="uk-width-1-2">
+                    <div class="uk-card uk-card-default uk-card-body uk-card-hover uk-button  uk-border-rounded" href="#">
+                        <p id="temp2">Temperature</p>
                     </div>
-
-                    <div> <!-- Humidity InfoBox -->
-                        <div class="uk-card uk-card-default uk-card-small uk-card-body uk-card-hover uk-button rounded" href="#">
-                            <p id="humidity2">Humidity</p>
-                        </div>
+                </div>
+                <div class="uk-width-1-2"> <!-- Humidity InfoBox -->
+                    <div class="uk-card uk-card-default uk-card-body uk-card-hover uk-button  uk-border-rounded" href="#">
+                        <p id="humidity2">Humidity</p>
                     </div>
-
-                    <div> <!-- Rainfall InfoBox -->
-                        <div class="uk-card uk-card-default uk-card-small uk-card-body uk-card-hover uk-button rounded" href="#">
-                            <p id="precipprob2">Rainfall</p>
-                        </div>
+                </div>
+            
+                <div class="uk-width-1-2"> <!-- Rainfall InfoBox -->
+                    <div class="uk-card uk-card-default uk-card-body uk-card-hover uk-button  uk-border-rounded" href="#">
+                        <p id="precipprob2">Rainfall</p>
                     </div>
-
-                    <div> <!-- Wind InfoBox -->
-                        <div class="uk-card uk-card-default uk-card-small uk-card-body uk-card-hover uk-button rounded" href="#">
-                            <p id="windspeed2">Wind Speed</p>
-                        </div>
+                </div>
+            
+                <div class="uk-width-1-2"> <!-- Wind InfoBox -->
+                    <div class="uk-card uk-card-default uk-card-body uk-card-hover uk-button  uk-border-rounded" href="#">
+                        <p id="windspeed2">Wind Speed</p>
                     </div>
-
-                    <div> <!-- UV InfoBox -->
-                        <div class="uk-card uk-card-default uk-card-small uk-card-body uk-card-hover uk-button rounded" href="#">
-                            <p id="uvindex2">UV Index</p>
-                        </div>
+                </div>
+            
+                <div class="uk-width-1-2"> <!-- UV InfoBox -->
+                    <div class="uk-card uk-card-default uk-card-body uk-card-hover uk-button  uk-border-rounded" href="#">
+                        <p id="uvindex2">UV Index</p>
                     </div>
                 </div>
 
-                <div class="uk-card uk-card-default uk-card-small uk-card-body uk-width-expand uk-switcher rounded" style="margin-left:15px"> <!-- GraphBox -->
+                <!--
+                <div class="uk-card uk-card-default uk-card-small uk-card-body uk-width-expand uk-switcher uk-border-rounded" style="margin-left:15px"> 
                     <div id="temperatureContainer">
                         <script>
                             document.addEventListener('DOMContentLoaded', function () {
@@ -190,8 +187,8 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                             });
                         </script>
                     </div>
-                    <div>UV</div> <!-- UV Graph -->
-                </div>
+                    <div>UV</div>
+                </div>--->
 
             </div>
 

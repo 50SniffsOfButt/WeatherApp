@@ -39,23 +39,36 @@ function fetchWeatherData(location) {
             console.log(res); // Debugging: Json in console
             getElement('Error').innerHTML = ''; // Clear the error message
 
+            // Clothing suggestions based on feelslike temperature
+            /*if (feelslike > 18) {
+                clothing = 'T-shirt';
+            } else if (feelslike > 11 && feelslike <= 18) {
+                clothing = 'Sweater';
+            } else if (feelslike > 1 && feelslike <= 11) {
+                clothing = 'Jacket';
+            } else if (feelslike <= 1) {
+                clothing = 'Winter Jacket';
+            } else {
+                clothing = 'ERROR';
+            }*/
+
             const address = res.resolvedAddress
             getElement('Address').innerHTML = address;
             const currentConditions = res.currentConditions;
-            getElement('conditions').innerHTML = currentConditions.conditions;
+            getElement('currentConditions').innerHTML = currentConditions.conditions;
             const currentEpoch = currentConditions.datetimeEpoch;
             const currentTimestamp = new Date(currentEpoch * 1000).toLocaleString();
             getElement('currentTimestamp').innerHTML = 'Data from: ' + currentTimestamp;
             const dateParts = dayData.datetime.split('-'); // Makes Year-Month-Day into Day-Month-Year
             const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
             getElement('datetime').innerHTML = 'Datum: ' + formattedDate;
-            getElement('feelslike').innerHTML = 'Feels Like: ' + dayData.feelslike + '°C';
+            getElement('currentFeelslike').innerHTML = 'Feels Like: ' + currentConditions.feelslike + '°C';
             getElement('description').innerHTML = dayData.description;
-            getElement('temp').innerHTML = 'Temperature: ' + dayData.temp + '°C';
-            getElement('humidity').innerHTML = 'Humidity: ' + dayData.humidity + '%';
-            getElement('precipprob').innerHTML = 'Precipitation Probability: ' + dayData.precipprob + '%';
-            getElement('windspeed').innerHTML = 'Wind Speed: ' + dayData.windspeed + ' km/h';
-            getElement('uvindex').innerHTML = 'UV Index: ' + dayData.uvindex;
+            getElement('currentTemp').innerHTML = 'Temperature: ' + currentConditions.temp + '°C';
+            getElement('currentHumidity').innerHTML = 'Humidity: ' + currentConditions.humidity + '%';
+            getElement('currentPrecipprob').innerHTML = 'Precipitation Probability: ' + currentConditions.precipprob + '%';
+            getElement('currentWindspeed').innerHTML = 'Wind Speed: ' + currentConditions.windspeed + ' km/h';
+            getElement('currentUVIndex').innerHTML = 'UV Index: ' + currentConditions.uvindex;
             getElement('temp2').innerHTML = 'Temperature: ' + dayData.temp + '°C';
             getElement('humidity2').innerHTML = 'Humidity: ' + dayData.humidity + '%';
             getElement('precipprob2').innerHTML = 'Rainfall Probability: ' + dayData.precipprob + '%';
