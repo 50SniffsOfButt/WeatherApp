@@ -66,10 +66,11 @@ function fetchWeatherData(location) {
             getElement('description').innerHTML = dayData.description;
             getElement('currentTemp').innerHTML = 'Temperature: ' + currentConditions.temp + '°C';
             getElement('currentHumidity').innerHTML = 'Humidity: ' + currentConditions.humidity + '%';
-            getElement('currentPrecipprob').innerHTML = 'Precipitation Probability: ' + currentConditions.precipprob + '%';
+            getElement('currentPrecipprob').innerHTML = 'Precipitation Chance: ' + currentConditions.precipprob + '%';
             getElement('currentWindspeed').innerHTML = 'Wind Speed: ' + currentConditions.windspeed + ' km/h';
             getElement('currentUVIndex').innerHTML = 'UV Index: ' + currentConditions.uvindex;
             getElement('temp2').innerHTML = 'Temperature: ' + dayData.temp + '°C';
+            getElement('feelslike2').innerHTML = 'Feels Like: ' + dayData.feelslike + '°C';
             getElement('humidity2').innerHTML = 'Humidity: ' + dayData.humidity + '%';
             getElement('precipprob2').innerHTML = 'Rainfall Probability: ' + dayData.precipprob + '%';
             getElement('windspeed2').innerHTML = 'Wind Speed: ' + dayData.windspeed + ' km/h';
@@ -118,7 +119,7 @@ function fetchWeatherData(location) {
                 } else {
                     console.error(`Element with id ${elementId} not found`);
                 }
-            });
+            });/*
 
             hourDataArray.forEach((hourData, index) => {
                 const datetime = hourData.datetime;
@@ -146,7 +147,7 @@ function fetchWeatherData(location) {
                 } else {
                     console.error(`Element with id ${elementId} not found`);
                 }
-            });
+            });*/
 
         })
         .catch(error => {
