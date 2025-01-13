@@ -23,8 +23,8 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 <body>
     <div class="uk-background-primary" style="background-color: #2d497d;"> <!-- Background -->
         <!-- Sidebar -->
-        <div class="" style="height:100%;width: 160px; background-color:#41619e; position:fixed!important; z-index:1; overflow:auto">
-            <h2 class="uk-text-center" style="margin: 25px;">Sidebar</h2>
+        <div class="" style="height:100%;width: 160px; background-color:#0C2D48; position:fixed!important; z-index:1; overflow:auto">
+            <h2 class="uk-text-center" style="margin: 25px; color: white">Sidebar</h2>
             <div>
                 <ul class="uk-list uk-list-large uk-list-divider">
                     <a class="uk-button" style="width: 160px; color: white;" href="index.html">Refresh</a>
@@ -40,7 +40,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 
             <div class="uk-margin"> <!-- Search Button -->
                 <form id="SearchbarTop" class="uk-search uk-search-default rounded">
-                    <input id="Searchbar" class="uk-search-input" minlength="3" type="search" placeholder="Search" aria-label="Search" style="background-color: azure;"> <!-- bug: can submit with 0 letters -->
+                    <input id="Searchbar" class="uk-search-input" minlength="3" type="search" placeholder="Search" aria-label="Search" style="background-color: #C3E0E5;"> <!-- bug: can submit with 0 letters -->
                     <span class="uk-search-icon-flip" uk-search-icon></span>
                 </form>
             </div>
@@ -89,39 +89,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                     <div class="uk-card uk-card-default uk-card-body uk-text-center uk-border-rounded">
                         <p id="Address">Address</p>
                         <p id="currentTimestamp">Data from :</p>
-                    </div>
-                </div>
-            </div>
-
-            <div uk-grid> <!-- Whole Day InfoBox -->
-                <div class="uk-width-expand">
-                    <div class="uk-card uk-card-default uk-card-small uk-card-body uk-border-rounded uk-switcher switcher-graphs">
-                        <div id="temperatureContainer">
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const container = document.getElementById('temperatureContainer');
-
-                                    for (let i = 1; i <= 24; i++) {
-                                        const div = document.createElement('div');
-                                        div.id = `temperatureDay${i}`;
-                                        container.appendChild(div);
-                                    }
-                                });
-                            </script>
-                        </div>
-                        <div id="humidityContainer">
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const container = document.getElementById('humidityContainer');
-
-                                    for (let i = 1; i <= 24; i++) {
-                                        const div = document.createElement('div');
-                                        div.id = `humidityDay${i}`;
-                                        container.appendChild(div);
-                                    }
-                                });
-                            </script>
-                        </div>
+                        <p id="clothingRec">Clothing Recommended</p>
                     </div>
                 </div>
             </div>
@@ -130,7 +98,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 
                 <div class=""> <!-- Temperature InfoBox -->
                     <div class=" uk-card uk-card-default uk-card-body uk-card-hover uk-button uk-border-rounded" href="#">
-                        <p id="temp2">Temperature</p>
+                        <p id="temp">Temperature</p>
                     </div>
                 </div>
                 
@@ -142,13 +110,13 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <p class="uk-text-left" style="font-size: x-small;">prominent factor: wind</p>
                         <div class="uk-flex uk-flex-row uk-flex-around">
                             <div class="uk-width-1-2">
-                                <p id="currentPrecipprob">Feels like:</p>
+                                <p id="feelslike2">Feels like:</p>
                             </div>
                             <div class="uk-width-1-2">
-                                <p id="currentWindspeed">Temperature:</p>
+                                <p id="temp2">Temperature:</p>
                             </div>
                         </div>
-                        <p id="feelslike2" class=""></p>
+                        <p id="feelslike2" class="">Feels Like: </p>
                     </div>
                 </div>
                 
@@ -176,6 +144,64 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                     </div>
                 </div>
 
+            </div>
+            <div uk-grid> <!-- Whole Day InfoBox -->
+                <div class="uk-width-expand">
+                    <div class="uk-card uk-card-default uk-card-small uk-card-body uk-border-rounded uk-switcher switcher-graphs">
+                        <div id="temperatureContainer">
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const container = document.getElementById('temperatureContainer');
+
+                                    for (let i = 1; i <= 24; i++) {
+                                        const div = document.createElement('div');
+                                        div.id = `temperatureDay${i}`;
+                                        container.appendChild(div);
+                                    }
+                                });
+                            </script>
+                        </div>
+                        <div id="feelslikeContainer">
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const container = document.getElementById('feelslikeContainer');
+
+                                    for (let i = 1; i <= 24; i++) {
+                                        const div = document.createElement('div');
+                                        div.id = `feelslikeDay${i}`;
+                                        container.appendChild(div);
+                                    }
+                                });
+                            </script>
+                        </div>
+                        <div id="humidityContainer">
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const container = document.getElementById('humidityContainer');
+
+                                    for (let i = 1; i <= 24; i++) {
+                                        const div = document.createElement('div');
+                                        div.id = `humidityDay${i}`;
+                                        container.appendChild(div);
+                                    }
+                                });
+                            </script>
+                        </div>
+                        <div id="rainfallProbabilityContainer">
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const container = document.getElementById('rainfallProbabilityContainer');
+
+                                    for (let i = 1; i <= 24; i++) {
+                                        const div = document.createElement('div');
+                                        div.id = `rainfallProabilityDay${i}`;
+                                        container.appendChild(div);
+                                    }
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

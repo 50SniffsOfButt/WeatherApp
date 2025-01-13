@@ -4,43 +4,31 @@ document.querySelector('#SearchbarTop').addEventListener('submit', function (eve
     console.log(window.document.querySelector('#Searchbar').value);
     event.preventDefault();
     const searchQuery = document.querySelector('#Searchbar').value;
-    fetchWeatherData(searchQuery);
+    fetchWeatherLocation(searchQuery);
 });
 
-console.log(window.document.querySelector('#Searchbar').value);
-
-function fetchWeatherData(location) {
+function fetchWeatherLocation(location) {
 
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&include=days%2Ccurrent%2Chours%2Calerts&key=JML37MDXVH3FAJWLAJ5M98YCP&contentType=json`
     // Includes 15 days Forecast, hours, currentconditions and alerts
 
     fetch(url)
-        .then(res => {
-            return res.json();
+        .then(WeatherData => {
+            return WeatherData.json();
         })
-        .then((res) => {
-            const days = res.days;
+        .then((WeatherData) => {
+            const days = WeatherData.days;
             if (!days || days.length === 0) {
                 throw new Error('Data format is not as expected');
             }
             const dayData = days[0];
-
-            const hours = dayData.hours;
-            if (!hours || hours.length === 0) {
-                throw new Error('Data format is not as expected');
-            }
-
-            const hourDataArray = hours.slice(0, 24);
-            const hourDataObject = {};
-            hourDataArray.forEach((hourData, index) => {
-                hourDataObject[`hourData${index + 1}`] = hourData;
-            });
-
-            console.log(res); // Debugging: Json in console
+ 
+            console.log(WeatherData); // Debugging: Json in console
             getElement('Error').innerHTML = ''; // Clear the error message
-
+            
             // Clothing suggestions based on feelslike temperature
-            /*if (feelslike > 18) {
+            const feelslike = WeatherData.currentConditions.feelslike;
+            if (feelslike > 18) {
                 clothing = 'T-shirt';
             } else if (feelslike > 11 && feelslike <= 18) {
                 clothing = 'Sweater';
@@ -50,31 +38,34 @@ function fetchWeatherData(location) {
                 clothing = 'Winter Jacket';
             } else {
                 clothing = 'ERROR';
-            }*/
+            }
+            const firstDayData = days[0];
 
-            const address = res.resolvedAddress
+            const address = WeatherData.resolvedAddress
             getElement('Address').innerHTML = address;
-            const currentConditions = res.currentConditions;
+            const currentConditions = WeatherData.currentConditions;
             getElement('currentConditions').innerHTML = currentConditions.conditions;
             const currentEpoch = currentConditions.datetimeEpoch;
             const currentTimestamp = new Date(currentEpoch * 1000).toLocaleString();
             getElement('currentTimestamp').innerHTML = 'Data from: ' + currentTimestamp;
-            const dateParts = dayData.datetime.split('-'); // Makes Year-Month-Day into Day-Month-Year
+            getElement('clothingRec').innerHTML = 'Clothing Recommendation: ' + clothing;
+            const dateParts = firstDayData.datetime.split('-'); // Makes Year-Month-Day into Day-Month-Year
             const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
             getElement('datetime').innerHTML = 'Datum: ' + formattedDate;
             getElement('currentFeelslike').innerHTML = 'Feels Like: ' + currentConditions.feelslike + '°C';
-            getElement('description').innerHTML = dayData.description;
+            getElement('description').innerHTML = firstDayData.description;
             getElement('currentTemp').innerHTML = 'Temperature: ' + currentConditions.temp + '°C';
             getElement('currentHumidity').innerHTML = 'Humidity: ' + currentConditions.humidity + '%';
             getElement('currentPrecipprob').innerHTML = 'Precipitation Chance: ' + currentConditions.precipprob + '%';
             getElement('currentWindspeed').innerHTML = 'Wind Speed: ' + currentConditions.windspeed + ' km/h';
             getElement('currentUVIndex').innerHTML = 'UV Index: ' + currentConditions.uvindex;
-            getElement('temp2').innerHTML = 'Temperature: ' + dayData.temp + '°C';
-            getElement('feelslike2').innerHTML = 'Feels Like: ' + dayData.feelslike + '°C';
-            getElement('humidity2').innerHTML = 'Humidity: ' + dayData.humidity + '%';
-            getElement('precipprob2').innerHTML = 'Rainfall Probability: ' + dayData.precipprob + '%';
-            getElement('windspeed2').innerHTML = 'Wind Speed: ' + dayData.windspeed + ' km/h';
-            getElement('uvindex2').innerHTML = 'UV Index: ' + dayData.uvindex;
+            getElement('temp').innerHTML = 'Temperature: ' + firstDayData.temp + '°C';
+            getElement('temp2').innerHTML = 'Temperature: ' + firstDayData.temp + '°C';
+            getElement('feelslike2').innerHTML = 'Feels Like: ' + firstDayData.feelslike + '°C';
+            getElement('humidity2').innerHTML = 'Humidity: ' + firstDayData.humidity + '%';
+            getElement('precipprob2').innerHTML = 'Rainfall Probability: ' + firstDayData.precipprob + '%';
+            getElement('windspeed2').innerHTML = 'Wind Speed: ' + firstDayData.windspeed + ' km/h';
+            getElement('uvindex2').innerHTML = 'UV Index: ' + firstDayData.uvindex;
 
 
             const weatherIcon = document.getElementById('weatherIcon');
@@ -91,14 +82,13 @@ function fetchWeatherData(location) {
                 weatherIcon.src = 'icons/clear_day.svg';
             }
 
-            // Entire Day Forecast
-
-            hourDataArray.forEach((hourData, index) => {
+            // Takes 24 hours of Temperature of first Day and displays them
+            WeatherData.days[0].hours.slice(0, 24).forEach((hourData, index) => {
                 const datetime = hourData.datetime;
                 const temperature = hourData.temp;
 
                 const elementId = `temperatureDay${index + 1}`;
-                const element = getElement(elementId);
+                const element = document.getElementById(elementId);
 
                 if (element) {
                     element.innerHTML = `Time: ${datetime}, Temperature: ${temperature}°C`;
@@ -107,47 +97,50 @@ function fetchWeatherData(location) {
                 }
             });
 
-            hourDataArray.forEach((hourData, index) => {
+            // Takes 24 hours of Feelslike of first Day and displays them
+            WeatherData.days[0].hours.slice(0, 24).forEach((hourData, index) => {
+                const datetime = hourData.datetime;
+                const feelslike = hourData.feelslike;
+
+                const elementId = `feelslikeDay${index + 1}`;
+                const element = document.getElementById(elementId);
+
+                if (element) {
+                    element.innerHTML = `Time: ${datetime}, Feels Like: ${feelslike}°C`;
+                } else {
+                    console.error(`Element with id ${elementId} not found`);
+                }
+            });
+
+            // Takes 24 hours of Humidity of first Day and displays them
+            WeatherData.days[0].hours.slice(0, 24).forEach((hourData, index) => {
                 const datetime = hourData.datetime;
                 const humidity = hourData.humidity;
 
                 const elementId = `humidityDay${index + 1}`;
-                const element = getElement(elementId);
+                const element = document.getElementById(elementId);
 
                 if (element) {
                     element.innerHTML = `Time: ${datetime}, Humidity: ${humidity}%`;
                 } else {
                     console.error(`Element with id ${elementId} not found`);
                 }
-            });/*
+            });
 
-            hourDataArray.forEach((hourData, index) => {
+            // Takes 24 hours of Rainfall Proability of first Day and displays them
+            WeatherData.days[0].hours.slice(0, 24).forEach((hourData, index) => {
                 const datetime = hourData.datetime;
                 const precipprob = hourData.precipprob;
 
-                const elementId = `rainfallDay${index + 1}`;
-                const element = getElement(elementId);
+                const elementId = `rainfallProabilityDay${index + 1}`;
+                const element = document.getElementById(elementId);
 
                 if (element) {
-                    element.innerHTML = `Time: ${datetime}, Rainfall Probility: ${precipprob}%`;
+                    element.innerHTML = `Time: ${datetime}, Rainfall Proability: ${precipprob}%`;
                 } else {
                     console.error(`Element with id ${elementId} not found`);
                 }
             });
-
-            hourDataArray.forEach((hourData, index) => {
-                const datetime = hourData.datetime;
-                const windspeed = hourData.windspeed;
-
-                const elementId = `windspeedDay${index + 1}`;
-                const element = getElement(elementId);
-
-                if (element) {
-                    element.innerHTML = `Time: ${datetime}, Windspeed: ${windspeed}km/h`;
-                } else {
-                    console.error(`Element with id ${elementId} not found`);
-                }
-            });*/
 
         })
         .catch(error => {
