@@ -40,7 +40,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 
             <div class="uk-margin"> <!-- Search Button -->
                 <form id="SearchbarTop" class="uk-search uk-search-default rounded">
-                    <input id="Searchbar" class="uk-search-input" minlength="3" type="search" placeholder="Search" aria-label="Search" style="background-color: #C3E0E5;"> <!-- bug: can submit with 0 letters -->
+                    <input id="Searchbar" class="uk-search-input" minlength="3" type="search" placeholder="Search" aria-label="Search" style="background-color: #C3E0E5;">
                     <span class="uk-search-icon-flip" uk-search-icon></span>
                 </form>
             </div>
@@ -155,7 +155,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 
                                     for (let i = 1; i <= 24; i++) {
                                         const div = document.createElement('div');
-                                        div.id = `temperatureDay${i}`;
+                                        div.id = `tempDay${i}`;
                                         container.appendChild(div);
                                     }
                                 });
@@ -194,7 +194,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 
                                     for (let i = 1; i <= 24; i++) {
                                         const div = document.createElement('div');
-                                        div.id = `rainfallProabilityDay${i}`;
+                                        div.id = `precipprobDay${i}`;
                                         container.appendChild(div);
                                     }
                                 });

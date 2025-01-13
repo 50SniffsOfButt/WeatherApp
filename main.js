@@ -1,9 +1,12 @@
-function getElement(id) { return document.getElementById(id); }
-
 document.querySelector('#SearchbarTop').addEventListener('submit', function (event) {
-    console.log(window.document.querySelector('#Searchbar').value);
     event.preventDefault();
-    const searchQuery = document.querySelector('#Searchbar').value;
+    let searchQuery = document.querySelector('#Searchbar').value.trim();
+    
+    if (!searchQuery) {
+        searchQuery = 'Nakakpiripirit';
+    }
+
+    console.log(searchQuery); // Debugging: Log the search query
     fetchWeatherData(searchQuery);
 });
 
@@ -30,7 +33,10 @@ function processWeatherData(weatherData) {
     getElement('Error').innerHTML = ''; // Clear the error message
 
     updateCurrentWeather(currentConditions, firstDayData, address, clothing);
-    updateHourlyWeather(firstDayData.hours);
+    updateHourlyWeatherData(firstDayData, 'temp', '°C');
+    updateHourlyWeatherData(firstDayData, 'feelslike', '°C');
+    updateHourlyWeatherData(firstDayData, 'humidity', '%');
+    updateHourlyWeatherData(firstDayData, 'precipprob', '%');
     updateWeatherIcon(currentConditions.icon);
 }
 
@@ -47,6 +53,8 @@ function getClothingRecommendation(feelslike) {
         return 'ERROR';
     }
 }
+
+function getElement(id) { return document.getElementById(id); }
 
 function updateCurrentWeather(currentConditions, firstDayData, address, clothing) {
     const dateParts = firstDayData.datetime.split('-'); // Makes Year-Month-Day into Day-Month-Year
@@ -74,27 +82,34 @@ function updateCurrentWeather(currentConditions, firstDayData, address, clothing
     getElement('uvindex2').innerHTML = 'UV Index: ' + firstDayData.uvindex;
 }
 
-function updateHourlyWeather(hours) {
+
+
+function updateHourlyWeatherData(firstDayData, dataType, unit) {
+    const hours = firstDayData.hours;
+    const dataTypeDisplayNames = {
+        temp: 'Temperature',
+        feelslike: 'Feels Like',
+        humidity: 'Humidity',
+        precipprob: 'Precipitation Chance',
+        windspeed: 'Wind Speed',
+        uvindex: 'UV Index'
+    };
+    const displayName = dataTypeDisplayNames[dataType] || dataType;
+
     hours.slice(0, 24).forEach((hourData, index) => {
         const datetime = hourData.datetime;
-        const temperature = hourData.temp;
+        const dataValue = hourData[dataType];
 
-        const elementId = `temperatureDay${index + 1}`;
+        const elementId = `${dataType}Day${index + 1}`;
         const element = document.getElementById(elementId);
 
         if (element) {
-            element.innerHTML = `Time: ${datetime}, Temperature: ${temperature}°C`;
+            element.innerHTML = `Time: ${datetime}, ${(displayName)}: ${dataValue}${unit}`;
         } else {
             console.error(`Element with id ${elementId} not found`);
         }
     });
 }
-/*
-kind of data = temperature
-unit of messurement = °C,%,km/h etc
-jsondata = like firstDayData.temp
-*/
-
 
 
 function updateWeatherIcon(iconData) {
