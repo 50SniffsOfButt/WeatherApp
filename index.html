@@ -167,95 +167,47 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                     <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small" href="#">
                         <div class="uk-align-left uk-text-left">
                             <h5>UV Index</h5>
-                        </div>                        
+                        </div>
                         <div style="width: 300px; justify-self: center">
                             <canvas id="uvIndexGraph"></canvas>
                         </div>
-                        <p id="uvindexAverage" class="">UV Index Average: </p>
+                        <p id="uvindexAverage" class="">UV Index Max: </p>
                     </div>
                 </div>
 
             </div>
-            <div uk-grid> <!-- Whole Day InfoBox -->
+            <div uk-grid> <!-- Big InfoBoxes -->
                 <div class="uk-width-expand">
                     <div class="uk-card uk-card-default uk-card-small uk-card-body uk-border-rounded uk-switcher switcher-graphs">
                         <div id="temperatureContainer">
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const container = document.getElementById('temperatureContainer');
-
-                                    for (let i = 1; i <= 24; i++) {
-                                        const div = document.createElement('div');
-                                        div.id = `tempDay${i}`;
-                                        container.appendChild(div);
-                                    }
-                                });
-                            </script>
+                            <div style="width: 1200px; justify-self: center">
+                                <canvas id="bigTemperatureGraph"></canvas>
+                            </div>
                         </div>
                         <div id="feelslikeContainer">
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const container = document.getElementById('feelslikeContainer');
-
-                                    for (let i = 1; i <= 24; i++) {
-                                        const div = document.createElement('div');
-                                        div.id = `feelslikeDay${i}`;
-                                        container.appendChild(div);
-                                    }
-                                });
-                            </script>
+                            <div style="width: 1200px; justify-self: center">
+                                <canvas id="bigFeelsikeGraph"></canvas>
+                            </div>
                         </div>
                         <div id="humidityContainer">
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const container = document.getElementById('humidityContainer');
-
-                                    for (let i = 1; i <= 24; i++) {
-                                        const div = document.createElement('div');
-                                        div.id = `humidityDay${i}`;
-                                        container.appendChild(div);
-                                    }
-                                });
-                            </script>
+                            <div style="width: 1200px; justify-self: center">
+                                <canvas id="bigHumidityGraph"></canvas>
+                            </div>
                         </div>
                         <div id="rainfallProbabilityContainer">
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const container = document.getElementById('rainfallProbabilityContainer');
-
-                                    for (let i = 1; i <= 24; i++) {
-                                        const div = document.createElement('div');
-                                        div.id = `precipprobDay${i}`;
-                                        container.appendChild(div);
-                                    }
-                                });
-                            </script>
+                            <div style="width: 1200px; justify-self: center">
+                                <canvas id="bigPrecipprobGraph"></canvas>
+                            </div>
                         </div>
                         <div id="windspeedContainer">
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const container = document.getElementById('windspeedContainer');
-
-                                    for (let i = 1; i <= 24; i++) {
-                                        const div = document.createElement('div');
-                                        div.id = `windspeedDay${i}`;
-                                        container.appendChild(div);
-                                    }
-                                });
-                            </script>
+                            <div style="width: 1200px; justify-self: center">
+                                <canvas id="bigWindSpeedGraph"></canvas>
+                            </div>
                         </div>
                         <div id="UVIndexContainer">
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const container = document.getElementById('UVIndexContainer');
-
-                                    for (let i = 1; i <= 24; i++) {
-                                        const div = document.createElement('div');
-                                        div.id = `uvindexDay${i}`;
-                                        container.appendChild(div);
-                                    }
-                                });
-                            </script>
+                            <div style="width: 1200px; justify-self: center">
+                                <canvas id="bigUVIndexGraph"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>

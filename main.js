@@ -14,8 +14,69 @@ const feelsikeGraph = createGraph('feelsikeGraph');
 const humidityGraph = createGraph('humidityGraph');
 const precipprobGraph = createGraph('precipprobGraph');
 const windSpeedGraph = createGraph('windSpeedGraph');
-const uvIndexGraph = createGraph('uvIndexGraph');
+const uvIndexGraph = createGraph('uvIndexGraph',);
+const bigTemperatureGraph = createGraph('bigTemperatureGraph',);
+const bigFeelsikeGraph = createGraph('bigFeelsikeGraph',);
+const bigHumidityGraph = createGraph('bigHumidityGraph',);
+const bigPrecipprobGraph = createGraph('bigPrecipprobGraph',);
+const bigWindSpeedGraph = createGraph('bigWindSpeedGraph',);
+const bigUVIndexGraph = createGraph('bigUVIndexGraph',);
 
+function createGraph(divElement) {
+    const dataTypeDisplayNames = {
+        tempGraph: false,
+        feelsikeGraph: false,
+        humidityGraph: false,
+        precipprobGraph: true,
+        windSpeedGraph: false,
+        uvIndexGraph: true,
+        bigTemperatureGraph: false,
+        bigFeelsikeGraph: false,
+        bigHumidityGraph: false,
+        bigPrecipprobGraph: true,
+        bigWindSpeedGraph: false,
+        bigUVIndexGraph: true
+    };
+    const graphStyle = dataTypeDisplayNames[divElement];
+
+    return new Chart(divElement, {
+        type: 'line',
+        options: {
+            animation: {
+                onComplete: () => {
+                  delayed = true;
+                },
+                delay: (context) => {
+                  let delay = 0;
+                  if (context.type === 'data' && context.mode === 'default' && !delay) {
+                    delay = context.dataIndex * 50 + context.datasetIndex * 75;
+                  }
+                  return delay;
+                },
+              },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            elements: {
+                point: {
+                    radius: 1,
+                    hitRadius: 10,
+                    hoverRadius: 5
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: graphStyle,
+                    suggestedMax: 50,
+                    suggestedMin: 0,
+            }
+
+        }
+    }}
+    );
+}
 
 function fetchWeatherData(location) {
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&include=days%2Ccurrent%2Chours%2Calerts&key=JML37MDXVH3FAJWLAJ5M98YCP&contentType=json`;
@@ -43,18 +104,18 @@ function processWeatherData(weatherData) {
     getElement('Error').innerHTML = ''; // Clear the error message
 
     updateCurrentWeather(currentConditions, firstDayData, address, clothing);
-    updateHourlyWeatherData(firstDayData, 'temp', '°C');
-    updateHourlyWeatherData(firstDayData, 'feelslike', '°C');
-    updateHourlyWeatherData(firstDayData, 'humidity', '%');
-    updateHourlyWeatherData(firstDayData, 'precipprob', '%');
-    updateHourlyWeatherData(firstDayData, 'windspeed', ' km/h');
-    updateHourlyWeatherData(firstDayData, 'uvindex', '');
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, tempGraph, 'temp');
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, feelsikeGraph, 'feelslike');
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, humidityGraph, 'humidity');
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, precipprobGraph, 'precipprob');
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, windSpeedGraph, 'windspeed');
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, uvIndexGraph, 'uvindex');
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, tempGraph, 'temp', 8);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, feelsikeGraph, 'feelslike', 8);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, humidityGraph, 'humidity', 8);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, precipprobGraph, 'precipprob', 8);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, windSpeedGraph, 'windspeed', 8);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, uvIndexGraph, 'uvindex', 8);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigTemperatureGraph, 'temp', 25);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigFeelsikeGraph, 'feelslike', 25);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigHumidityGraph, 'humidity', 25);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigPrecipprobGraph, 'precipprob', 25);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigWindSpeedGraph, 'windspeed', 25);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigUVIndexGraph, 'uvindex', 25);
     updateWeatherIcon(currentConditions.icon);
 }
 
@@ -94,40 +155,17 @@ function updateCurrentWeather(currentConditions, firstDayData, address, clothing
     getElement('humidityAverage').innerHTML = 'Humidity Average: ' + firstDayData.humidity + '%';
     getElement('precipprobAverage').innerHTML = 'Rainfall Probability Average: ' + firstDayData.precipprob + '%';
     getElement('windspeedAverage').innerHTML = 'Wind Speed Average: ' + firstDayData.windspeed + ' km/h';
-    getElement('uvindexAverage').innerHTML = 'UV Index Average: ' + firstDayData.uvindex;
+    getElement('uvindexAverage').innerHTML = 'UV Index Max: ' + firstDayData.uvindex;
 }
 
-function updateHourlyWeatherData(firstDayData, dataType, unit) {
-    const hours = firstDayData.hours;
-    const dataTypeDisplayNames = {
-        temp: 'Temperature',
-        feelslike: 'Feels Like',
-        humidity: 'Humidity',
-        precipprob: 'Precipitation Chance',
-        windspeed: 'Wind Speed',
-        uvindex: 'UV Index'
-    };
-    const displayName = dataTypeDisplayNames[dataType] || dataType;
-
-    hours.slice(0, 24).forEach((hourData, index) => {
-        const dateTime = hourData.datetime;
-        const dataValue = hourData[dataType];
-
-        const elementId = `${dataType}Day${index + 1}`;
-        const element = document.getElementById(elementId);
-
-        element.innerHTML = `Time: ${dateTime}, ${(displayName)}: ${dataValue}${unit}`;
-    });
-}
-
-function updateCurrentGraph(timeData, firstDayData, secondDayData, chart, unit) {
+function updateCurrentGraph(timeData, firstDayData, secondDayData, chart, unit, size) {
     const currentTime = parseInt(timeData.split(':')[0], 10);
     const hours = firstDayData.hours;
     const secondDayHours = secondDayData.hours;
 
     data = []; 
 
-    for(let i = 0; i <= 8; i++) {
+    for(let i = 0; i <= size; i++) {
 
 
         if(currentTime + i < 24) {
@@ -174,22 +212,3 @@ function handleError(error) {
     }
 }
 
-function createGraph(divElement) {
-    return new Chart(divElement, {
-        type: 'line',
-        options: {
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            elements: {
-                point: {
-                    radius: 1,
-                    hitRadius: 10,
-                    hoverRadius: 3
-                }
-            }
-        }
-    }
-);}
