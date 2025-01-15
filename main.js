@@ -43,16 +43,8 @@ function createGraph(divElement) {
         type: 'line',
         options: {
             animation: {
-                onComplete: () => {
-                  delayed = true;
-                },
-                delay: (context) => {
-                  let delay = 0;
-                  if (context.type === 'data' && context.mode === 'default' && !delay) {
-                    delay = context.dataIndex * 50 + context.datasetIndex * 75;
-                  }
-                  return delay;
-                },
+                easing : false,
+                duration : 0,
               },
             plugins: {
                 legend: {
@@ -69,8 +61,8 @@ function createGraph(divElement) {
             scales: {
                 y: {
                     beginAtZero: graphStyle,
-                    suggestedMax: 50,
-                    suggestedMin: 0,
+                    //suggestedMax: 50,
+                    //suggestedMin: 0,
             }
 
         }
@@ -104,18 +96,18 @@ function processWeatherData(weatherData) {
     getElement('Error').innerHTML = ''; // Clear the error message
 
     updateCurrentWeather(currentConditions, firstDayData, address, clothing);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, tempGraph, 'temp', 8);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, feelsikeGraph, 'feelslike', 8);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, humidityGraph, 'humidity', 8);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, precipprobGraph, 'precipprob', 8);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, windSpeedGraph, 'windspeed', 8);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, uvIndexGraph, 'uvindex', 8);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigTemperatureGraph, 'temp', 25);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigFeelsikeGraph, 'feelslike', 25);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigHumidityGraph, 'humidity', 25);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigPrecipprobGraph, 'precipprob', 25);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigWindSpeedGraph, 'windspeed', 25);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigUVIndexGraph, 'uvindex', 25);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, tempGraph, 'temp', 7);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, feelsikeGraph, 'feelslike', 7);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, humidityGraph, 'humidity', 7);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, precipprobGraph, 'precipprob', 7);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, windSpeedGraph, 'windspeed', 7);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, uvIndexGraph, 'uvindex', 7);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigTemperatureGraph, 'temp', 23);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigFeelsikeGraph, 'feelslike', 23);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigHumidityGraph, 'humidity', 23);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigPrecipprobGraph, 'precipprob', 23);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigWindSpeedGraph, 'windspeed', 23);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigUVIndexGraph, 'uvindex', 23);
     updateWeatherIcon(currentConditions.icon);
 }
 
@@ -164,7 +156,6 @@ function updateCurrentGraph(timeData, firstDayData, secondDayData, chart, unit, 
     const secondDayHours = secondDayData.hours;
 
     data = []; 
-
     for(let i = 0; i <= size; i++) {
 
 
