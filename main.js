@@ -1,7 +1,6 @@
 document.querySelector('#SearchbarTop').addEventListener('submit', function (event) {
     event.preventDefault();
     let searchQuery = document.querySelector('#Searchbar').value.trim();
-    
     if (!searchQuery) {
         searchQuery = 'Nakakpiripirit';
     }
@@ -23,6 +22,8 @@ function fetchWeatherData(location) {
     });
 }
 
+function getElement(id) { return document.getElementById(id); }
+
 function processWeatherData(weatherData) {
     const firstDayData = weatherData.days[0];
     const currentConditions = weatherData.currentConditions;
@@ -37,6 +38,10 @@ function processWeatherData(weatherData) {
     updateHourlyWeatherData(firstDayData, 'feelslike', '°C');
     updateHourlyWeatherData(firstDayData, 'humidity', '%');
     updateHourlyWeatherData(firstDayData, 'precipprob', '%');
+    updateHourlyWeatherData(firstDayData, 'windspeed', ' km/h');
+    updateHourlyWeatherData(firstDayData, 'uvindex', '');
+    updateCurrentGraph(currentConditions.datetime, firstDayData, 'feelsikeGraph', 'feelslike');
+    updateCurrentGraph(currentConditions.datetime, firstDayData, 'humidityGraph', 'humidity')
     updateWeatherIcon(currentConditions.icon);
 }
 
@@ -53,8 +58,6 @@ function getClothingRecommendation(feelslike) {
         return 'ERROR';
     }
 }
-
-function getElement(id) { return document.getElementById(id); }
 
 function updateCurrentWeather(currentConditions, firstDayData, address, clothing) {
     const dateParts = firstDayData.datetime.split('-'); // Makes Year-Month-Day into Day-Month-Year
@@ -82,8 +85,6 @@ function updateCurrentWeather(currentConditions, firstDayData, address, clothing
     getElement('uvindex2').innerHTML = 'UV Index: ' + firstDayData.uvindex;
 }
 
-
-
 function updateHourlyWeatherData(firstDayData, dataType, unit) {
     const hours = firstDayData.hours;
     const dataTypeDisplayNames = {
@@ -97,20 +98,48 @@ function updateHourlyWeatherData(firstDayData, dataType, unit) {
     const displayName = dataTypeDisplayNames[dataType] || dataType;
 
     hours.slice(0, 24).forEach((hourData, index) => {
-        const datetime = hourData.datetime;
+        const dateTime = hourData.datetime;
         const dataValue = hourData[dataType];
 
         const elementId = `${dataType}Day${index + 1}`;
         const element = document.getElementById(elementId);
 
-        if (element) {
-            element.innerHTML = `Time: ${datetime}, ${(displayName)}: ${dataValue}${unit}`;
-        } else {
-            console.error(`Element with id ${elementId} not found`);
-        }
+        element.innerHTML = `Time: ${dateTime}, ${(displayName)}: ${dataValue}${unit}`;
     });
 }
 
+function updateCurrentGraph(timeData, firstDayData, divElement, unit) {
+    const Graph = getElement(divElement);
+    const currentTime = parseInt(timeData.split(':')[0], 10);
+    const hours = firstDayData.hours;
+    const currentValue = hours[currentTime][unit];
+
+    const data = [
+        { time: currentTime, value: hours[currentTime][unit] },
+        { time: currentTime + 1, value: hours[currentTime + 1][unit] },
+        { time: currentTime + 2, value: hours[currentTime + 2][unit] },
+        { time: currentTime + 3, value: hours[currentTime + 3][unit] },
+        { time: currentTime + 4, value: hours[currentTime + 4][unit] },
+    ];
+    new Chart(divElement, {
+        type: 'line',
+        data: {
+            labels: data.map(row => row.time),
+            datasets: [{
+                label: unit,
+                data: data.map(row => row.value),
+                borderWidth: 3,
+            }]
+        },
+        options: {
+            plugins: {
+                title: {
+                    display: true
+                }
+            }
+        }
+    });
+}
 
 function updateWeatherIcon(iconData) {
     const weatherIcon = document.getElementById('weatherIcon');

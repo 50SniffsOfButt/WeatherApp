@@ -9,13 +9,15 @@
     <link rel="JsonData" href="WeatherAPI.json">
     <script src="js/uikit.js"></script>
     <script src="js/uikit-icons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <style>
         .debug-border {
             border: 1px solid red;
         }
     </style>
 </head>
-
+Searchbar first one to Tab to,
+Added Function updateCurrentGraph,
 <!--
 https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 -->
@@ -40,7 +42,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 
             <div class="uk-margin"> <!-- Search Button -->
                 <form id="SearchbarTop" class="uk-search uk-search-default rounded">
-                    <input id="Searchbar" class="uk-search-input" minlength="3" type="search" placeholder="Search" aria-label="Search" style="background-color: #C3E0E5;">
+                    <input id="Searchbar" class="uk-search-input" tabindex="1" minlength="3" type="search" placeholder="Search" aria-label="Search" style="background-color: #C3E0E5;">
                     <span class="uk-search-icon-flip" uk-search-icon></span>
                 </form>
             </div>
@@ -97,15 +99,19 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
             <div uk-grid class="uk-child-width-1-3" uk-switcher="connect: .switcher-graphs"> <!-- Bottom InfoBoxes -->
 
                 <div class=""> <!-- Temperature InfoBox -->
-                    <div class=" uk-card uk-card-default uk-card-body uk-card-hover uk-button uk-border-rounded" href="#">
+                    <div class="uk-card uk-card-default uk-card-body uk-card-hover uk-button uk-border-rounded" href="#">
                         <p id="temp">Temperature</p>
                     </div>
                 </div>
                 
-                <div class="uk-child-width-expand"><!-- Feels Like InfoBox -->
-                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small" href="#">
+                <div class="uk-child-width-expand"><!-- FeelsLike InfoBox -->
+                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small"
+                        href="#">
                         <div class="uk-align-left uk-text-left">
                             <h5>Feels Like</h5>
+                        </div>
+                        <div style="width: 300px; justify-self: center">
+                            <canvas id="feelsikeGraph"></canvas>
                         </div>
                         <p class="uk-text-left" style="font-size: x-small;">prominent factor: wind</p>
                         <div class="uk-flex uk-flex-row uk-flex-around">
@@ -119,13 +125,19 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <p id="feelslike2" class="">Feels Like: </p>
                     </div>
                 </div>
-                
-                <div class=""> <!-- Humidity InfoBox -->
-                    <div class="uk-card uk-card-default uk-card-body uk-card-hover uk-button uk-border-rounded" href="#">
-                        <p id="humidity2">Humidity</p>
+
+                <div class="uk-child-width-expand"><!-- Humidity InfoBox -->
+                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small" href="#">
+                        <div class="uk-align-left uk-text-left">
+                            <h5>Humidity</h5>
+                        </div>                        
+                        <div style="width: 300px; justify-self: center">
+                            <canvas id="humidityGraph"></canvas>
+                        </div>
+                        <p id="humidity2" class="">Humiditiy: </p>
                     </div>
                 </div>
-            
+
                 <div class=""> <!-- Rainfall InfoBox -->
                     <div class="uk-card uk-card-default uk-card-body uk-card-hover uk-button uk-border-rounded" href="#">
                         <p id="precipprob2">Rainfall</p>
@@ -195,6 +207,32 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                                     for (let i = 1; i <= 24; i++) {
                                         const div = document.createElement('div');
                                         div.id = `precipprobDay${i}`;
+                                        container.appendChild(div);
+                                    }
+                                });
+                            </script>
+                        </div>
+                        <div id="windspeedContainer">
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const container = document.getElementById('windspeedContainer');
+
+                                    for (let i = 1; i <= 24; i++) {
+                                        const div = document.createElement('div');
+                                        div.id = `windspeedDay${i}`;
+                                        container.appendChild(div);
+                                    }
+                                });
+                            </script>
+                        </div>
+                        <div id="UVIndexContainer">
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    const container = document.getElementById('UVIndexContainer');
+
+                                    for (let i = 1; i <= 24; i++) {
+                                        const div = document.createElement('div');
+                                        div.id = `uvindexDay${i}`;
                                         container.appendChild(div);
                                     }
                                 });
