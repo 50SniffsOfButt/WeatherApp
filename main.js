@@ -9,6 +9,14 @@ document.querySelector('#SearchbarTop').addEventListener('submit', function (eve
     fetchWeatherData(searchQuery);
 });
 
+const tempGraph = createGraph('tempGraph');
+const feelsikeGraph = createGraph('feelsikeGraph');
+const humidityGraph = createGraph('humidityGraph');
+const precipprobGraph = createGraph('precipprobGraph');
+const windSpeedGraph = createGraph('windSpeedGraph');
+const uvIndexGraph = createGraph('uvIndexGraph');
+
+
 function fetchWeatherData(location) {
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&include=days%2Ccurrent%2Chours%2Calerts&key=JML37MDXVH3FAJWLAJ5M98YCP&contentType=json`;
 
@@ -26,6 +34,7 @@ function getElement(id) { return document.getElementById(id); }
 
 function processWeatherData(weatherData) {
     const firstDayData = weatherData.days[0];
+    const secondDayData = weatherData.days[1];
     const currentConditions = weatherData.currentConditions;
     const address = weatherData.resolvedAddress;
     const clothing = getClothingRecommendation(currentConditions.feelslike);
@@ -40,8 +49,12 @@ function processWeatherData(weatherData) {
     updateHourlyWeatherData(firstDayData, 'precipprob', '%');
     updateHourlyWeatherData(firstDayData, 'windspeed', ' km/h');
     updateHourlyWeatherData(firstDayData, 'uvindex', '');
-    updateCurrentGraph(currentConditions.datetime, firstDayData, 'feelsikeGraph', 'feelslike');
-    updateCurrentGraph(currentConditions.datetime, firstDayData, 'humidityGraph', 'humidity')
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, tempGraph, 'temp');
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, feelsikeGraph, 'feelslike');
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, humidityGraph, 'humidity');
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, precipprobGraph, 'precipprob');
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, windSpeedGraph, 'windspeed');
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, uvIndexGraph, 'uvindex');
     updateWeatherIcon(currentConditions.icon);
 }
 
@@ -76,13 +89,12 @@ function updateCurrentWeather(currentConditions, firstDayData, address, clothing
     getElement('currentPrecipprob').innerHTML = 'Precipitation Chance: ' + currentConditions.precipprob + '%';
     getElement('currentWindspeed').innerHTML = 'Wind Speed: ' + currentConditions.windspeed + ' km/h';
     getElement('currentUVIndex').innerHTML = 'UV Index: ' + currentConditions.uvindex;
-    getElement('temp').innerHTML = 'Temperature: ' + firstDayData.temp + '°C';
-    getElement('temp2').innerHTML = 'Temperature: ' + firstDayData.temp + '°C';
-    getElement('feelslike2').innerHTML = 'Feels Like: ' + firstDayData.feelslike + '°C';
-    getElement('humidity2').innerHTML = 'Humidity: ' + firstDayData.humidity + '%';
-    getElement('precipprob2').innerHTML = 'Rainfall Probability: ' + firstDayData.precipprob + '%';
-    getElement('windspeed2').innerHTML = 'Wind Speed: ' + firstDayData.windspeed + ' km/h';
-    getElement('uvindex2').innerHTML = 'UV Index: ' + firstDayData.uvindex;
+    getElement('tempAverage').innerHTML = 'Temperature Average: ' + firstDayData.temp + '°C';
+    getElement('feelslikeAverage').innerHTML = 'Feels Like Average: ' + firstDayData.feelslike + '°C';
+    getElement('humidityAverage').innerHTML = 'Humidity Average: ' + firstDayData.humidity + '%';
+    getElement('precipprobAverage').innerHTML = 'Rainfall Probability Average: ' + firstDayData.precipprob + '%';
+    getElement('windspeedAverage').innerHTML = 'Wind Speed Average: ' + firstDayData.windspeed + ' km/h';
+    getElement('uvindexAverage').innerHTML = 'UV Index Average: ' + firstDayData.uvindex;
 }
 
 function updateHourlyWeatherData(firstDayData, dataType, unit) {
@@ -108,37 +120,34 @@ function updateHourlyWeatherData(firstDayData, dataType, unit) {
     });
 }
 
-function updateCurrentGraph(timeData, firstDayData, divElement, unit) {
-    const Graph = getElement(divElement);
+function updateCurrentGraph(timeData, firstDayData, secondDayData, chart, unit) {
     const currentTime = parseInt(timeData.split(':')[0], 10);
     const hours = firstDayData.hours;
-    const currentValue = hours[currentTime][unit];
+    const secondDayHours = secondDayData.hours;
 
-    const data = [
-        { time: currentTime, value: hours[currentTime][unit] },
-        { time: currentTime + 1, value: hours[currentTime + 1][unit] },
-        { time: currentTime + 2, value: hours[currentTime + 2][unit] },
-        { time: currentTime + 3, value: hours[currentTime + 3][unit] },
-        { time: currentTime + 4, value: hours[currentTime + 4][unit] },
-    ];
-    new Chart(divElement, {
-        type: 'line',
-        data: {
-            labels: data.map(row => row.time),
-            datasets: [{
-                label: unit,
-                data: data.map(row => row.value),
-                borderWidth: 3,
-            }]
-        },
-        options: {
-            plugins: {
-                title: {
-                    display: true
-                }
-            }
+    data = []; 
+
+    for(let i = 0; i <= 8; i++) {
+
+
+        if(currentTime + i < 24) {
+            data.push({time: currentTime + i, value: hours[currentTime + i][unit]})
+        } else {
+            data.push({time: currentTime + i -24, value: secondDayHours[currentTime + i -24][unit]})
         }
-    });
+    }
+
+
+    chart.data = {
+        labels: data.map(row => row.time),
+        datasets: [{
+            label: unit,
+            data: data.map(row => row.value),
+            borderWidth: 3,
+            tension: 0.35        
+        }]
+    }
+    chart.update()
 }
 
 function updateWeatherIcon(iconData) {
@@ -164,3 +173,23 @@ function handleError(error) {
         getElement('Error').innerHTML = 'Error: ' + error.message;
     }
 }
+
+function createGraph(divElement) {
+    return new Chart(divElement, {
+        type: 'line',
+        options: {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            elements: {
+                point: {
+                    radius: 1,
+                    hitRadius: 10,
+                    hoverRadius: 3
+                }
+            }
+        }
+    }
+);}
