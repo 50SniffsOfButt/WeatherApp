@@ -14,13 +14,15 @@ const feelsikeGraph = createGraph('feelsikeGraph');
 const humidityGraph = createGraph('humidityGraph');
 const precipprobGraph = createGraph('precipprobGraph');
 const windSpeedGraph = createGraph('windSpeedGraph');
-const uvIndexGraph = createGraph('uvIndexGraph',);
-const bigTemperatureGraph = createGraph('bigTemperatureGraph',);
-const bigFeelsikeGraph = createGraph('bigFeelsikeGraph',);
-const bigHumidityGraph = createGraph('bigHumidityGraph',);
-const bigPrecipprobGraph = createGraph('bigPrecipprobGraph',);
-const bigWindSpeedGraph = createGraph('bigWindSpeedGraph',);
-const bigUVIndexGraph = createGraph('bigUVIndexGraph',);
+const uvIndexGraph = createGraph('uvIndexGraph');
+const bigTemperatureGraph = createGraph('bigTemperatureGraph');
+const bigFeelsikeGraph = createGraph('bigFeelsikeGraph');
+const bigHumidityGraph = createGraph('bigHumidityGraph');
+const bigPrecipprobGraph = createGraph('bigPrecipprobGraph');
+const bigWindSpeedGraph = createGraph('bigWindSpeedGraph');
+const bigUVIndexGraph = createGraph('bigUVIndexGraph');
+
+
 
 function createGraph(divElement) {
     const dataTypeDisplayNames = {
@@ -76,10 +78,10 @@ function fetchWeatherData(location) {
     fetch(url)
         .then(response => response.json())
         .then(weatherData => {
-            processWeatherData(weatherData);
+            processWeatherData(weatherData)
         })
     .catch(error => {
-        handleError(error);
+        handleError(error)
     });
 }
 
@@ -88,6 +90,7 @@ function getElement(id) { return document.getElementById(id); }
 function processWeatherData(weatherData) {
     const firstDayData = weatherData.days[0];
     const secondDayData = weatherData.days[1];
+    const thirdDayData = weatherData.days[2];
     const currentConditions = weatherData.currentConditions;
     const address = weatherData.resolvedAddress;
     const clothing = getClothingRecommendation(currentConditions.feelslike);
@@ -96,18 +99,18 @@ function processWeatherData(weatherData) {
     getElement('Error').innerHTML = ''; // Clear the error message
 
     updateCurrentWeather(currentConditions, firstDayData, address, clothing);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, tempGraph, 'temp', 7);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, feelsikeGraph, 'feelslike', 7);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, humidityGraph, 'humidity', 7);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, precipprobGraph, 'precipprob', 7);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, windSpeedGraph, 'windspeed', 7);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, uvIndexGraph, 'uvindex', 7);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigTemperatureGraph, 'temp', 23);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigFeelsikeGraph, 'feelslike', 23);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigHumidityGraph, 'humidity', 23);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigPrecipprobGraph, 'precipprob', 23);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigWindSpeedGraph, 'windspeed', 23);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, bigUVIndexGraph, 'uvindex', 23);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, tempGraph, 'temp', 'day');
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, feelsikeGraph, 'feelslike', 'day');
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, humidityGraph, 'humidity', 'day');
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, precipprobGraph, 'precipprob', 'day');
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, windSpeedGraph, 'windspeed', 'day');
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, uvIndexGraph, 'uvindex', 'day');
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, bigTemperatureGraph, 'temp', 47);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, bigFeelsikeGraph, 'feelslike', 47);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, bigHumidityGraph, 'humidity', 47);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, bigPrecipprobGraph, 'precipprob', 47);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, bigWindSpeedGraph, 'windspeed', 47);
+    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, bigUVIndexGraph, 'uvindex', 47);
     updateWeatherIcon(currentConditions.icon);
 }
 
@@ -135,6 +138,7 @@ function updateCurrentWeather(currentConditions, firstDayData, address, clothing
     getElement('currentTimestamp').innerHTML = 'Data from: ' + currentTimestamp;
     getElement('clothingRec').innerHTML = 'Clothing Recommendation: ' + clothing;
     getElement('datetime').innerHTML = 'Datum: ' + formattedDate;
+    getElement('currentTime').innerHTML = 'Time: ' + currentConditions.datetime;
     getElement('currentFeelslike').innerHTML = 'Feels Like: ' + currentConditions.feelslike + '°C';
     getElement('description').innerHTML = firstDayData.description;
     getElement('currentTemp').innerHTML = 'Temperature: ' + currentConditions.temp + '°C';
@@ -150,27 +154,44 @@ function updateCurrentWeather(currentConditions, firstDayData, address, clothing
     getElement('uvindexAverage').innerHTML = 'UV Index Max: ' + firstDayData.uvindex;
 }
 
-function updateCurrentGraph(timeData, firstDayData, secondDayData, chart, unit, size) {
+function updateCurrentGraph(timeData, firstDayData, secondDayData, thirdDayData, chart, unit, size) {
     const currentTime = parseInt(timeData.split(':')[0], 10);
-    const hours = firstDayData.hours;
+    const firstDayHours = firstDayData.hours;
     const secondDayHours = secondDayData.hours;
+    const thirdDayHours = thirdDayData.hours;
+    const dataTypeDisplayNames = {
+        temp: 'Temperature',
+        feelslike: 'Feels Like',
+        humidity: 'Humidity',
+        precipprob: 'Precipitation Probability',
+        windspeed: 'Wind Speed',
+        uvindex: 'UV Index',
+    };
+    const graphTypeDisplay = dataTypeDisplayNames[unit] || 'Error';
+
+    const hoursUntilMidnight = 24 - currentTime;
+
+    const parsedSize = (size === 'day') ? (hoursUntilMidnight > 16 ? 16 : (hoursUntilMidnight < 8 ? 8 : hoursUntilMidnight)) : size;
+    // checks if the hours until midnight is greater than 16, if so, it sets the size to 16, if it is less than 8, it sets it to 8, otherwise it sets it to the hours until midnight
+    // but only if the value of size is 'day', otherwise it sets it to the value of size
 
     data = []; 
-    for(let i = 0; i <= size; i++) {
+    for(let i = 0; i <= parsedSize; i++) {
 
 
         if(currentTime + i < 24) {
-            data.push({time: currentTime + i, value: hours[currentTime + i][unit]})
-        } else {
+            data.push({time: currentTime + i, value: firstDayHours[currentTime + i][unit]})
+        } else if(currentTime + i < 48) { 
             data.push({time: currentTime + i -24, value: secondDayHours[currentTime + i -24][unit]})
-        }
+        } else { data.push({time: currentTime + i -48, value: thirdDayHours[currentTime + i -48][unit]})}
     }
 
+    const label = data.map(row => row.time + ':00');
 
     chart.data = {
-        labels: data.map(row => row.time),
+        labels: label,
         datasets: [{
-            label: unit,
+            label: graphTypeDisplay,
             data: data.map(row => row.value),
             borderWidth: 3,
             tension: 0.35        
@@ -202,4 +223,3 @@ function handleError(error) {
         getElement('Error').innerHTML = 'Error: ' + error.message;
     }
 }
-

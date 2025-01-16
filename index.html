@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,31 +24,32 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 <body>
     <div class="uk-background-primary" style="background-color: #2d497d;"> <!-- Background -->
         <!-- Sidebar -->
-        <div class="" style="height:100%;width: 160px; background-color:#0C2D48; position:fixed!important; z-index:1; overflow:auto">
+        <div class=""
+            style="height:100%;width: 160px; background-color:#0C2D48; position:fixed!important; z-index:1; overflow:auto">
             <h2 class="uk-text-center" style="margin: 25px; color: white">Sidebar</h2>
             <div>
                 <ul class="uk-list uk-list-large uk-list-divider">
-                    <a class="uk-button" style="width: 160px; color: white;" href="index.html">Refresh</a>
-                    <li class="uk-button" style="width: 160px; color: white;">List item 2</li>
-                    <li class="uk-button" style="width: 160px; color: white;">List item 3</li>
+                    <a class="uk-button" style="width: 160px; color: white" href="index.html">Weather</a>
+                    <a class="uk-button" style="width: 160px; color: white" href="roadChecker.html">Road Checker</a>
+                    <a class="uk-button" style="width: 160px; color: white">List item 3</a>
                 </ul>
             </div>
         </div>
         <div class="uk-container"> <!-- Main Box -->
-            <!-- Header -->
-            <h1 class="uk-heading-line uk-text-center" style="color: white;"><span>Weather</span></h1>
-            <h1 id="Error" style="color: white;" class="uk-text-center"></h1>
+            <h1 class="uk-heading-line uk-text-center" style="color: white"><span>Weather</span></h1> <!-- Header -->
+            <h1 id="Error" style="color: white" class="uk-text-center"></h1>
 
             <div class="uk-margin"> <!-- Search Button -->
                 <form id="SearchbarTop" class="uk-search uk-search-default rounded">
-                    <input id="Searchbar" class="uk-search-input" tabindex="1" minlength="3" type="search" placeholder="Search" aria-label="Search" style="background-color: #C3E0E5;">
+                    <input id="Searchbar" class="uk-search-input" tabindex="1" minlength="3" type="search"
+                        placeholder="Search" aria-label="Search" style="background-color: #C3E0E5;">
                     <span class="uk-search-icon-flip" uk-search-icon></span>
                 </form>
             </div>
-
             <div class="uk-child-width-expand" uk-grid> <!-- Top InfoBoxes -->
                 <div> <!-- Location InfoBox Main -->
-                    <div class="uk-card uk-card-default uk-card-body uk-flex-column uk-border-rounded" style="padding: 8px;">
+                    <div class="uk-card uk-card-default uk-card-body uk-flex-column uk-border-rounded"
+                        style="padding: 8px;">
                         <div class="uk-flex uk-flex-row uk-flex-between">
                             <div class="uk-text-left">Current Weather</div>
                             <div id="datetime" class="uk-text-right">Date</div>
@@ -56,17 +57,22 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div class="">
                             <div class="uk-flex uk-flex-row">
                                 <div>
-                                    <img id="weatherIcon" class="uk-align-left" src="icons/clear_day.svg" alt="Weather Icon" style="width: 80px; height: auto;">
+                                    <img id="weatherIcon" class="uk-align-left" src="icons/clear_day.svg"
+                                        alt="Weather Icon" style="width: 80px; height: auto;">
                                 </div>
                                 <div class="">
                                     <div id="currentTemp" class=""> Temperature</div>
                                     <div id="currentConditions" class="">Short Description</div>
                                     <div id="currentFeelslike" class="">Feels Like</div>
                                 </div>
+                                <div class="uk-width-expand">
+                                    <div id="currentTime" class="uk-text-right">Time</div>
+                                </div>
                             </div>
                             <div>
                                 <div> <!-- General Description InfoBox -->
-                                    <div id="description" class="uk-card uk-card-small uk-card-body"> Long Description</div>
+                                    <div id="description" class="uk-card uk-card-small uk-card-body"> Long Description
+                                    </div>
                                 </div>
                             </div>
                             <div class="uk-flex uk-flex-row uk-flex-between">
@@ -98,17 +104,18 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
             <div uk-grid class="uk-child-width-1-3" uk-switcher="connect: .switcher-graphs"> <!-- Bottom InfoBoxes -->
 
                 <div class="uk-child-width-expand"><!-- Temperature InfoBox -->
-                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small" href="#">
+                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small"
+                        href="#">
                         <div class="uk-align-left uk-text-left">
                             <h5>Temperature</h5>
-                        </div>                        
+                        </div>
                         <div style="width: 300px; justify-self: center">
                             <canvas id="tempGraph"></canvas>
                         </div>
                         <p id="tempAverage" class="">Temperature Average: </p>
                     </div>
                 </div>
-                
+
                 <div class="uk-child-width-expand"><!-- FeelsLike InfoBox -->
                     <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small"
                         href="#">
@@ -118,20 +125,29 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div style="width: 300px; justify-self: center">
                             <canvas id="feelsikeGraph"></canvas>
                         </div>
-                        <p class="uk-text-left" style="font-size: x-small;">prominent factor: wind</p>
-                        <div class="uk-flex uk-flex-row uk-flex-around">
-                            <div class="uk-width-1-2">
-                                <p id="feelslikeAverage">Feels like Average:</p>
-                            </div>
+                        <p id="feelslikeAverage" class="">Feels like Average: </p>
+                    </div>
+                </div>
+
+                <div class="uk-child-width-expand"><!-- Wind InfoBox -->
+                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small"
+                        href="#">
+                        <div class="uk-align-left uk-text-left">
+                            <h5>Wind Speed</h5>
                         </div>
+                        <div style="width: 300px; justify-self: center">
+                            <canvas id="windSpeedGraph"></canvas>
+                        </div>
+                        <p id="windspeedAverage" class="">Wind Speed Average: </p>
                     </div>
                 </div>
 
                 <div class="uk-child-width-expand"><!-- Humidity InfoBox -->
-                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small" href="#">
+                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small"
+                        href="#">
                         <div class="uk-align-left uk-text-left">
                             <h5>Humidity</h5>
-                        </div>                        
+                        </div>
                         <div style="width: 300px; justify-self: center">
                             <canvas id="humidityGraph"></canvas>
                         </div>
@@ -140,31 +156,21 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                 </div>
 
                 <div class="uk-child-width-expand"><!-- Rainfall InfoBox -->
-                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small" href="#">
+                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small"
+                        href="#">
                         <div class="uk-align-left uk-text-left">
                             <h5>Rainfall</h5>
-                        </div>                        
+                        </div>
                         <div style="width: 300px; justify-self: center">
                             <canvas id="precipprobGraph"></canvas>
                         </div>
                         <p id="precipprobAverage" class="">Rainfall Average: </p>
                     </div>
                 </div>
-            
-                <div class="uk-child-width-expand"><!-- Wind InfoBox -->
-                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small" href="#">
-                        <div class="uk-align-left uk-text-left">
-                            <h5>Wind Speed</h5>
-                        </div>                        
-                        <div style="width: 300px; justify-self: center">
-                            <canvas id="windSpeedGraph"></canvas>
-                        </div>
-                        <p id="windspeedAverage" class="">Wind Speed Average: </p>
-                    </div>
-                </div>
 
                 <div class="uk-child-width-expand"><!-- UV InfoBox -->
-                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small" href="#">
+                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small"
+                        href="#">
                         <div class="uk-align-left uk-text-left">
                             <h5>UV Index</h5>
                         </div>
@@ -181,31 +187,49 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                     <div class="uk-card uk-card-default uk-card-small uk-card-body uk-border-rounded uk-switcher switcher-graphs"
                         style="height: 650px;">
                         <div id="temperatureContainer">
+                            <div class="uk-align-center uk-text-center">
+                                <h5>Temperature</h5>
+                            </div>
                             <div style="width: 1200px; justify-self: center">
                                 <canvas id="bigTemperatureGraph"></canvas>
                             </div>
                         </div>
                         <div id="feelslikeContainer">
+                            <div class="uk-align-center uk-text-center">
+                                <h5>Feels Like</h5>
+                            </div>
                             <div style="width: 1200px; justify-self: center">
                                 <canvas id="bigFeelsikeGraph"></canvas>
                             </div>
                         </div>
+                        <div id="windspeedContainer">
+                            <div class="uk-align-center uk-text-center">
+                                <h5>Wind Speed</h5>
+                            </div>
+                            <div style="width: 1200px; justify-self: center">
+                                <canvas id="bigWindSpeedGraph"></canvas>
+                            </div>
+                        </div>
                         <div id="humidityContainer">
+                            <div class="uk-align-center uk-text-center">
+                                <h5>Humidity</h5>
+                            </div>
                             <div style="width: 1200px; justify-self: center">
                                 <canvas id="bigHumidityGraph"></canvas>
                             </div>
                         </div>
                         <div id="rainfallProbabilityContainer">
+                            <div class="uk-align-center uk-text-center">
+                                <h5>Rainfall Probability</h5>
+                            </div>
                             <div style="width: 1200px; justify-self: center">
                                 <canvas id="bigPrecipprobGraph"></canvas>
                             </div>
                         </div>
-                        <div id="windspeedContainer">
-                            <div style="width: 1200px; justify-self: center">
-                                <canvas id="bigWindSpeedGraph"></canvas>
-                            </div>
-                        </div>
                         <div id="UVIndexContainer">
+                            <div class="uk-align-center uk-text-center">
+                                <h5>UV Index</h5>
+                            </div>
                             <div style="width: 1200px; justify-self: center">
                                 <canvas id="bigUVIndexGraph"></canvas>
                             </div>
@@ -217,6 +241,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
     </div>
     <script src="main.js"></script>
 </body>
+
 </html>
 
 <!-- 
