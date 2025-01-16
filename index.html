@@ -22,7 +22,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 -->
 
 <body>
-    <div class="uk-background-primary" style="background-color: #2d497d;"> <!-- Background -->
+    <div class="uk-background-primary" style="background-color: #2d497d; padding-bottom: 50px;"> <!-- Background -->
         <!-- Sidebar -->
         <div class=""
             style="height:100%;width: 160px; background-color:#0C2D48; position:fixed!important; z-index:1; overflow:auto">
@@ -41,7 +41,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 
             <div class="uk-margin"> <!-- Search Button -->
                 <form id="SearchbarTop" class="uk-search uk-search-default rounded">
-                    <input id="Searchbar" class="uk-search-input" tabindex="1" type="search"
+                    <input id="Searchbar" class="uk-search-input" minlength="2" tabindex="1" type="search"
                         placeholder="Search" aria-label="Search" style="background-color: #C3E0E5;">
                     <span class="uk-search-icon-flip" uk-search-icon></span>
                 </form>
@@ -112,7 +112,10 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div style="width: 300px; justify-self: center">
                             <canvas id="tempGraph"></canvas>
                         </div>
-                        <p id="tempAverage" class="">Temperature Average: </p>
+                        <div class="">
+                            <div id="tempAverage" class="">Temperature Average: </div>
+                            <div id="feelslikeAverage2" class="">Feels Like Average: </div>
+                        </div>
                     </div>
                 </div>
 
@@ -138,7 +141,10 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div style="width: 300px; justify-self: center">
                             <canvas id="windSpeedGraph"></canvas>
                         </div>
-                        <p id="windspeedAverage" class="">Wind Speed Average: </p>
+                        <div>
+                            <div id="windspeedAverage" class="">Wind Speed Average: </div>
+                            <div id="windgustAverage" class="">Wind Gust: </div>
+                        </div>
                     </div>
                 </div>
 
@@ -151,7 +157,10 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div style="width: 300px; justify-self: center">
                             <canvas id="humidityGraph"></canvas>
                         </div>
-                        <p id="humidityAverage" class="">Humiditiy Average: </p>
+                        <div>
+                            <div id="humidityAverage" class="">Humiditiy Average: </div>
+                            <div id="dewpointAverage" class="">Dew Point Average: </div>
+                        </div>
                     </div>
                 </div>
 
@@ -177,7 +186,10 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div style="width: 300px; justify-self: center">
                             <canvas id="uvIndexGraph"></canvas>
                         </div>
-                        <p id="uvindexAverage" class="">UV Index Max: </p>
+                        <div class="">
+                            <div id="uvindexAverage" class="">UV Index Max: </div>
+                            <div id="uvProtection" class="">Protection: </div>
+                        </div>
                     </div>
                 </div>
 
@@ -224,7 +236,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
             <div uk-grid> <!-- Big InfoBoxes -->
                 <div class="uk-width-expand">
                     <div class="uk-card uk-card-default uk-card-small uk-card-body uk-border-rounded uk-switcher switcher-graphs"
-                        style="height: 650px;">
+                        style="height: 680px;">
                         <div id="temperatureContainer">
                             <div class="uk-align-center uk-text-center">
                                 <h5>Temperature</h5>
