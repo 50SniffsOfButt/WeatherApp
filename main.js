@@ -15,13 +15,18 @@ const humidityGraph = createGraph('humidityGraph');
 const precipprobGraph = createGraph('precipprobGraph');
 const windSpeedGraph = createGraph('windSpeedGraph');
 const uvIndexGraph = createGraph('uvIndexGraph');
+const visibilityGraph = createGraph('visibilityGraph');
+const solarRadiationGraph = createGraph('solarRadiationGraph');
+const pressureGraph = createGraph('pressureGraph');
 const bigTemperatureGraph = createGraph('bigTemperatureGraph');
 const bigFeelsikeGraph = createGraph('bigFeelsikeGraph');
 const bigHumidityGraph = createGraph('bigHumidityGraph');
 const bigPrecipprobGraph = createGraph('bigPrecipprobGraph');
 const bigWindSpeedGraph = createGraph('bigWindSpeedGraph');
 const bigUVIndexGraph = createGraph('bigUVIndexGraph');
-
+const bigVisibilityGraph = createGraph('bigVisibilityGraph');
+const bigSolarRadiationGraph = createGraph('bigSolarRadiationGraph');
+const bigPressureGraph = createGraph('bigPressureGraph');
 
 
 function createGraph(divElement) {
@@ -63,8 +68,6 @@ function createGraph(divElement) {
             scales: {
                 y: {
                     beginAtZero: graphStyle,
-                    //suggestedMax: 50,
-                    //suggestedMin: 0,
             }
 
         }
@@ -89,8 +92,7 @@ function getElement(id) { return document.getElementById(id); }
 
 function processWeatherData(weatherData) {
     const firstDayData = weatherData.days[0];
-    const secondDayData = weatherData.days[1];
-    const thirdDayData = weatherData.days[2];
+    const threeDayData = weatherData.days.slice(0, 3);
     const currentConditions = weatherData.currentConditions;
     const address = weatherData.resolvedAddress;
     const clothing = getClothingRecommendation(currentConditions.feelslike);
@@ -99,18 +101,24 @@ function processWeatherData(weatherData) {
     getElement('Error').innerHTML = ''; // Clear the error message
 
     updateCurrentWeather(currentConditions, firstDayData, address, clothing);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, tempGraph, 'temp', 'day');
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, feelsikeGraph, 'feelslike', 'day');
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, humidityGraph, 'humidity', 'day');
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, precipprobGraph, 'precipprob', 'day');
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, windSpeedGraph, 'windspeed', 'day');
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, uvIndexGraph, 'uvindex', 'day');
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, bigTemperatureGraph, 'temp', 47);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, bigFeelsikeGraph, 'feelslike', 47);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, bigHumidityGraph, 'humidity', 47);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, bigPrecipprobGraph, 'precipprob', 47);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, bigWindSpeedGraph, 'windspeed', 47);
-    updateCurrentGraph(currentConditions.datetime, firstDayData, secondDayData, thirdDayData, bigUVIndexGraph, 'uvindex', 47);
+    updateCurrentGraph(currentConditions.datetime, threeDayData, tempGraph, 'temp', 'day');
+    updateCurrentGraph(currentConditions.datetime, threeDayData, feelsikeGraph, 'feelslike', 'day');
+    updateCurrentGraph(currentConditions.datetime, threeDayData, humidityGraph, 'humidity', 'day');
+    updateCurrentGraph(currentConditions.datetime, threeDayData, precipprobGraph, 'precipprob', 'day');
+    updateCurrentGraph(currentConditions.datetime, threeDayData, windSpeedGraph, 'windspeed', 'day');
+    updateCurrentGraph(currentConditions.datetime, threeDayData, uvIndexGraph, 'uvindex', 'day');
+    updateCurrentGraph(currentConditions.datetime, threeDayData, visibilityGraph, 'visibility', 'day');
+    updateCurrentGraph(currentConditions.datetime, threeDayData, solarRadiationGraph, 'solarradiation', 'day');
+    updateCurrentGraph(currentConditions.datetime, threeDayData, pressureGraph, 'pressure', 'day');
+    updateCurrentGraph(currentConditions.datetime, threeDayData, bigTemperatureGraph, 'temp', 47);
+    updateCurrentGraph(currentConditions.datetime, threeDayData, bigFeelsikeGraph, 'feelslike', 47);
+    updateCurrentGraph(currentConditions.datetime, threeDayData, bigHumidityGraph, 'humidity', 47);
+    updateCurrentGraph(currentConditions.datetime, threeDayData, bigPrecipprobGraph, 'precipprob', 47);
+    updateCurrentGraph(currentConditions.datetime, threeDayData, bigWindSpeedGraph, 'windspeed', 47);
+    updateCurrentGraph(currentConditions.datetime, threeDayData, bigUVIndexGraph, 'uvindex', 47);
+    updateCurrentGraph(currentConditions.datetime, threeDayData, bigVisibilityGraph, 'visibility', 47);
+    updateCurrentGraph(currentConditions.datetime, threeDayData, bigSolarRadiationGraph, 'solarradiation', 47);
+    updateCurrentGraph(currentConditions.datetime, threeDayData, bigPressureGraph, 'pressure', 47);
     updateWeatherIcon(currentConditions.icon);
 }
 
@@ -154,18 +162,22 @@ function updateCurrentWeather(currentConditions, firstDayData, address, clothing
     getElement('uvindexAverage').innerHTML = 'UV Index Max: ' + firstDayData.uvindex;
 }
 
-function updateCurrentGraph(timeData, firstDayData, secondDayData, thirdDayData, chart, unit, size) {
+function updateCurrentGraph(timeData, threeDayData, chart, unit, size) {
     const currentTime = parseInt(timeData.split(':')[0], 10);
-    const firstDayHours = firstDayData.hours;
-    const secondDayHours = secondDayData.hours;
-    const thirdDayHours = thirdDayData.hours;
+    const firstDayHours = threeDayData[0].hours;
+    const secondDayHours = threeDayData[1].hours;
+    const thirdDayHours = threeDayData[2].hours;
     const dataTypeDisplayNames = {
         temp: 'Temperature',
         feelslike: 'Feels Like',
         humidity: 'Humidity',
         precipprob: 'Precipitation Probability',
         windspeed: 'Wind Speed',
+        windgust: 'Wind Gust',
         uvindex: 'UV Index',
+        visibility: 'Visibility',
+        solarradiation: 'Solar Radiation',
+        pressure: 'Pressure',
     };
     const graphTypeDisplay = dataTypeDisplayNames[unit] || 'Error';
 
@@ -194,7 +206,7 @@ function updateCurrentGraph(timeData, firstDayData, secondDayData, thirdDayData,
             label: graphTypeDisplay,
             data: data.map(row => row.value),
             borderWidth: 3,
-            tension: 0.35        
+            tension: 0.45       
         }]
     }
     chart.update()

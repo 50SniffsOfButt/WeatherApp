@@ -41,7 +41,7 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
 
             <div class="uk-margin"> <!-- Search Button -->
                 <form id="SearchbarTop" class="uk-search uk-search-default rounded">
-                    <input id="Searchbar" class="uk-search-input" tabindex="1" minlength="3" type="search"
+                    <input id="Searchbar" class="uk-search-input" tabindex="1" type="search"
                         placeholder="Search" aria-label="Search" style="background-color: #C3E0E5;">
                     <span class="uk-search-icon-flip" uk-search-icon></span>
                 </form>
@@ -181,6 +181,45 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                     </div>
                 </div>
 
+                <div class="uk-child-width-expand"><!-- Visibility InfoBox -->
+                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small"
+                        href="#">
+                        <div class="uk-align-left uk-text-left">
+                            <h5>Visibility</h5>
+                        </div>
+                        <div style="width: 300px; justify-self: center">
+                            <canvas id="visibilityGraph"></canvas>
+                        </div>
+                        <p id="visibilityAverage" class="">Visibility Average: </p>
+                    </div>
+                </div>
+
+                <div class="uk-child-width-expand"><!-- Solar Radiation InfoBox -->
+                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small"
+                        href="#">
+                        <div class="uk-align-left uk-text-left">
+                            <h5>Solar Radiation</h5>
+                        </div>
+                        <div style="width: 300px; justify-self: center">
+                            <canvas id="solarRadiationGraph"></canvas>
+                        </div>
+                        <p id="solarRadiationAverage" class="">Solar Radiation Average: </p>
+                    </div>
+                </div>
+
+                <div class="uk-child-width-expand"><!-- Pressure InfoBox -->
+                    <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small"
+                        href="#">
+                        <div class="uk-align-left uk-text-left">
+                            <h5>Pressure</h5>
+                        </div>
+                        <div style="width: 300px; justify-self: center">
+                            <canvas id="pressureGraph"></canvas>
+                        </div>
+                        <p id="pressureAverage" class="">Pressure Average: </p>
+                    </div>
+                </div>
+
             </div>
             <div uk-grid> <!-- Big InfoBoxes -->
                 <div class="uk-width-expand">
@@ -232,6 +271,30 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                             </div>
                             <div style="width: 1200px; justify-self: center">
                                 <canvas id="bigUVIndexGraph"></canvas>
+                            </div>
+                        </div>
+                        <div id="visibilityContainer">
+                            <div class="uk-align-center uk-text-center">
+                                <h5>Visibility</h5>
+                            </div>
+                            <div style="width: 1200px; justify-self: center">
+                                <canvas id="bigVisibilityGraph"></canvas>
+                            </div>
+                        </div>
+                        <div id="solarRadiationContainer">
+                            <div class="uk-align-center uk-text-center">
+                                <h5>Solar Radiation</h5>
+                            </div>
+                            <div style="width: 1200px; justify-self: center">
+                                <canvas id="bigSolarRadiationGraph"></canvas>
+                            </div>
+                        </div>
+                        <div id="pressureContainer">
+                            <div class="uk-align-center uk-text-center">
+                                <h5>Pressure</h5>
+                            </div>
+                            <div style="width: 1200px; justify-self: center">
+                                <canvas id="bigPressureGraph"></canvas>
                             </div>
                         </div>
                     </div>
