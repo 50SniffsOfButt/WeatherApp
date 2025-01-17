@@ -15,24 +15,10 @@ const topPrecipGraph = createGraph('topPrecipGraph');
 const topWindGraph = createGraph('topWindGraph');
 const topVisibilityGraph = createGraph('topVisibilityGraph');
 const topHumidityGraph = createGraph('topHumidityGraph');
-const tempGraph = createGraph('tempGraph');
-const feelsikeGraph = createGraph('feelsikeGraph');
-const humidityGraph = createGraph('humidityGraph');
-const precipprobGraph = createGraph('precipprobGraph');
-const windSpeedGraph = createGraph('windSpeedGraph');
-const uvIndexGraph = createGraph('uvIndexGraph');
-const visibilityGraph = createGraph('visibilityGraph');
-const solarRadiationGraph = createGraph('solarRadiationGraph');
-const pressureGraph = createGraph('pressureGraph');
-const bigTemperatureGraph = createGraph('bigTemperatureGraph');
-const bigFeelsikeGraph = createGraph('bigFeelsikeGraph');
-const bigHumidityGraph = createGraph('bigHumidityGraph');
-const bigPrecipprobGraph = createGraph('bigPrecipprobGraph');
-const bigWindSpeedGraph = createGraph('bigWindSpeedGraph');
-const bigUVIndexGraph = createGraph('bigUVIndexGraph');
-const bigVisibilityGraph = createGraph('bigVisibilityGraph');
-const bigSolarRadiationGraph = createGraph('bigSolarRadiationGraph');
-const bigPressureGraph = createGraph('bigPressureGraph');
+const topUVIndexGraph = createGraph('topUVIndexGraph');
+const topSolarRadGraph = createGraph('topSolarRadGraph');
+const topCloudGraph = createGraph('topCloudGraph');
+const topPressureGraph = createGraph('topPressureGraph');
 
 function createGraph(divElement) {
     const dataTypeDisplayNames = {
@@ -55,7 +41,7 @@ function createGraph(divElement) {
         bigUVIndexGraph: true
     };
     const graphStyle = dataTypeDisplayNames[divElement];
-
+    
     return new Chart(divElement, {
         type: 'line',
         options: {
@@ -115,24 +101,10 @@ function processWeatherData(weatherData) {
     updateCurrentGraphDouble(currentConditions.datetime, threeDayData, topWindGraph, 'windspeed', 'windgust', 47);
     updateCurrentGraph(currentConditions.datetime, threeDayData, topVisibilityGraph, 'visibility', 47);
     updateCurrentGraphDouble(currentConditions.datetime, threeDayData, topHumidityGraph, 'humidity', 'dew', 47);
-    updateCurrentGraphDouble(currentConditions.datetime, threeDayData, tempGraph, 'temp', 'feelslike', 'day');
-    updateCurrentGraph(currentConditions.datetime, threeDayData, feelsikeGraph, 'feelslike', 'day');
-    updateCurrentGraphDouble(currentConditions.datetime, threeDayData, humidityGraph, 'humidity', 'dew','day');
-    updateCurrentGraph(currentConditions.datetime, threeDayData, precipprobGraph, 'precipprob', 'day');
-    updateCurrentGraphDouble(currentConditions.datetime, threeDayData, windSpeedGraph, 'windspeed', 'windgust', 'day');
-    updateCurrentGraph(currentConditions.datetime, threeDayData, uvIndexGraph, 'uvindex', 'day');
-    updateCurrentGraph(currentConditions.datetime, threeDayData, visibilityGraph, 'visibility', 'day');
-    updateCurrentGraph(currentConditions.datetime, threeDayData, solarRadiationGraph, 'solarradiation', 'day');
-    updateCurrentGraph(currentConditions.datetime, threeDayData, pressureGraph, 'pressure', 'day');
-    updateCurrentGraphDouble(currentConditions.datetime, threeDayData, bigTemperatureGraph, 'temp', 'feelslike', 47);
-    updateCurrentGraph(currentConditions.datetime, threeDayData, bigFeelsikeGraph, 'feelslike', 47);
-    updateCurrentGraphDouble(currentConditions.datetime, threeDayData, bigHumidityGraph, 'humidity', 'dew', 47);
-    updateCurrentGraph(currentConditions.datetime, threeDayData, bigPrecipprobGraph, 'precipprob', 47);
-    updateCurrentGraphDouble(currentConditions.datetime, threeDayData, bigWindSpeedGraph, 'windspeed', 'windgust', 47);
-    updateCurrentGraph(currentConditions.datetime, threeDayData, bigUVIndexGraph, 'uvindex', 47);
-    updateCurrentGraph(currentConditions.datetime, threeDayData, bigVisibilityGraph, 'visibility', 47);
-    updateCurrentGraph(currentConditions.datetime, threeDayData, bigSolarRadiationGraph, 'solarradiation', 47);
-    updateCurrentGraph(currentConditions.datetime, threeDayData, bigPressureGraph, 'pressure', 47);
+    updateCurrentGraph(currentConditions.datetime, threeDayData, topUVIndexGraph, 'uvindex', 47);
+    updateCurrentGraphDouble(currentConditions.datetime, threeDayData, topSolarRadGraph, 'solarradiation', 'solarenergy', 47);
+    updateCurrentGraph(currentConditions.datetime, threeDayData, topCloudGraph, 'cloudcover', 47);
+    updateCurrentGraph(currentConditions.datetime, threeDayData, topPressureGraph, 'pressure', 47);
     updateWeatherIcon(currentConditions.icon);
 }
 
@@ -173,7 +145,7 @@ function updateCurrentWeather(currentConditions, firstDayData, address,) {
     getElement('currentConditions').innerHTML = currentConditions.conditions;
     getElement('currentTimestamp').innerHTML = 'Data from: ' + currentTimestamp;
     getElement('clothingRec').innerHTML = 'Clothing Recommendation: ' + getClothingRecommendation(currentConditions.feelslike);
-    getElement('uvProtection').innerHTML = 'UV Protection Recommended: ' + getUVProtectionRecommendation(currentConditions.uvindex);
+    //getElement('uvProtection').innerHTML = 'UV Protection Recommended: ' + getUVProtectionRecommendation(currentConditions.uvindex);
     getElement('datetime').innerHTML = 'Datum: ' + formattedDate;
     getElement('currentTime').innerHTML = 'Time: ' + currentConditions.datetime;
     getElement('currentFeelslike').innerHTML = 'Feels Like: ' + currentConditions.feelslike + '°C';
@@ -183,18 +155,18 @@ function updateCurrentWeather(currentConditions, firstDayData, address,) {
     getElement('currentPrecipprob').innerHTML = 'Precipitation Chance: ' + currentConditions.precipprob + '%';
     getElement('currentWindspeed').innerHTML = 'Wind Speed: ' + currentConditions.windspeed + ' km/h';
     getElement('currentUVIndex').innerHTML = 'UV Index: ' + currentConditions.uvindex;
-    getElement('tempAverage').innerHTML = 'Temperature Average: ' + firstDayData.temp + '°C';
-    getElement('feelslikeAverage2').innerHTML = 'Feels Like Average: ' + firstDayData.feelslike + '°C';
-    getElement('feelslikeAverage').innerHTML = 'Feels Like Average: ' + firstDayData.feelslike + '°C';
-    getElement('humidityAverage').innerHTML = 'Humidity Average: ' + firstDayData.humidity + '%';
-    getElement('dewpointAverage').innerHTML = 'Dew Point Average: ' + firstDayData.dew + '°C';
-    getElement('precipprobAverage').innerHTML = 'Rainfall Probability Average: ' + firstDayData.precipprob + '%';
-    getElement('windspeedAverage').innerHTML = 'Wind Speed Average: ' + firstDayData.windspeed + ' km/h';
-    getElement('windgustAverage').innerHTML = 'Wind Gust Average: ' + firstDayData.windgust + ' km/h';
-    getElement('uvindexAverage').innerHTML = 'UV Index Max: ' + firstDayData.uvindex;
-    getElement('visibilityAverage').innerHTML = 'Visibility Average: ' + firstDayData.visibility + ' km';
-    getElement('solarRadiationAverage').innerHTML = 'Solar Radiation Average: ' + firstDayData.solarradiation + ' W/m2';
-    getElement('pressureAverage').innerHTML = 'Pressure Average: ' + firstDayData.pressure + ' mb';
+    //getElement('tempAverage').innerHTML = 'Temperature Average: ' + firstDayData.temp + '°C';
+    //getElement('feelslikeAverage2').innerHTML = 'Feels Like Average: ' + firstDayData.feelslike + '°C';
+    //getElement('feelslikeAverage').innerHTML = 'Feels Like Average: ' + firstDayData.feelslike + '°C';
+    //getElement('humidityAverage').innerHTML = 'Humidity Average: ' + firstDayData.humidity + '%';
+    //getElement('dewpointAverage').innerHTML = 'Dew Point Average: ' + firstDayData.dew + '°C';
+    //getElement('precipprobAverage').innerHTML = 'Rainfall Probability Average: ' + firstDayData.precipprob + '%';
+    //getElement('windspeedAverage').innerHTML = 'Wind Speed Average: ' + firstDayData.windspeed + ' km/h';
+    //getElement('windgustAverage').innerHTML = 'Wind Gust Average: ' + firstDayData.windgust + ' km/h';
+    //getElement('uvindexAverage').innerHTML = 'UV Index Max: ' + firstDayData.uvindex;
+    //getElement('visibilityAverage').innerHTML = 'Visibility Average: ' + firstDayData.visibility + ' km';
+    //getElement('solarRadiationAverage').innerHTML = 'Solar Radiation Average: ' + firstDayData.solarradiation + ' W/m2';
+    //getElement('pressureAverage').innerHTML = 'Pressure Average: ' + firstDayData.pressure + ' mb';
 }
 
 function updateCurrentGraph(timeData, threeDayData, chart, unit, size) {
@@ -227,7 +199,7 @@ function updateCurrentGraph(timeData, threeDayData, chart, unit, size) {
     for(let i = 0; i <= parsedSize; i++) {
         if (currentTime  === currentTime + i) {
             data.push({
-                time: 'Today: ' + (currentTime, + i),
+                time: 'Today: ' + (currentTime + i),
                 value: firstDayHours[currentTime + i][unit]}) 
         } else if (currentTime + i < 24) {
             data.push({
@@ -264,7 +236,7 @@ function updateCurrentGraph(timeData, threeDayData, chart, unit, size) {
             borderColor: '#5a6fb0',
         }]
     }
-    chart.update()
+    element.click()
 }
 
 function updateCurrentGraphDouble(timeData, threeDayData, chart, unitFirst, unitSecond, size) {
@@ -295,12 +267,13 @@ function updateCurrentGraphDouble(timeData, threeDayData, chart, unitFirst, unit
     const parsedSize = (size === 'day') ? (hoursUntilMidnight > 16 ? 16 : (hoursUntilMidnight < 8 ? 8 : hoursUntilMidnight)) : size;
     // checks if the hours until midnight is greater than 16, if so, it sets the size to 16, if it is less than 8, it sets it to 8, otherwise it sets it to the hours until midnight
     // but only if the value of size is 'day', otherwise it sets it to the value of size
+    console.log(currentTime)
 
     data = []; 
     for(let i = 0; i <= parsedSize; i++) {
         if (currentTime  === currentTime + i) {
             data.push({
-                time: 'Today: ' + (currentTime, + i),
+                time: 'Today: ' + (currentTime + i),
                 value1: firstDayHours[currentTime + i][unitFirst],
                 value2: firstDayHours[currentTime + i][unitSecond]}) 
         } else if (currentTime + i < 24) {
