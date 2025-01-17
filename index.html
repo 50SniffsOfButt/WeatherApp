@@ -101,7 +101,27 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                 </div>
             </div>
 
-            <div class="uk-section uk-width-expand"> <!-- New InfoBox -->
+            <div class="uk-section uk-width-expand"> <!-- Main InfoBox -->
+                <div class="uk-card uk-card-default uk-border-rounded uk-flex-column">
+                    <div uk-grid class="uk-padding-small" uk-switcher="connect: .switcher-topGraphs"> <!-- Selectors -->
+                        <div><div class="uk-button" href="#">Temperature</div></div>
+                        <div><div class="uk-button" href="#">Precipitation</div></div>
+                        <div><div class="uk-button" href="#">Wind Speed</div></div>
+                        <div><div class="uk-button" href="#">Visibility</div></div>
+                        <div><div class="uk-button" href="#">Humidity</div></div>
+                    </div>
+                    <hr class="">
+                    <div class="uk-flex-column uk-width-expand uk-padding-small uk-switcher switcher-topGraphs"> <!-- Graphs -->
+                        <div><canvas id="topTempGraph" style="width: 900px; height: 250px"></canvas></div>
+                        <div><canvas id="topPrecipGraph" style="width: 900px; height: 250px"></canvas></div>
+                        <div><canvas id="topWindGraph" style="width: 900px; height: 250px"></canvas></div>
+                        <div><canvas id="topVisibilityGraph" style="width: 900px; height: 250px"></canvas></div>
+                        <div><canvas id="topHumidityGraph" style="width: 900px; height: 250px"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="uk-section uk-width-expand"> <!-- Second InfoBox -->
                 <div class="uk-card uk-card-default uk-border-rounded uk-flex-column">
                     <div uk-grid class="uk-padding-small" uk-switcher="connect: .switcher-topGraphs"> <!-- Selectors -->
                         <div><div class="uk-button" href="#">Temperature</div></div>
@@ -345,6 +365,9 @@ https://getuikit.com/docs/introduction
 https://cssgridgarden.com/#de
 https://flexboxfroggy.com/#de
 https://www.timeanddate.com/weather/?sort=6
+https://www.visualcrossing.com/resources/documentation/weather-data/weather-data-documentation/
+https://www.visualcrossing.com/resources/documentation/weather-api/energy-elements-in-the-timeline-weather-api/
+https://www.visualcrossing.com/resources/documentation/weather-api/agriculture-elements-in-the-timeline-weather-api/
 
 https://lesscss.org/
 https://www.visualcrossing.com/weather/weather-data-services/germany?v=api#

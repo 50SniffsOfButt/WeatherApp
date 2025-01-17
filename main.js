@@ -36,6 +36,11 @@ const bigPressureGraph = createGraph('bigPressureGraph');
 
 function createGraph(divElement) {
     const dataTypeDisplayNames = {
+        topTempGraph: false,
+        topPrecipGraph: true,
+        topWindGraph: false,
+        topVisibilityGraph: true,
+        topHumidityGraph: false,
         tempGraph: false,
         feelsikeGraph: false,
         humidityGraph: false,
@@ -66,8 +71,8 @@ function createGraph(divElement) {
             elements: {
                 point: {
                     radius: 1,
-                    hitRadius: 10,
-                    hoverRadius: 5
+                    hitRadius: 15,
+                    hoverRadius: 8
                 }
             },
             scales: {
@@ -131,7 +136,6 @@ function processWeatherData(weatherData) {
     updateWeatherIcon(currentConditions.icon);
 }
 
-
 function getClothingRecommendation(feelslike) {
     if (feelslike > 18) {
         return 'T-shirt';
@@ -193,7 +197,6 @@ function updateCurrentWeather(currentConditions, firstDayData, address,) {
     getElement('pressureAverage').innerHTML = 'Pressure Average: ' + firstDayData.pressure + ' mb';
 }
 
-
 function updateCurrentGraph(timeData, threeDayData, chart, unit, size) {
     const currentTime = parseInt(timeData.split(':')[0], 10);
     const firstDayHours = threeDayData[0].hours;
@@ -222,11 +225,31 @@ function updateCurrentGraph(timeData, threeDayData, chart, unit, size) {
 
     data = []; 
     for(let i = 0; i <= parsedSize; i++) {
-        if(currentTime + i < 24) {
-            data.push({time: currentTime + i, value: firstDayHours[currentTime + i][unit]})
-        } else if(currentTime + i < 48) { 
-            data.push({time: currentTime + i -24, value: secondDayHours[currentTime + i -24][unit]})
-        } else { data.push({time: currentTime + i -48, value: thirdDayHours[currentTime + i -48][unit]})}
+        if (currentTime  === currentTime + i) {
+            data.push({
+                time: 'Today: ' + (currentTime, + i),
+                value: firstDayHours[currentTime + i][unit]}) 
+        } else if (currentTime + i < 24) {
+            data.push({
+                time: (currentTime + i),
+                value: firstDayHours[currentTime + i][unit]})
+        } else if (currentTime + i === 24) {
+            data.push({
+                time: 'Day 2: ' + (currentTime + i - 24),
+                value: secondDayHours[currentTime + i -24][unit]})
+        } else if (currentTime + i < 48) { 
+            data.push({
+                time: (currentTime + i - 24),
+                value: secondDayHours[currentTime + i -24][unit]})
+        } else if (currentTime + i === 48) { 
+            data.push({
+                time: 'Day 3: ' + (currentTime + i - 48),
+                value: thirdDayHours[currentTime + i -48][unit]})
+        } else {
+            data.push({
+                time: (currentTime + i - 48),
+                value: thirdDayHours[currentTime + i -48][unit]})
+        }
     }
 
     const label = data.map(row => row.time + ':00');
@@ -274,25 +297,37 @@ function updateCurrentGraphDouble(timeData, threeDayData, chart, unitFirst, unit
     // but only if the value of size is 'day', otherwise it sets it to the value of size
 
     data = []; 
-    for (let i = 0; i <= parsedSize; i++) {
-        if (currentTime + i < 24) {
+    for(let i = 0; i <= parsedSize; i++) {
+        if (currentTime  === currentTime + i) {
             data.push({
-                time: currentTime + i,
+                time: 'Today: ' + (currentTime, + i),
                 value1: firstDayHours[currentTime + i][unitFirst],
-                value2: firstDayHours[currentTime + i][unitSecond]
-            });
-        } else if (currentTime + i < 48) {
+                value2: firstDayHours[currentTime + i][unitSecond]}) 
+        } else if (currentTime + i < 24) {
             data.push({
-                time: currentTime + i - 24,
+                time: (currentTime + i),
+                value1: firstDayHours[currentTime + i][unitFirst],
+                value2: firstDayHours[currentTime + i][unitSecond]})
+        } else if (currentTime + i === 24) {
+            data.push({
+                time: 'Day 2: ' + (currentTime + i - 24),
                 value1: secondDayHours[currentTime + i - 24][unitFirst],
-                value2: secondDayHours[currentTime + i - 24][unitSecond]
-            });
+                value2: secondDayHours[currentTime + i - 24][unitSecond]})
+        } else if (currentTime + i < 48) { 
+            data.push({
+                time: (currentTime + i - 24),
+                value1: secondDayHours[currentTime + i - 24][unitFirst],
+                value2: secondDayHours[currentTime + i - 24][unitSecond]})
+        } else if (currentTime + i === 48) { 
+            data.push({
+                time: 'Day 3: ' + (currentTime + i - 48),
+                value1: thirdDayHours[currentTime + i - 48][unitFirst],
+                value2: thirdDayHours[currentTime + i - 48][unitSecond]})
         } else {
             data.push({
-                time: currentTime + i - 48,
+                time: (currentTime + i - 48),
                 value1: thirdDayHours[currentTime + i - 48][unitFirst],
-                value2: thirdDayHours[currentTime + i - 48][unitSecond]
-            });
+                value2: thirdDayHours[currentTime + i - 48][unitSecond]})
         }
     }
 
@@ -312,9 +347,7 @@ function updateCurrentGraphDouble(timeData, threeDayData, chart, unitFirst, unit
             borderWidth: 3,
             tension: 0.45,
             borderColor: '#19b8d1',
-        }
-
-    ]
+        }]
     }
     chart.update()
 }
