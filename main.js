@@ -96,16 +96,16 @@ function processWeatherData(weatherData) {
     getElement('Error').innerHTML = ''; // Clear the error message
 
     updateCurrentWeather(currentConditions, firstDayData, address,);
-    updateCurrentGraphDouble(currentConditions.datetime, threeDayData, topTempGraph, 'temp', 'feelslike', 47);
-    //updateCurrentGraphDouble(currentConditions.datetime, threeDayData, topPrecipGraph, 'precipprob', 'precip', 47);
-    //updateCurrentGraphDouble(currentConditions.datetime, threeDayData, topWindGraph, 'windspeed', 'windgust', 47);
-    //updateCurrentGraph(currentConditions.datetime, threeDayData, topVisibilityGraph, 'visibility', 47);
-    //updateCurrentGraphDouble(currentConditions.datetime, threeDayData, topHumidityGraph, 'humidity', 'dew', 47);
-    //updateCurrentGraph(currentConditions.datetime, threeDayData, topUVIndexGraph, 'uvindex', 47);
-    //updateCurrentGraphDouble(currentConditions.datetime, threeDayData, topSolarRadGraph, 'solarradiation', 'solarenergy', 47);
-    //updateCurrentGraph(currentConditions.datetime, threeDayData, topCloudGraph, 'cloudcover', 47);
-    //updateCurrentGraph(currentConditions.datetime, threeDayData, topPressureGraph, 'pressure', 47);
-    //updateWeatherIcon(currentConditions.icon);
+    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topTempGraph, 'temp', 'feelslike', 47);
+    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topPrecipGraph, 'precipprob', 'precip', 47);
+    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topWindGraph, 'windspeed', 'windgust', 47);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topVisibilityGraph, 'visibility', 47);
+    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topHumidityGraph, 'humidity', 'dew', 47);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topUVIndexGraph, 'uvindex', 47);
+    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topSolarRadGraph, 'solarradiation', 'solarenergy', 47);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topCloudGraph, 'cloudcover', 47);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topPressureGraph, 'pressure', 47);
+    updateWeatherIcon(currentConditions.icon);
 }
 
 function getClothingRecommendation(feelslike) {
@@ -169,11 +169,8 @@ function updateCurrentWeather(currentConditions, firstDayData, address,) {
     //getElement('pressureAverage').innerHTML = 'Pressure Average: ' + firstDayData.pressure + ' mb';
 }
 
-function updateCurrentGraph(timeData, threeDayData, chart, unit, size) {
+function updateCurrentGraph(timeData, weatherData, chart, unit, size) {
     const currentTime = parseInt(timeData.split(':')[0], 10);
-    const firstDayHours = threeDayData[0].hours;
-    const secondDayHours = threeDayData[1].hours;
-    const thirdDayHours = threeDayData[2].hours;
     const dataTypeDisplayNames = {
         temp: 'Temperature',
         feelslike: 'Feels Like',
@@ -197,7 +194,7 @@ function updateCurrentGraph(timeData, threeDayData, chart, unit, size) {
 
     data = [];
     for (let i = 0; i <= parsedSize; i++) {
-        let day = ((currentTime + i) / 24) + 1;
+        let day = Math.floor((currentTime + i) / 24) + 1;
         let hour = (currentTime + i) % 24;
         let timeLabel;
         if (i === 0) {
@@ -206,13 +203,13 @@ function updateCurrentGraph(timeData, threeDayData, chart, unit, size) {
             timeLabel = (hour === 0) ? `Day ${day}: ${hour}` : `${hour}`;
         }
         let value;
-    
+        
         if (day === 1) {
-            value = firstDayHours[hour][unit];
+            value = weatherData.days[day].hours[hour][unit];
         } else if (day === 2) {
-            value = secondDayHours[hour][unit];
+            value = weatherData.days[day].hours[hour][unit];
         } else {
-            value = thirdDayHours[hour][unit];
+            value = weatherData.days[day].hours[hour][unit];
         }
     
         data.push({
@@ -236,11 +233,8 @@ function updateCurrentGraph(timeData, threeDayData, chart, unit, size) {
     chart.update()
 }
 
-function updateCurrentGraphDouble(timeData, threeDayData, chart, unitFirst, unitSecond, size) {
+function updateCurrentGraphDouble(timeData, weatherData, chart, unitFirst, unitSecond, size) {
     const currentTime = parseInt(timeData.split(':')[0], 10);
-    const firstDayHours = threeDayData[0].hours;
-    const secondDayHours = threeDayData[1].hours;
-    const thirdDayHours = threeDayData[2].hours;
     const dataTypeDisplayNames = {
         temp: 'Temperature',
         feelslike: 'Feels Like',
@@ -267,7 +261,7 @@ function updateCurrentGraphDouble(timeData, threeDayData, chart, unitFirst, unit
 
     data = [];
     for (let i = 0; i <= parsedSize; i++) {
-        let day = ((currentTime + i) / 24) + 1;
+        let day = Math.floor((currentTime + i) / 24) + 1;
         let hour = (currentTime + i) % 24;
         let timeLabel;
         if (i === 0) {
@@ -278,14 +272,14 @@ function updateCurrentGraphDouble(timeData, threeDayData, chart, unitFirst, unit
         let value1, value2;
     
         if (day === 1) {
-            value1 = firstDayHours[hour][unitFirst];
-            value2 = firstDayHours[hour][unitSecond];
+            value1 = weatherData.days[day].hours[hour][unitFirst];
+            value2 = weatherData.days[day].hours[hour][unitSecond];
         } else if (day === 2) {
-            value1 = secondDayHours[hour][unitFirst];
-            value2 = secondDayHours[hour][unitSecond];
+            value1 = weatherData.days[day].hours[hour][unitFirst];
+            value2 = weatherData.days[day].hours[hour][unitSecond];
         } else {
-            value1 = thirdDayHours[hour][unitFirst];
-            value2 = thirdDayHours[hour][unitSecond];
+            value1 = weatherData.days[day].hours[hour][unitFirst];
+            value2 = weatherData.days[day].hours[hour][unitSecond];
         }
     
         data.push({
