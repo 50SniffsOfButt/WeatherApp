@@ -10,6 +10,11 @@ document.querySelector('#SearchbarTop').addEventListener('submit', function (eve
 });
 
 
+const topTempGraph = createGraph('topTempGraph');
+const topPrecipGraph = createGraph('topPrecipGraph');
+const topWindGraph = createGraph('topWindGraph');
+const topVisibilityGraph = createGraph('topVisibilityGraph');
+const topHumidityGraph = createGraph('topHumidityGraph');
 const tempGraph = createGraph('tempGraph');
 const feelsikeGraph = createGraph('feelsikeGraph');
 const humidityGraph = createGraph('humidityGraph');
@@ -100,6 +105,11 @@ function processWeatherData(weatherData) {
     getElement('Error').innerHTML = ''; // Clear the error message
 
     updateCurrentWeather(currentConditions, firstDayData, address,);
+    updateCurrentGraphDouble(currentConditions.datetime, threeDayData, topTempGraph, 'temp', 'feelslike', 47);
+    updateCurrentGraphDouble(currentConditions.datetime, threeDayData, topPrecipGraph, 'precipprob', 'precip', 47);
+    updateCurrentGraphDouble(currentConditions.datetime, threeDayData, topWindGraph, 'windspeed', 'windgust', 47);
+    updateCurrentGraph(currentConditions.datetime, threeDayData, topVisibilityGraph, 'visibility', 47);
+    updateCurrentGraphDouble(currentConditions.datetime, threeDayData, topHumidityGraph, 'humidity', 'dew', 47);
     updateCurrentGraphDouble(currentConditions.datetime, threeDayData, tempGraph, 'temp', 'feelslike', 'day');
     updateCurrentGraph(currentConditions.datetime, threeDayData, feelsikeGraph, 'feelslike', 'day');
     updateCurrentGraphDouble(currentConditions.datetime, threeDayData, humidityGraph, 'humidity', 'dew','day');
@@ -107,7 +117,7 @@ function processWeatherData(weatherData) {
     updateCurrentGraphDouble(currentConditions.datetime, threeDayData, windSpeedGraph, 'windspeed', 'windgust', 'day');
     updateCurrentGraph(currentConditions.datetime, threeDayData, uvIndexGraph, 'uvindex', 'day');
     updateCurrentGraph(currentConditions.datetime, threeDayData, visibilityGraph, 'visibility', 'day');
-    updateCurrentGraphDouble(currentConditions.datetime, threeDayData, solarRadiationGraph, 'solarradiation', 'solarenergy', 'day');
+    updateCurrentGraph(currentConditions.datetime, threeDayData, solarRadiationGraph, 'solarradiation', 'day');
     updateCurrentGraph(currentConditions.datetime, threeDayData, pressureGraph, 'pressure', 'day');
     updateCurrentGraphDouble(currentConditions.datetime, threeDayData, bigTemperatureGraph, 'temp', 'feelslike', 47);
     updateCurrentGraph(currentConditions.datetime, threeDayData, bigFeelsikeGraph, 'feelslike', 47);
@@ -116,7 +126,7 @@ function processWeatherData(weatherData) {
     updateCurrentGraphDouble(currentConditions.datetime, threeDayData, bigWindSpeedGraph, 'windspeed', 'windgust', 47);
     updateCurrentGraph(currentConditions.datetime, threeDayData, bigUVIndexGraph, 'uvindex', 47);
     updateCurrentGraph(currentConditions.datetime, threeDayData, bigVisibilityGraph, 'visibility', 47);
-    updateCurrentGraphDouble(currentConditions.datetime, threeDayData, bigSolarRadiationGraph, 'solarradiation', 'solarenergy', 47);
+    updateCurrentGraph(currentConditions.datetime, threeDayData, bigSolarRadiationGraph, 'solarradiation', 47);
     updateCurrentGraph(currentConditions.datetime, threeDayData, bigPressureGraph, 'pressure', 47);
     updateWeatherIcon(currentConditions.icon);
 }
@@ -194,6 +204,7 @@ function updateCurrentGraph(timeData, threeDayData, chart, unit, size) {
         feelslike: 'Feels Like',
         humidity: 'Humidity',
         precipprob: 'Precipitation Probability',
+        precip: 'Precipitation',
         windspeed: 'Wind Speed',
         windgust: 'Wind Gust',
         uvindex: 'UV Index',
@@ -226,7 +237,8 @@ function updateCurrentGraph(timeData, threeDayData, chart, unit, size) {
             label: graphTypeDisplay,
             data: data.map(row => row.value),
             borderWidth: 3,
-            tension: 0.45       
+            tension: 0.45,
+            borderColor: '#5a6fb0',
         }]
     }
     chart.update()
@@ -243,6 +255,7 @@ function updateCurrentGraphDouble(timeData, threeDayData, chart, unitFirst, unit
         humidity: 'Humidity',
         dew: 'Dew Point',
         precipprob: 'Precipitation Probability',
+        precip: 'Precipitation',
         windspeed: 'Wind Speed',
         windgust: 'Wind Gust',
         uvindex: 'UV Index',
@@ -291,12 +304,14 @@ function updateCurrentGraphDouble(timeData, threeDayData, chart, unitFirst, unit
             label: graphTypeDisplay,
             data: data.map(row => row.value1),
             borderWidth: 3,
-            tension: 0.45
+            tension: 0.45,
+            borderColor: '#5a6fb0',
         },{
             label: graphTypeDisplay2,
             data: data.map(row => row.value2),
             borderWidth: 3,
-            tension: 0.45
+            tension: 0.45,
+            borderColor: '#19b8d1',
         }
 
     ]

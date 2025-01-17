@@ -101,6 +101,26 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                 </div>
             </div>
 
+            <div class="uk-section uk-width-expand"> <!-- New InfoBox -->
+                <div class="uk-card uk-card-default uk-border-rounded uk-flex-column">
+                    <div uk-grid class="uk-padding-small" uk-switcher="connect: .switcher-topGraphs"> <!-- Selectors -->
+                        <div><div class="uk-button" href="#">Temperature</div></div>
+                        <div><div class="uk-button" href="#">Precipitation</div></div>
+                        <div><div class="uk-button" href="#">Wind Speed</div></div>
+                        <div><div class="uk-button" href="#">Visibility</div></div>
+                        <div><div class="uk-button" href="#">Humidity</div></div>
+                    </div>
+                    <hr class="">
+                    <div class="uk-flex-column uk-width-expand uk-padding-small uk-switcher switcher-topGraphs"> <!-- Graphs -->
+                        <div><canvas id="topTempGraph" style="width: 900px; height: 250px"></canvas></div>
+                        <div><canvas id="topPrecipGraph" style="width: 900px; height: 250px"></canvas></div>
+                        <div><canvas id="topWindGraph" style="width: 900px; height: 250px"></canvas></div>
+                        <div><canvas id="topVisibilityGraph" style="width: 900px; height: 250px"></canvas></div>
+                        <div><canvas id="topHumidityGraph" style="width: 900px; height: 250px"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
             <div uk-grid class="uk-child-width-1-3" uk-switcher="connect: .switcher-graphs"> <!-- Bottom InfoBoxes -->
 
                 <div class="uk-child-width-expand"><!-- Temperature InfoBox -->
@@ -109,8 +129,8 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div class="uk-align-left uk-text-left">
                             <h5>Temperature</h5>
                         </div>
-                        <div style="width: 300px; justify-self: center">
-                            <canvas id="tempGraph"></canvas>
+                        <div class="justify-self: center">
+                            <canvas id="tempGraph" style="width: 300px"></canvas>
                         </div>
                         <div class="">
                             <div id="tempAverage" class="">Temperature Average: </div>
@@ -125,8 +145,8 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div class="uk-align-left uk-text-left">
                             <h5>Feels Like</h5>
                         </div>
-                        <div style="width: 300px; justify-self: center">
-                            <canvas id="feelsikeGraph"></canvas>
+                        <div class="justify-self: center">
+                            <canvas id="feelsikeGraph" style="width: 300px"></canvas>
                         </div>
                         <p id="feelslikeAverage" class="">Feels like Average: </p>
                     </div>
@@ -138,8 +158,8 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div class="uk-align-left uk-text-left">
                             <h5>Wind Speed</h5>
                         </div>
-                        <div style="width: 300px; justify-self: center">
-                            <canvas id="windSpeedGraph"></canvas>
+                        <div class="justify-self: center">
+                            <canvas id="windSpeedGraph" style="width: 300px"></canvas>
                         </div>
                         <div>
                             <div id="windspeedAverage" class="">Wind Speed Average: </div>
@@ -154,8 +174,8 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div class="uk-align-left uk-text-left">
                             <h5>Humidity</h5>
                         </div>
-                        <div style="width: 300px; justify-self: center">
-                            <canvas id="humidityGraph"></canvas>
+                        <div class="justify-self: center">
+                            <canvas id="humidityGraph" style="width: 300px"></canvas>
                         </div>
                         <div>
                             <div id="humidityAverage" class="">Humiditiy Average: </div>
@@ -164,16 +184,16 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                     </div>
                 </div>
 
-                <div class="uk-child-width-expand"><!-- Rainfall InfoBox -->
+                <div class="uk-child-width-expand"><!-- Precipitation Probability InfoBox -->
                     <div class="uk-card-default uk-card-hover uk-button uk-border-rounded uk-flex-column uk-child-width-expand uk-padding-small"
                         href="#">
                         <div class="uk-align-left uk-text-left">
-                            <h5>Rainfall</h5>
+                            <h5>Precipitation Probability</h5>
                         </div>
-                        <div style="width: 300px; justify-self: center">
-                            <canvas id="precipprobGraph"></canvas>
+                        <div class="justify-self: center">
+                            <canvas id="precipprobGraph" style="width: 300px"></canvas>
                         </div>
-                        <p id="precipprobAverage" class="">Rainfall Average: </p>
+                        <p id="precipprobAverage" class="">Precipitation Probability Average: </p>
                     </div>
                 </div>
 
@@ -183,8 +203,8 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div class="uk-align-left uk-text-left">
                             <h5>UV Index</h5>
                         </div>
-                        <div style="width: 300px; justify-self: center">
-                            <canvas id="uvIndexGraph"></canvas>
+                        <div class="justify-self: center">
+                            <canvas id="uvIndexGraph" style="width: 300px"></canvas>
                         </div>
                         <div class="">
                             <div id="uvindexAverage" class="">UV Index Max: </div>
@@ -199,8 +219,8 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div class="uk-align-left uk-text-left">
                             <h5>Visibility</h5>
                         </div>
-                        <div style="width: 300px; justify-self: center">
-                            <canvas id="visibilityGraph"></canvas>
+                        <div class="justify-self: center">
+                            <canvas id="visibilityGraph" style="width: 300px"></canvas>
                         </div>
                         <p id="visibilityAverage" class="">Visibility Average: </p>
                     </div>
@@ -212,8 +232,8 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div class="uk-align-left uk-text-left">
                             <h5>Solar Radiation</h5>
                         </div>
-                        <div style="width: 300px; justify-self: center">
-                            <canvas id="solarRadiationGraph"></canvas>
+                        <div class="justify-self: center">
+                            <canvas id="solarRadiationGraph" style="width: 300px"></canvas>
                         </div>
                         <p id="solarRadiationAverage" class="">Solar Radiation Average: </p>
                     </div>
@@ -225,8 +245,8 @@ https://github.com/mrdarrengriffin/google-weather-icons (Weather Icons)
                         <div class="uk-align-left uk-text-left">
                             <h5>Pressure</h5>
                         </div>
-                        <div style="width: 300px; justify-self: center">
-                            <canvas id="pressureGraph"></canvas>
+                        <div class="justify-self: center">
+                            <canvas id="pressureGraph" style="width: 300px"></canvas>
                         </div>
                         <p id="pressureAverage" class="">Pressure Average: </p>
                     </div>
@@ -324,6 +344,7 @@ https://docs.tomorrow.io/recipes
 https://getuikit.com/docs/introduction
 https://cssgridgarden.com/#de
 https://flexboxfroggy.com/#de
+https://www.timeanddate.com/weather/?sort=6
 
 https://lesscss.org/
 https://www.visualcrossing.com/weather/weather-data-services/germany?v=api#
