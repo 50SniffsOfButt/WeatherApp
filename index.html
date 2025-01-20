@@ -52,7 +52,7 @@ Bugs:
                     <div class="uk-card uk-card-default uk-card-body uk-flex-column uk-border-rounded"
                         style="padding: 8px;">
                         <div class="uk-flex uk-flex-row uk-flex-between">
-                            <div class="uk-text-left">Current Weather</div>
+                            <div id="currentWeather" class="uk-text-left">Current Weather</div>
                             <div id="datetime" class="uk-text-right">Date</div>
                         </div>
                         <div class="">
@@ -72,7 +72,7 @@ Bugs:
                             </div>
                             <div>
                                 <div> <!-- General Description InfoBox -->
-                                    <div id="description" class="uk-card uk-card-small uk-card-body"> Long Description
+                                    <div id="longDescription" class="uk-card uk-card-small uk-card-body"> Long Description
                                     </div>
                                 </div>
                             </div>
@@ -104,7 +104,7 @@ Bugs:
                             <select id="languageInput" aria-label="Custom controls">
                                 <option value="Deutsch">Deutsch</option>
                                 <option value="English">English</option>
-                                <option value="3">Option 03</option>
+                                <option value="Suaheli">Suaheli</option>
                                 <option value="4">Option 04</option>
                             </select>
                             <button class="uk-button uk-button-default" type="button" tabindex="2">
@@ -119,11 +119,11 @@ Bugs:
             <div class="uk-section-xsmall uk-width-expand"> <!-- Main InfoBox -->
                 <div class="uk-card uk-card-default uk-border-rounded uk-flex-column">
                     <div uk-grid class="uk-padding-small" uk-switcher="connect: .switcher-topGraphs"> <!-- Selectors -->
-                        <div><div class="uk-button" href="#">Temperature</div></div>
-                        <div><div class="uk-button" href="#">Precipitation</div></div>
-                        <div><div class="uk-button" href="#">Wind Speed</div></div>
-                        <div><div class="uk-button" href="#">Visibility</div></div>
-                        <div><div class="uk-button" href="#">Humidity</div></div>
+                        <div><div id="temperature" class="uk-button" href="#">Temperature</div></div>
+                        <div><div id="preciptiation" class="uk-button" href="#">Precipitation</div></div>
+                        <div><div id="windspeed" class="uk-button" href="#">Wind Speed</div></div>
+                        <div><div id="visibility" class="uk-button" href="#">Visibility</div></div>
+                        <div><div id="humidity" class="uk-button" href="#">Humidity</div></div>
                     </div>
                     <hr class="">
                     <div class="uk-flex-column uk-width-expand uk-padding-small uk-switcher switcher-topGraphs"> <!-- Graphs -->
@@ -142,10 +142,10 @@ Bugs:
             <div class="uk-section-xsmall uk-width-expand"> <!-- Second InfoBox -->
                 <div class="uk-card uk-card-default uk-border-rounded uk-flex-column">
                     <div uk-grid class="uk-padding-small" uk-switcher="connect: .switcher-secondGraphs"> <!-- Selectors -->
-                        <div><div class="uk-button" href="#">UV Index</div></div>
-                        <div><div class="uk-button" href="#">Solar Radiation</div></div>
-                        <div><div class="uk-button" href="#">Cloud Cover</div></div>
-                        <div><div class="uk-button" href="#">Pressure</div></div>
+                        <div><div id="uvIndex" class="uk-button" href="#">UV Index</div></div>
+                        <div><div id="solarRad" class="uk-button" href="#">Solar Radiation</div></div>
+                        <div><div id="cloudCover" class="uk-button" href="#">Cloud Cover</div></div>
+                        <div><div id="pressure" class="uk-button" href="#">Pressure</div></div>
                     </div>
                     <hr class="">
                     <div class="uk-flex-column uk-width-expand uk-padding-small uk-switcher switcher-secondGraphs"> <!-- Graphs -->

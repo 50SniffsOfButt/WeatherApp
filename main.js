@@ -97,8 +97,7 @@ function processWeatherData(weatherData) {
     getElement('Error').innerHTML = ''; // Clear the error message
 
     const languageValue = getLanguage();
-    console.log(languageValue);
-    updateCurrentWeather(currentConditions, firstDayData, address,);
+    updateCurrentWeather(currentConditions, firstDayData, address, languageValue);
     initializeGraphs(weatherData,languageValue);
     document.getElementById('dayInput').addEventListener('input', function(event) {
         let rangeValue = event.target.value;
@@ -135,25 +134,142 @@ function getUVProtectionRecommendation(uvindex) {
     }
 }
 
-function updateCurrentWeather(currentConditions, firstDayData, address,) {
+function updateCurrentWeather(currentConditions, firstDayData, address, languageValue) {
     const dateParts = firstDayData.datetime.split('-'); // Makes Year-Month-Day into Day-Month-Year
     const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
     const currentTimestamp = new Date(currentConditions.datetimeEpoch * 1000).toLocaleString();
 
+    const translations = {
+        English: {
+            dataFrom: 'Data from',
+            clothingRecommendation: 'Clothing Recommendation',
+            time: 'Time',
+            feelsLike: 'Feels Like',
+            temperature: 'Temperature',
+            humidity: 'Humidity',
+            precipitationChance: 'Precipitation Chance',
+            windSpeed: 'Wind Speed',
+            uvIndex: 'UV Index',
+            date: 'Date',
+            currentWeather: 'Current Weather',
+            visibility: 'Visibility',
+            solarRad: 'Solar Radiation',
+            cloudCover: 'Cloud Cover',
+            pressure: 'Pressure',
+        },
+        Deutsch: {
+            dataFrom: 'Daten von',
+            clothingRecommendation: 'Kleidungsempfehlung',
+            time: 'Zeit',
+            feelsLike: 'Gefühlt',
+            temperature: 'Temperatur',
+            humidity: 'Luftfeuchtigkeit',
+            precipitationChance: 'Niederschlags Wahrscheinlichkeit',
+            windSpeed: 'Wind Geschwindigkeit',
+            uvIndex: 'UV Index',
+            date: 'Datum',
+            currentWeather: 'Aktuelles Wetter',
+            visibility: 'Sichtweite',
+            solarRad: 'Sonnenstrahlung',
+            cloudCover: 'Bewölkung',
+            pressure: 'Luftdruck',
+        },
+        Suaheli: {
+            dataFrom: 'Taarifa kutoka',
+            clothingRecommendation: 'Mapendekezo ya Mavazi',
+            time: 'Wakati',
+            feelsLike: 'Inahisi Kama',
+            temperature: 'Joto',
+            humidity: 'Unyevu',
+            precipitationChance: 'Nafasi ya Mvua',
+            windSpeed: 'Kasi ya Upepo',
+            uvIndex: 'Kiwango cha UV',
+            date: 'Tarehe',
+            currentWeather: 'Hali ya Hewa ya Sasa',
+            visibility: 'Mwonekano',
+            solarRad: 'Mionzi ya Jua',
+            cloudCover: 'Mawingu',
+            pressure: 'Shinikizo',
+        },
+    };
+    const shortWeatherTranslations = {
+        English: {
+            Clear: 'Clear',
+            Rain: 'Rain',
+            Snow: 'Snow',
+            Cloudy: 'Cloudy',
+            Overcast: 'Overcast',
+            'Partially cloudy': 'Partially cloudy',
+            "Rain, Partially cloudy": 'Rain, Partially cloudy',
+        },
+        Deutsch: {
+            Clear: 'Klar',
+            Rain: 'Regen',
+            Snow: 'Schnee',
+            Cloudy: 'Bewölkt',
+            Overcast: 'Bedeckt',
+            'Partially cloudy': 'Teilweise bewölkt',
+            "Rain, Partially cloudy": 'Regen, Teilweise bewölkt',
+        },
+        Suaheli: {
+            Clear: 'Wazi',
+            Rain: 'Mvua',
+            Snow: 'Theluji',
+            Cloudy: 'Mawingu',
+            Overcast: 'Mawingu',
+            'Partially cloudy': 'Sehemu yenye mawingu',
+            "Rain, Partially cloudy": 'Mvua, Sehemu yenye mawingu',
+        },
+    };
+    const longWeatherTranslations = {
+        English: {
+            'Partly cloudy throughout the day with rain.' : 'Partly cloudy throughout the day with rain.',
+            'Partly cloudy throughout the day.' : 'Partly cloudy throughout the day.',
+            'Overcast' : 'Overcast',
+            'Partially cloudy' : 'Partially cloudy',
+        },
+        Deutsch: {
+            'Partly cloudy throughout the day with rain.' : 'Teilweise bewölkt mit Regen.',
+            'Partly cloudy throughout the day.' : 'Teilweise bewölkt.',
+            'Overcast' : 'Bedeckt',
+            'Partially cloudy' : 'Teilweise bewölkt',
+        },
+        Suaheli: {
+            'Partly cloudy throughout the day with rain.': 'Sehemu yenye mawingu siku nzima na mvua.',
+            'Partly cloudy throughout the day.': 'Sehemu yenye mawingu siku nzima.',
+            'Overcast': 'Mawingu',
+            'Partially cloudy': 'Sehemu yenye mawingu',
+        },
+    };
+    
+    const selectedTranslations = translations[languageValue] || translations['English'];
+    const selectedShortWeatherTranslations = shortWeatherTranslations[languageValue] || shortWeatherTranslations['English'];
+    const selectedLongWeatherTranslations = longWeatherTranslations[languageValue] || longWeatherTranslations['English'];
+
+    getElement('currentWeather').innerHTML = selectedTranslations.currentWeather;
     getElement('Address').innerHTML = address;
-    getElement('currentConditions').innerHTML = currentConditions.conditions;
-    getElement('currentTimestamp').innerHTML = 'Data from: ' + currentTimestamp;
-    getElement('clothingRec').innerHTML = 'Clothing Recommendation: ' + getClothingRecommendation(currentConditions.feelslike);
+    getElement('currentConditions').innerHTML = selectedShortWeatherTranslations[currentConditions.conditions] || currentConditions.conditions;
+    getElement('currentTimestamp').innerHTML = `${selectedTranslations.dataFrom}: ${currentTimestamp}`;
+    getElement('clothingRec').innerHTML = `${selectedTranslations.clothingRecommendation}: ${getClothingRecommendation(currentConditions.feelslike)}`;
     //getElement('uvProtection').innerHTML = 'UV Protection Recommended: ' + getUVProtectionRecommendation(currentConditions.uvindex);
-    getElement('datetime').innerHTML = 'Datum: ' + formattedDate;
-    getElement('currentTime').innerHTML = 'Time: ' + currentConditions.datetime;
-    getElement('currentFeelslike').innerHTML = 'Feels Like: ' + currentConditions.feelslike + '°C';
-    getElement('description').innerHTML = firstDayData.description;
-    getElement('currentTemp').innerHTML = 'Temperature: ' + currentConditions.temp + '°C';
-    getElement('currentHumidity').innerHTML = 'Humidity: ' + currentConditions.humidity + '%';
-    getElement('currentPrecipprob').innerHTML = 'Precipitation Chance: ' + currentConditions.precipprob + '%';
-    getElement('currentWindspeed').innerHTML = 'Wind Speed: ' + currentConditions.windspeed + ' km/h';
-    getElement('currentUVIndex').innerHTML = 'UV Index: ' + currentConditions.uvindex;
+    getElement('datetime').innerHTML = `${selectedTranslations.date}: ${formattedDate}`;
+    getElement('currentTime').innerHTML = `${selectedTranslations.time}: ${currentConditions.datetime}`;
+    getElement('currentFeelslike').innerHTML = `${selectedTranslations.feelsLike}: ${currentConditions.feelslike}°C`;
+    getElement('longDescription').innerHTML = selectedLongWeatherTranslations[currentConditions.conditions] || currentConditions.conditions;
+    getElement('currentTemp').innerHTML = `${selectedTranslations.temperature}: ${currentConditions.temp}°C`;
+    getElement('currentHumidity').innerHTML = `${selectedTranslations.humidity}: ${currentConditions.humidity}%`;
+    getElement('currentPrecipprob').innerHTML = `${selectedTranslations.precipitationChance}: ${currentConditions.precipprob}%`;
+    getElement('currentWindspeed').innerHTML = `${selectedTranslations.windSpeed}: ${currentConditions.windspeed} km/h`;
+    getElement('currentUVIndex').innerHTML = `${selectedTranslations.uvIndex}: ${currentConditions.uvindex}`;
+    getElement('temperature').innerHTML = `${selectedTranslations.temperature}`;
+    getElement('preciptiation').innerHTML = `${selectedTranslations.precipitationChance}`;
+    getElement('windspeed').innerHTML = `${selectedTranslations.windSpeed}`;
+    getElement('visibility').innerHTML = `${selectedTranslations.visibility}`;
+    getElement('humidity').innerHTML = `${selectedTranslations.humidity}`;
+    getElement('uvIndex').innerHTML = `${selectedTranslations.uvIndex}`;
+    getElement('solarRad').innerHTML = `${selectedTranslations.solarRad}`;
+    getElement('cloudCover').innerHTML = `${selectedTranslations.cloudCover}`;
+    getElement('pressure').innerHTML = `${selectedTranslations.pressure}`;
     //getElement('tempAverage').innerHTML = 'Temperature Average: ' + firstDayData.temp + '°C';
     //getElement('feelslikeAverage2').innerHTML = 'Feels Like Average: ' + firstDayData.feelslike + '°C';
     //getElement('feelslikeAverage').innerHTML = 'Feels Like Average: ' + firstDayData.feelslike + '°C';
@@ -230,13 +346,44 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
             pressure: 'Luftdruck',
             cloudcover: 'Bewölkung',
         },
-        // Add more languages as needed
+        Suaheli: {
+            temp: 'Joto',
+            feelslike: 'Inahisi Kama',
+            humidity: 'Unyevu',
+            dew: 'Umande',
+            precipprob: 'Nafasi ya Mvua',
+            precip: 'Mvua',
+            windspeed: 'Kasi ya Upepo',
+            windgust: 'Kasi ya Upepo',
+            uvindex: 'Kiwango cha UV',
+            visibility: 'Mwonekano',
+            solarradiation: 'Mionzi ya Jua',
+            solarenergy: 'Nishati ya Jua',
+            pressure: 'Shinikizo',
+            cloudcover: 'Mawingu',
+        },
     };
 
+    const dataLanguageDisplay = {
+        English: {
+            day: 'Day',
+            today: 'Today',
+        },
+        Deutsch: {
+            day: 'Tag',
+            today: 'Heute',
+        },
+        Suaheli: {
+            day: 'Siku',
+            today: 'Leo',
+        },
+    }
     const selectedLanguage = dataTypeDisplayNames[languageValue] || dataTypeDisplayNames['English'];
 
     const graphTypeDisplay = selectedLanguage[unitFirst] || 'Error';
     const graphTypeDisplay2 = selectedLanguage[unitSecond] || 'Error';
+    const graphLanguageDisplayDay = dataLanguageDisplay[languageValue].day || 'Error';
+    const graphLanguageDisplayToday = dataLanguageDisplay[languageValue].today || 'Error';
 
     const hoursUntilMidnight = 24 - currentTime;
 
@@ -255,9 +402,9 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
         let hour = totalHours % 24;
         let timeLabel;
         if (i === 0 && hoursValue === 0) {
-            timeLabel = `Today: ${hour}`;
+            timeLabel = `${graphLanguageDisplayToday}: ${hour}`;
         } else {
-            timeLabel = (hour === 0) ? `Day ${day + 1}: ${hour}` : `${hour}`;
+            timeLabel = (hour === 0) ? `${graphLanguageDisplayDay} ${day + 1}: ${hour}` : `${hour}`;
         }
         let value1, value2;
         value1 = weatherData.days[day].hours[hour][unitFirst];
