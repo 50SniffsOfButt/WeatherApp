@@ -9,7 +9,6 @@ document.querySelector('#SearchbarTop').addEventListener('submit', function (eve
     fetchWeatherData(searchQuery);
 });
 
-
 const topTempGraph = createGraph('topTempGraph');
 const topPrecipGraph = createGraph('topPrecipGraph');
 const topWindGraph = createGraph('topWindGraph');
@@ -88,7 +87,6 @@ function getElement(id) { return document.getElementById(id); }
 
 function processWeatherData(weatherData) {
     const firstDayData = weatherData.days[0];
-    const threeDayData = weatherData.days.slice(0, 3);
     const currentConditions = weatherData.currentConditions;
     const address = weatherData.resolvedAddress;
 
@@ -96,15 +94,8 @@ function processWeatherData(weatherData) {
     getElement('Error').innerHTML = ''; // Clear the error message
 
     updateCurrentWeather(currentConditions, firstDayData, address,);
-    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topTempGraph, 'temp', 'feelslike', 47);
-    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topPrecipGraph, 'precipprob', 'precip', 47);
-    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topWindGraph, 'windspeed', 'windgust', 47);
-    updateCurrentGraph(currentConditions.datetime, weatherData, topVisibilityGraph, 'visibility', 47);
-    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topHumidityGraph, 'humidity', 'dew', 47);
-    updateCurrentGraph(currentConditions.datetime, weatherData, topUVIndexGraph, 'uvindex', 47);
-    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topSolarRadGraph, 'solarradiation', 'solarenergy', 47);
-    updateCurrentGraph(currentConditions.datetime, weatherData, topCloudGraph, 'cloudcover', 47);
-    updateCurrentGraph(currentConditions.datetime, weatherData, topPressureGraph, 'pressure', 47);
+    initializeGraphs(weatherData);
+    updateGraphs(weatherData);
     updateWeatherIcon(currentConditions.icon);
 }
 
@@ -169,6 +160,35 @@ function updateCurrentWeather(currentConditions, firstDayData, address,) {
     //getElement('pressureAverage').innerHTML = 'Pressure Average: ' + firstDayData.pressure + ' mb';
 }
 
+function initializeGraphs(weatherData,) {
+    const currentConditions = weatherData.currentConditions;
+    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topTempGraph, 'temp', 'feelslike', 47,);
+    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topPrecipGraph, 'precipprob', 'precip', 47);
+    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topWindGraph, 'windspeed', 'windgust', 47);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topVisibilityGraph, 'visibility', 47);
+    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topHumidityGraph, 'humidity', 'dew', 47);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topUVIndexGraph, 'uvindex', 47);
+    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topSolarRadGraph, 'solarradiation', 'solarenergy', 47);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topCloudGraph, 'cloudcover', 47);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topPressureGraph, 'pressure', 47);
+}
+
+function updateGraphs(weatherData) {
+    document.getElementById('dayInput').addEventListener('input', function(event) {
+    let rangeValue = event.target.value;
+    const currentConditions = weatherData.currentConditions;
+    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topTempGraph, 'temp', 'feelslike', 47, rangeValue);
+    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topPrecipGraph, 'precipprob', 'precip', 47, rangeValue);
+    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topWindGraph, 'windspeed', 'windgust', 47, rangeValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topVisibilityGraph, 'visibility', 47, rangeValue);
+    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topHumidityGraph, 'humidity', 'dew', 47, rangeValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topUVIndexGraph, 'uvindex', 47, rangeValue);
+    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topSolarRadGraph, 'solarradiation', 'solarenergy', 47, rangeValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topCloudGraph, 'cloudcover', 47, rangeValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topPressureGraph, 'pressure', 47, rangeValue);
+});
+}
+
 function updateCurrentGraph(timeData, weatherData, chart, unit, size) {
     const currentTime = parseInt(timeData.split(':')[0], 10);
     const dataTypeDisplayNames = {
@@ -203,14 +223,7 @@ function updateCurrentGraph(timeData, weatherData, chart, unit, size) {
             timeLabel = (hour === 0) ? `Day ${day}: ${hour}` : `${hour}`;
         }
         let value;
-        
-        if (day === 1) {
-            value = weatherData.days[day].hours[hour][unit];
-        } else if (day === 2) {
-            value = weatherData.days[day].hours[hour][unit];
-        } else {
-            value = weatherData.days[day].hours[hour][unit];
-        }
+        value = weatherData.days[day].hours[hour][unit];
     
         data.push({
             time: timeLabel,
@@ -233,7 +246,7 @@ function updateCurrentGraph(timeData, weatherData, chart, unit, size) {
     chart.update()
 }
 
-function updateCurrentGraphDouble(timeData, weatherData, chart, unitFirst, unitSecond, size) {
+function updateCurrentGraphDouble(timeData, weatherData, chart, unitFirst, unitSecond, size, rangeValue) {
     const currentTime = parseInt(timeData.split(':')[0], 10);
     const dataTypeDisplayNames = {
         temp: 'Temperature',
@@ -253,15 +266,24 @@ function updateCurrentGraphDouble(timeData, weatherData, chart, unitFirst, unitS
     const graphTypeDisplay = dataTypeDisplayNames[unitFirst] || 'Error';
     const graphTypeDisplay2 = dataTypeDisplayNames[unitSecond] || 'Error';
 
+
     const hoursUntilMidnight = 24 - currentTime;
 
     const parsedSize = (size === 'day') ? (hoursUntilMidnight > 16 ? 16 : (hoursUntilMidnight < 8 ? 8 : hoursUntilMidnight)) : size;
-    // checks if the hours until midnight is greater than 16, if so, it sets the size to 16, if it is less than 8, it sets it to 8, otherwise it sets it to the hours until midnight
-    // but only if the value of size is 'day', otherwise it sets it to the value of size
+    // Sets the parsedSize to max 16  or min 8 but only if the value of size is 'day', otherwise it sets it to the value of size
+
+    let dayValue = 0;
+    if (typeof rangeValue !== 'undefined') {
+        dayValue = parseInt(rangeValue);
+        console.log(dayValue); // Debugging: Log the dayValue
+    } else {
+        console.log('rangeValue is not defined, using default dayValue');
+    }
+
 
     data = [];
     for (let i = 0; i <= parsedSize; i++) {
-        let day = Math.floor((currentTime + i) / 24) + 1;
+        let day = Math.floor(((currentTime + i) / 24) + dayValue);
         let hour = (currentTime + i) % 24;
         let timeLabel;
         if (i === 0) {
@@ -270,17 +292,9 @@ function updateCurrentGraphDouble(timeData, weatherData, chart, unitFirst, unitS
             timeLabel = (hour === 0) ? `Day ${day}: ${hour}` : `${hour}`;
         }
         let value1, value2;
-    
-        if (day === 1) {
-            value1 = weatherData.days[day].hours[hour][unitFirst];
-            value2 = weatherData.days[day].hours[hour][unitSecond];
-        } else if (day === 2) {
-            value1 = weatherData.days[day].hours[hour][unitFirst];
-            value2 = weatherData.days[day].hours[hour][unitSecond];
-        } else {
-            value1 = weatherData.days[day].hours[hour][unitFirst];
-            value2 = weatherData.days[day].hours[hour][unitSecond];
-        }
+        value1 = weatherData.days[day].hours[hour][unitFirst];
+        value2 = weatherData.days[day].hours[hour][unitSecond];
+
     
         data.push({
             time: timeLabel,
