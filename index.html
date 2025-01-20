@@ -99,11 +99,19 @@ Bugs:
                         <p id="currentTimestamp">Data from :</p>
                         <p id="clothingRec">Clothing Recommended</p>
                     </div>
-                    <div class="uk-margin"> <!-- Search Button -->
-                        <form id="SearchbarBottom" class="uk-search uk-search-default rounded">
-                            <input id="Searchbar" class="uk-search-input" tabindex="2" type="search"
-                                placeholder="Search" aria-label="Search" style="background-color: #C3E0E5;">
-                        </form>
+                    <div class="uk-margin">
+                        <div style="background-color: #fff;" uk-form-custom="target: > * > span:first-child">
+                            <select id="languageInput" aria-label="Custom controls">
+                                <option value="Deutsch">Deutsch</option>
+                                <option value="English">English</option>
+                                <option value="3">Option 03</option>
+                                <option value="4">Option 04</option>
+                            </select>
+                            <button class="uk-button uk-button-default" type="button" tabindex="2">
+                                <span></span>
+                                <span uk-icon="icon: chevron-down"></span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -126,7 +134,7 @@ Bugs:
                         <div><canvas id="topHumidityGraph" style="width: 900px; height: 250px"></canvas></div>
                     </div>
                     <div class="uk-margin uk-padding-small">
-                        <input id="dayInput" class="uk-range" type="range" value="0" min="0" max="10" step="0.1" aria-label="Range">
+                        <input id="dayInput" class="uk-range" type="range" value="0" min="0" max="28.9" step="0.1" aria-label="Range">
                     </div>
                 </div>
             </div>

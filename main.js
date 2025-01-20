@@ -2,7 +2,7 @@ document.querySelector('#SearchbarTop').addEventListener('submit', function (eve
     event.preventDefault();
     let searchQuery = document.querySelector('#Searchbar').value.trim();
     if (!searchQuery) {
-        searchQuery = 'Nakakpiripirit';
+       searchQuery = 'Nakakpiripirit';
     }
 
     console.log(searchQuery); // Debugging: Log the search query
@@ -63,9 +63,7 @@ function createGraph(divElement) {
             scales: {
                 y: {
                     beginAtZero: graphStyle,
-            }
-
-        }
+            }}
     }}
     );
 }
@@ -85,6 +83,11 @@ function fetchWeatherData(location) {
 
 function getElement(id) { return document.getElementById(id); }
 
+function  getLanguage() {
+    let languageValue = document.getElementById('languageInput').value;
+    return languageValue;
+}
+
 function processWeatherData(weatherData) {
     const firstDayData = weatherData.days[0];
     const currentConditions = weatherData.currentConditions;
@@ -93,9 +96,14 @@ function processWeatherData(weatherData) {
     console.log(weatherData); // Debugging: Json in console
     getElement('Error').innerHTML = ''; // Clear the error message
 
+    const languageValue = getLanguage();
+    console.log(languageValue);
     updateCurrentWeather(currentConditions, firstDayData, address,);
-    initializeGraphs(weatherData);
-    updateGraphs(weatherData);
+    initializeGraphs(weatherData,languageValue);
+    document.getElementById('dayInput').addEventListener('input', function(event) {
+        let rangeValue = event.target.value;
+        updateGraphs(weatherData, rangeValue, languageValue);
+    } );
     updateWeatherIcon(currentConditions.icon);
 }
 
@@ -160,119 +168,75 @@ function updateCurrentWeather(currentConditions, firstDayData, address,) {
     //getElement('pressureAverage').innerHTML = 'Pressure Average: ' + firstDayData.pressure + ' mb';
 }
 
-function initializeGraphs(weatherData,) {
+function initializeGraphs(weatherData,languageValue) {
     const currentConditions = weatherData.currentConditions;
-    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topTempGraph, 'temp', 'feelslike', 47,);
-    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topPrecipGraph, 'precipprob', 'precip', 47);
-    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topWindGraph, 'windspeed', 'windgust', 47);
-    updateCurrentGraph(currentConditions.datetime, weatherData, topVisibilityGraph, 'visibility', 47);
-    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topHumidityGraph, 'humidity', 'dew', 47);
-    updateCurrentGraph(currentConditions.datetime, weatherData, topUVIndexGraph, 'uvindex', 47);
-    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topSolarRadGraph, 'solarradiation', 'solarenergy', 47);
-    updateCurrentGraph(currentConditions.datetime, weatherData, topCloudGraph, 'cloudcover', 47);
-    updateCurrentGraph(currentConditions.datetime, weatherData, topPressureGraph, 'pressure', 47);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topTempGraph, 'temp', 'feelslike', 47, 0, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topPrecipGraph, 'precipprob', 'precip', 47, 0, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topWindGraph, 'windspeed', 'windgust', 47, 0, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topVisibilityGraph, 'visibility', null, 47, 0, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topHumidityGraph, 'humidity', 'dew', 47, 0, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topUVIndexGraph, 'uvindex', null, 47, 0, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topSolarRadGraph, 'solarradiation', 'solarenergy', 47, 0, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topCloudGraph, 'cloudcover', null, 47, 0, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topPressureGraph, 'pressure', null, 47, 0, languageValue);
 }
 
-function updateGraphs(weatherData) {
-    document.getElementById('dayInput').addEventListener('input', function(event) {
-    let rangeValue = event.target.value;
+function updateGraphs(weatherData, rangeValue, languageValue) {
+    console.log(languageValue);
     const currentConditions = weatherData.currentConditions;
-    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topTempGraph, 'temp', 'feelslike', 47, rangeValue);
-    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topPrecipGraph, 'precipprob', 'precip', 47, rangeValue);
-    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topWindGraph, 'windspeed', 'windgust', 47, rangeValue);
-    updateCurrentGraph(currentConditions.datetime, weatherData, topVisibilityGraph, 'visibility', 47, rangeValue);
-    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topHumidityGraph, 'humidity', 'dew', 47, rangeValue);
-    updateCurrentGraph(currentConditions.datetime, weatherData, topUVIndexGraph, 'uvindex', 47, rangeValue);
-    updateCurrentGraphDouble(currentConditions.datetime, weatherData, topSolarRadGraph, 'solarradiation', 'solarenergy', 47, rangeValue);
-    updateCurrentGraph(currentConditions.datetime, weatherData, topCloudGraph, 'cloudcover', 47, rangeValue);
-    updateCurrentGraph(currentConditions.datetime, weatherData, topPressureGraph, 'pressure', 47, rangeValue);
-});
+    updateCurrentGraph(currentConditions.datetime, weatherData, topTempGraph, 'temp', 'feelslike', 47, rangeValue, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topPrecipGraph, 'precipprob', 'precip', 47, rangeValue, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topWindGraph, 'windspeed', 'windgust', 47, rangeValue, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topVisibilityGraph, 'visibility', null, 47, rangeValue, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topHumidityGraph, 'humidity', 'dew', 47, rangeValue, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topUVIndexGraph, 'uvindex', null, 47, rangeValue, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topSolarRadGraph, 'solarradiation', 'solarenergy', 47, rangeValue, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topCloudGraph, 'cloudcover', null, 47, rangeValue, languageValue);
+    updateCurrentGraph(currentConditions.datetime, weatherData, topPressureGraph, 'pressure', null, 47, rangeValue, languageValue);
 }
 
-function updateCurrentGraph(timeData, weatherData, chart, unit, size, rangeValue) {
+function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond, size, rangeValue=0, languageValue='English') {
     const currentTime = parseInt(timeData.split(':')[0], 10);
     const dataTypeDisplayNames = {
-        temp: 'Temperature',
-        feelslike: 'Feels Like',
-        humidity: 'Humidity',
-        precipprob: 'Precipitation Probability',
-        precip: 'Precipitation',
-        windspeed: 'Wind Speed',
-        windgust: 'Wind Gust',
-        uvindex: 'UV Index',
-        visibility: 'Visibility',
-        solarradiation: 'Solar Radiation',
-        pressure: 'Pressure',
+        English: {
+            temp: 'Temperature',
+            feelslike: 'Feels Like',
+            humidity: 'Humidity',
+            dew: 'Dew Point',
+            precipprob: 'Precipitation Probability',
+            precip: 'Precipitation',
+            windspeed: 'Wind Speed',
+            windgust: 'Wind Gust',
+            uvindex: 'UV Index',
+            visibility: 'Visibility',
+            solarradiation: 'Solar Radiation',
+            solarenergy: 'Solar Energy',
+            pressure: 'Pressure',
+            cloudcover: 'Cloud Cover',
+        },
+        Deutsch: {
+            temp: 'Temperatur',
+            feelslike: 'Gefühlt',
+            humidity: 'Luftfeuchtigkeit',
+            dew: 'Taupunkt',
+            precipprob: 'Niederschlagswahrscheinlichkeit',
+            precip: 'Niederschlag',
+            windspeed: 'Windgeschwindigkeit',
+            windgust: 'Windböen',
+            uvindex: 'UV Index',
+            visibility: 'Sichtweite',
+            solarradiation: 'Sonnenstrahlung',
+            solarenergy: 'Sonnenenergie',
+            pressure: 'Luftdruck',
+            cloudcover: 'Bewölkung',
+        },
+        // Add more languages as needed
     };
-    const graphTypeDisplay = dataTypeDisplayNames[unit] || 'Error';
 
-    const hoursUntilMidnight = 24 - currentTime;
+    const selectedLanguage = dataTypeDisplayNames[languageValue] || dataTypeDisplayNames['English'];
 
-    const parsedSize = (size === 'day') ? (hoursUntilMidnight > 16 ? 16 : (hoursUntilMidnight < 8 ? 8 : hoursUntilMidnight)) : size;
-    // checks if the hours until midnight is greater than 16, if so, it sets the size to 16, if it is less than 8, it sets it to 8, otherwise it sets it to the hours until midnight
-    // but only if the value of size is 'day', otherwise it sets it to the value of size
-
-    let dayValue = 0;
-    let hoursValue = 0.0;
-    if (typeof rangeValue !== 'undefined') {
-        dayValue = parseInt(rangeValue);
-        hoursValue = parseFloat(rangeValue);
-    }
-
-    data = [];
-    for (let i = 0; i <= parsedSize; i++) {
-        let day = Math.floor(((currentTime + i) / 24) + dayValue);
-        let hour = ((currentTime + i + (hoursValue*10)) % 24);
-        let timeLabel;
-        if (i === 0) {
-            timeLabel = `Today: ${hour}`;
-        } else {
-            timeLabel = (hour === 0) ? `Day ${day}: ${hour}` : `${hour}`;
-        }
-        let value;
-        value = weatherData.days[day].hours[hour][unit];
-    
-        data.push({
-            time: timeLabel,
-            value: value
-        });
-    }
-
-    const label = data.map(row => row.time + ':00');
-
-    chart.data = {
-        labels: label,
-        datasets: [{
-            label: graphTypeDisplay,
-            data: data.map(row => row.value),
-            borderWidth: 3,
-            tension: 0.45,
-            borderColor: '#5a6fb0',
-        }]
-    }
-    chart.update()
-}
-
-function updateCurrentGraphDouble(timeData, weatherData, chart, unitFirst, unitSecond, size, rangeValue) {
-    const currentTime = parseInt(timeData.split(':')[0], 10);
-    const dataTypeDisplayNames = {
-        temp: 'Temperature',
-        feelslike: 'Feels Like',
-        humidity: 'Humidity',
-        dew: 'Dew Point',
-        precipprob: 'Precipitation Probability',
-        precip: 'Precipitation',
-        windspeed: 'Wind Speed',
-        windgust: 'Wind Gust',
-        uvindex: 'UV Index',
-        visibility: 'Visibility',
-        solarradiation: 'Solar Radiation',
-        solarenergy: 'Solar Energy',
-        pressure: 'Pressure',
-    };
-    const graphTypeDisplay = dataTypeDisplayNames[unitFirst] || 'Error';
-    const graphTypeDisplay2 = dataTypeDisplayNames[unitSecond] || 'Error';
-
+    const graphTypeDisplay = selectedLanguage[unitFirst] || 'Error';
+    const graphTypeDisplay2 = selectedLanguage[unitSecond] || 'Error';
 
     const hoursUntilMidnight = 24 - currentTime;
 
@@ -281,22 +245,19 @@ function updateCurrentGraphDouble(timeData, weatherData, chart, unitFirst, unitS
 
     let dayValue = 0;
     let hoursValue = 0.0;
-    if (typeof rangeValue !== 'undefined') {
-        dayValue = parseInt(rangeValue);
-        hoursValue = parseFloat(rangeValue);
-    }
-
-    console.log('START');
+    dayValue = parseInt(rangeValue);
+    hoursValue = parseFloat(rangeValue);
 
     data = [];
     for (let i = 0; i <= parsedSize; i++) {
-        let day = Math.floor(((currentTime + i) / 24) + dayValue);
-        let hour = ((currentTime + i + (hoursValue*10)) % 24);
+        let totalHours = currentTime + i + (hoursValue * 10);
+        let day = Math.floor(totalHours / 24) ;
+        let hour = totalHours % 24;
         let timeLabel;
         if (i === 0 && hoursValue === 0) {
             timeLabel = `Today: ${hour}`;
         } else {
-            timeLabel = (hour === 0) ? `Day ${day}: ${hour}` : `${hour}`;
+            timeLabel = (hour === 0) ? `Day ${day + 1}: ${hour}` : `${hour}`;
         }
         let value1, value2;
         value1 = weatherData.days[day].hours[hour][unitFirst];
