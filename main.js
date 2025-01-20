@@ -189,7 +189,7 @@ function updateGraphs(weatherData) {
 });
 }
 
-function updateCurrentGraph(timeData, weatherData, chart, unit, size) {
+function updateCurrentGraph(timeData, weatherData, chart, unit, size, rangeValue) {
     const currentTime = parseInt(timeData.split(':')[0], 10);
     const dataTypeDisplayNames = {
         temp: 'Temperature',
@@ -212,10 +212,17 @@ function updateCurrentGraph(timeData, weatherData, chart, unit, size) {
     // checks if the hours until midnight is greater than 16, if so, it sets the size to 16, if it is less than 8, it sets it to 8, otherwise it sets it to the hours until midnight
     // but only if the value of size is 'day', otherwise it sets it to the value of size
 
+    let dayValue = 0;
+    let hoursValue = 0.0;
+    if (typeof rangeValue !== 'undefined') {
+        dayValue = parseInt(rangeValue);
+        hoursValue = parseFloat(rangeValue);
+    }
+
     data = [];
     for (let i = 0; i <= parsedSize; i++) {
-        let day = Math.floor((currentTime + i) / 24) + 1;
-        let hour = (currentTime + i) % 24;
+        let day = Math.floor(((currentTime + i) / 24) + dayValue);
+        let hour = ((currentTime + i + (hoursValue*10)) % 24);
         let timeLabel;
         if (i === 0) {
             timeLabel = `Today: ${hour}`;
@@ -273,20 +280,20 @@ function updateCurrentGraphDouble(timeData, weatherData, chart, unitFirst, unitS
     // Sets the parsedSize to max 16  or min 8 but only if the value of size is 'day', otherwise it sets it to the value of size
 
     let dayValue = 0;
+    let hoursValue = 0.0;
     if (typeof rangeValue !== 'undefined') {
         dayValue = parseInt(rangeValue);
-        console.log(dayValue); // Debugging: Log the dayValue
-    } else {
-        console.log('rangeValue is not defined, using default dayValue');
+        hoursValue = parseFloat(rangeValue);
     }
 
+    console.log('START');
 
     data = [];
     for (let i = 0; i <= parsedSize; i++) {
         let day = Math.floor(((currentTime + i) / 24) + dayValue);
-        let hour = (currentTime + i) % 24;
+        let hour = ((currentTime + i + (hoursValue*10)) % 24);
         let timeLabel;
-        if (i === 0) {
+        if (i === 0 && hoursValue === 0) {
             timeLabel = `Today: ${hour}`;
         } else {
             timeLabel = (hour === 0) ? `Day ${day}: ${hour}` : `${hour}`;
