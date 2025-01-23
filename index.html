@@ -17,35 +17,40 @@
     </style>
 </head>
 
-<!--
-Bugs:
-    showing new graph gives graphical oddities
--->
-
 <body>
     <div class="uk-background-primary" style="background-color: #2d497d; padding-bottom: 50px;"> <!-- Background -->
         <!-- Sidebar -->
-        <div class=""
-            style="height:100%;width: 160px; background-color:#0C2D48; position:fixed!important; z-index:1; overflow:auto">
+        <div class="" style="height:100%;width: 160px; background-color:#0C2D48; position:fixed!important; z-index:1; overflow:auto">
             <h2 class="uk-text-center" style="margin: 25px; color: white">Sidebar</h2>
             <div>
                 <ul class="uk-list uk-list-large uk-list-divider">
                     <a class="uk-button" style="width: 160px; color: white" href="index.html">Weather</a>
                     <a class="uk-button" style="width: 160px; color: white" href="roadChecker.html">Road Checker</a>
-                    <a class="uk-button" style="width: 160px; color: white" href="Titan Tussle.html">Titan Tussle</a>
+                    <a class="uk-button" style="width: 160px; color: white" href="CompartmentMon.html">CompartmentMón</a>
                 </ul>
             </div>
         </div>
         <div class="uk-container"> <!-- Main Box -->
             <h1 class="uk-heading-line uk-text-center" style="color: white"><span>Weather</span></h1> <!-- Header -->
             <h1 id="Error" style="color: white" class="uk-text-center"></h1>
-
-            <div class="uk-margin"> <!-- Search Button -->
+            <div class="uk-margin uk-flex-column"> <!-- Search Button -->
                 <form id="SearchbarTop" class="uk-search uk-search-default rounded">
                     <input id="Searchbar" class="uk-search-input" minlength="2" tabindex="1" type="search"
                         placeholder="Search" aria-label="Search" style="background-color: #C3E0E5;">
                     <span class="uk-search-icon-flip" uk-search-icon></span>
                 </form>
+                <div style="background-color: #fff;" uk-form-custom="target: > * > span:first-child">
+                    <select id="languageInput" aria-label="Custom controls">
+                        <option value="Deutsch">Deutsch</option>
+                        <option value="English">English</option>
+                        <option value="Suaheli">Suaheli</option>
+                        <option value="4">Option 04</option>
+                    </select>
+                    <button class="uk-button uk-button-default" type="button" tabindex="2">
+                        <span></span>
+                        <span uk-icon="icon: chevron-down"></span>
+                    </button>
+                </div>
             </div>
             <div class="uk-child-width-expand" uk-grid> <!-- Top InfoBoxes -->
                 <div> <!-- Location InfoBox Main -->
@@ -94,28 +99,42 @@ Bugs:
                     </div>
                 </div>
                 <div> <!-- Outdoor Condition InfoBox -->
-                    <div class="uk-card uk-card-default uk-card-body uk-text-center uk-border-rounded">
-                        <p id="Address">Address</p>
-                        <p id="currentTimestamp">Data from :</p>
-                        <p id="clothingRec">Clothing Recommended</p>
-                    </div>
-                    <div class="uk-margin">
-                        <div style="background-color: #fff;" uk-form-custom="target: > * > span:first-child">
-                            <select id="languageInput" aria-label="Custom controls">
-                                <option value="Deutsch">Deutsch</option>
-                                <option value="English">English</option>
-                                <option value="Suaheli">Suaheli</option>
-                                <option value="4">Option 04</option>
-                            </select>
-                            <button class="uk-button uk-button-default" type="button" tabindex="2">
-                                <span></span>
-                                <span uk-icon="icon: chevron-down"></span>
-                            </button>
+                    <div class="uk-card uk-card-default uk-card-body uk-text-center uk-border-rounded uk-child-padding">
+                        <div id="Address">Address</div>
+                        <div id="currentTimestamp">Data from</div>
+                        <div class="uk-flex uk-flex-row uk-flex-center">
+                            <div class="uk-padding-small uk-padding-remove-vertical" id="clothingRec">Clothing Recommended</div>
+                            <button class="uk-inline" type="button" uk-icon="icon: info"></button>
+                            <div class="uk-card uk-card-body uk-card-default" uk-drop="pos: right-center">
+                                <p id="roadTemp">Road Temperature</p>
+                                <p id="roadPrecip">Road Precipitation</p>
+                                <p id="roadGust">Road Wind Gust</p>
+                                <p id="roadVisibility">Road Visibility</p>
+                            </div>
+                        </div>
+                        <div class="uk-flex uk-flex-row uk-flex-center">
+                            <div class="uk-padding-small uk-padding-remove-vertical" id="roadCondition">Road Condition</div>
+                            <button class="uk-inline" type="button" uk-icon="icon: info"></button>
+                            <div class="uk-card uk-card-body uk-card-default" uk-drop="pos: right-center">
+                                <p id="roadTemp">Road Temperature</p>
+                                <p id="roadPrecip">Road Precipitation</p>
+                                <p id="roadGust">Road Wind Gust</p>
+                                <p id="roadVisibility">Road Visibility</p>
+                            </div>
+                        </div>
+                        <div class="uk-flex uk-flex-row uk-flex-center">
+                            <div class="uk-padding-small uk-padding-remove-vertical" id="UVProtecionRec">UVProtection Recommended</div>
+                            <button class="uk-inline" type="button" uk-icon="icon: info"></button>
+                            <div class="uk-card uk-card-body uk-card-default" uk-drop="pos: right-center">
+                                <p id="roadTemp">Road Temperature</p>
+                                <p id="roadPrecip">Road Precipitation</p>
+                                <p id="roadGust">Road Wind Gust</p>
+                                <p id="roadVisibility">Road Visibility</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="uk-section-xsmall uk-width-expand"> <!-- Main InfoBox -->
                 <div class="uk-card uk-card-default uk-border-rounded uk-flex-column">
                     <div uk-grid class="uk-padding-small" uk-switcher="connect: .switcher-topGraphs"> <!-- Selectors -->
@@ -124,35 +143,25 @@ Bugs:
                         <div><div id="windspeed" class="uk-button" href="#">Wind Speed</div></div>
                         <div><div id="visibility" class="uk-button" href="#">Visibility</div></div>
                         <div><div id="humidity" class="uk-button" href="#">Humidity</div></div>
-                    </div>
-                    <hr class="">
-                    <div class="uk-flex-column uk-width-expand uk-padding-small uk-switcher switcher-topGraphs"> <!-- Graphs -->
-                        <div><canvas id="topTempGraph" style="width: 900px; height: 250px"></canvas></div>
-                        <div><canvas id="topPrecipGraph" style="width: 900px; height: 250px"></canvas></div>
-                        <div><canvas id="topWindGraph" style="width: 900px; height: 250px"></canvas></div>
-                        <div><canvas id="topVisibilityGraph" style="width: 900px; height: 250px"></canvas></div>
-                        <div><canvas id="topHumidityGraph" style="width: 900px; height: 250px"></canvas></div>
-                    </div>
-                    <div class="uk-margin uk-padding-small">
-                        <input id="dayInput" class="uk-range" type="range" value="0" min="0" max="28.9" step="0.1" aria-label="Range">
-                    </div>
-                </div>
-            </div>
-
-            <div class="uk-section-xsmall uk-width-expand"> <!-- Second InfoBox -->
-                <div class="uk-card uk-card-default uk-border-rounded uk-flex-column">
-                    <div uk-grid class="uk-padding-small" uk-switcher="connect: .switcher-secondGraphs"> <!-- Selectors -->
                         <div><div id="uvIndex" class="uk-button" href="#">UV Index</div></div>
                         <div><div id="solarRad" class="uk-button" href="#">Solar Radiation</div></div>
                         <div><div id="cloudCover" class="uk-button" href="#">Cloud Cover</div></div>
                         <div><div id="pressure" class="uk-button" href="#">Pressure</div></div>
                     </div>
                     <hr class="">
-                    <div class="uk-flex-column uk-width-expand uk-padding-small uk-switcher switcher-secondGraphs"> <!-- Graphs -->
+                    <div class="uk-flex-column uk-width-expand uk-padding-small uk-switcher switcher-topGraphs" style="min-height: 360px;"> <!-- Graphs -->
+                        <div><canvas id="topTempGraph" style="width: 900px; height: 250px"></canvas></div>
+                        <div><canvas id="topPrecipGraph" style="width: 900px; height: 250px"></canvas></div>
+                        <div><canvas id="topWindGraph" style="width: 900px; height: 250px"></canvas></div>
+                        <div><canvas id="topVisibilityGraph" style="width: 900px; height: 250px"></canvas></div>
+                        <div><canvas id="topHumidityGraph" style="width: 900px; height: 250px"></canvas></div>
                         <div><canvas id="topUVIndexGraph" style="width: 900px; height: 250px"></canvas></div>
                         <div><canvas id="topSolarRadGraph" style="width: 900px; height: 250px"></canvas></div>
                         <div><canvas id="topCloudGraph" style="width: 900px; height: 250px"></canvas></div>
                         <div><canvas id="topPressureGraph" style="width: 900px; height: 250px"></canvas></div>
+                    </div>
+                    <div class="uk-margin uk-padding-small">
+                        <input id="dayInput" class="uk-range" type="range" value="0" min="0" max="28.9" step="0.1" aria-label="Range">
                     </div>
                 </div>
             </div>
@@ -164,7 +173,6 @@ Bugs:
 </html>
 
 <!-- 
-https://docs.tomorrow.io/recipes
 https://getuikit.com/docs/introduction
 https://cssgridgarden.com/#de
 https://flexboxfroggy.com/#de
@@ -172,12 +180,10 @@ https://www.timeanddate.com/weather/?sort=6
 https://www.visualcrossing.com/resources/documentation/weather-data/weather-data-documentation/
 https://www.visualcrossing.com/resources/documentation/weather-api/energy-elements-in-the-timeline-weather-api/
 https://www.visualcrossing.com/resources/documentation/weather-api/agriculture-elements-in-the-timeline-weather-api/
+https://developer.mozilla.org/en-US/
 
 https://lesscss.org/
 https://www.visualcrossing.com/weather/weather-data-services/germany?v=api#
 https://docs.fontawesome.com/
 https://symfony.com/
-
-Visual Studio Code Extension:
-    Live Server Ritwick Dey (MAYBE)
 -->
