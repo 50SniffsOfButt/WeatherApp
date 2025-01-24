@@ -4,6 +4,9 @@
 //                      //
 //////////////////////////
 
+document.cookie = "name=test";
+const allCookies = document.cookie;
+console.log(allCookies); 
 
 function getElement(id) { return document.getElementById(id)}
 function getLanguage() {let languageValue = document.getElementById('languageInput').value;return languageValue}
@@ -24,6 +27,7 @@ document.querySelector('#SearchbarTop').addEventListener('submit', function (eve
 
     console.log(searchQuery); // Debugging: Log the search query
     fetchWeatherData(searchQuery);
+    setLastSearchAsCookie(searchQuery);
 });
 
 // Takes the location and fetches the weather data via API Call
@@ -33,7 +37,6 @@ function fetchWeatherData(location) {
     fetch(url)
         .then(response => response.json())
         .then(weatherData => {
-            weatherData.isNewData = true;
             processWeatherData(weatherData)
         })
     .catch(error => {
@@ -316,7 +319,6 @@ const topCloudGraph = createGraph('topCloudGraph');
 const topPressureGraph = createGraph('topPressureGraph');
 ///////////////////////////////////////////////////////////
 
-
 // Creates the Graph, doesn't add any data to them
 function createGraph(divElement) {
     const dataTypeDisplayNames = {
@@ -381,12 +383,9 @@ function updateGraphs(weatherData, rangeValue=0) {
     updateCurrentGraph(currentConditions.datetime, weatherData, topPressureGraph, 'pressure', null, 47, rangeValue);
 }
 
-// Updates the Graphs if ValueData gets changed (Userinput to see different Data)
+// Updates the Graphs if ValueData gets changed (Userinput to see differnt Data)
 // Also called once to initialize the Graphs
-let cachedData = {};
-let previousRangeValue = null;
-
-function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond, size, rangeValue = 0) {
+function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond, size, rangeValue=0) {
     const currentTime = parseInt(timeData.split(':')[0], 10);
     const dataTypeDisplayNames = {
         English: {
@@ -411,7 +410,7 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
             humidity: 'Luftfeuchtigkeit',
             dew: 'Taupunkt',
             precipprob: 'Niederschlagswahrscheinlichkeit',
-            precip: 'Niederschlagmenge',
+            precip: 'Niederschlag',
             windspeed: 'Windgeschwindigkeit',
             windgust: 'Windböen',
             uvindex: 'UV Index',
@@ -452,8 +451,8 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
             day: 'Siku',
             today: 'Leo',
         },
-    };
-
+    }
+    
     const languageValue = getLanguage();
     const selectedLanguage = dataTypeDisplayNames[languageValue] || dataTypeDisplayNames['English'];
 
@@ -465,62 +464,54 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
     const hoursUntilMidnight = 24 - currentTime;
 
     const parsedSize = (size === 'day') ? (hoursUntilMidnight > 16 ? 16 : (hoursUntilMidnight < 8 ? 8 : hoursUntilMidnight)) : size;
+    // Sets the parsedSize to max 16  or min 8 but only if the value of size is 'day', otherwise it sets it to the value of size
 
-    let hoursValue = parseFloat(rangeValue);
+    let hoursValue = 0.0;
+    hoursValue = parseFloat(rangeValue);
 
-    // Create a unique key for the current graph based on unitFirst, unitSecond, and rangeValue to get the correct data out of the dataArray
-    const cacheKey = `${unitFirst}-${unitSecond}-${rangeValue}`;
-
-    // Only update the data array if rangeValue has changed
-    if (!cachedData[cacheKey]  || weatherData.isNewData) {
-        cachedData[cacheKey] = [];
-        for (let i = 0; i <= parsedSize; i++) {
-            let totalHours = currentTime + i + (hoursValue * 10);
-            let day = Math.floor(totalHours / 24);
-            let hour = totalHours % 24;
-            let timeLabel;
-            if (i === 0 && hoursValue === 0) {
-                timeLabel = `${graphLanguageDisplayToday}: ${hour}`;
-            } else {
-                timeLabel = (hour === 0) ? `${graphLanguageDisplayDay} ${day + 1}: ${hour}` : `${hour}`;
-            }
-            let value1 = weatherData.days[day].hours[hour][unitFirst];
-            let value2 = unitSecond ? weatherData.days[day].hours[hour][unitSecond] : null;
-
-            cachedData[cacheKey].push({
-                time: timeLabel,
-                value1: value1,
-                value2: value2
-            });
+    data = [];
+    for (let i = 0; i <= parsedSize; i++) {
+        let totalHours = currentTime + i + (hoursValue * 10);
+        let day = Math.floor(totalHours / 24) ;
+        let hour = totalHours % 24;
+        let timeLabel;
+        if (i === 0 && hoursValue === 0) {
+            timeLabel = `${graphLanguageDisplayToday}: ${hour}`;
+        } else {
+            timeLabel = (hour === 0) ? `${graphLanguageDisplayDay} ${day + 1}: ${hour}` : `${hour}`;
         }
+        let value1, value2;
+        value1 = weatherData.days[day].hours[hour][unitFirst];
+        value2 = weatherData.days[day].hours[hour][unitSecond];
+
+    
+        data.push({
+            time: timeLabel,
+            value1: value1,
+            value2: value2
+        });
     }
 
-    const label = cachedData[cacheKey].map(row => row.time + ':00');
+    const label = data.map(row => row.time + ':00'); // appends :00 to time in graph for better visuals
 
     chart.data = {
         labels: label,
         datasets: [{
             label: graphTypeDisplay,
-            data: cachedData[cacheKey].map(row => row.value1),
+            data: data.map(row => row.value1),
             borderWidth: 3,
             tension: 0.45,
             borderColor: '#5a6fb0',
-        }]
-    };
-
-    if (unitSecond) {
-        chart.data.datasets.push({
+        },{
             label: graphTypeDisplay2,
-            data: cachedData[cacheKey].map(row => row.value2),
+            data: data.map(row => row.value2),
             borderWidth: 3,
             tension: 0.45,
             borderColor: '#19b8d1',
-        });
+        }]
     }
-
-    chart.update();
+    chart.update()
 }
-
 
 function updateWeatherIcon(iconData) {
     const weatherIcon = document.getElementById('weatherIcon');
