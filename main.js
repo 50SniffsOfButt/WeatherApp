@@ -33,6 +33,7 @@ function fetchWeatherData(location) {
     fetch(url)
         .then(response => response.json())
         .then(weatherData => {
+            weatherData.isNewData = true;
             processWeatherData(weatherData)
         })
     .catch(error => {
@@ -471,7 +472,7 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
     const cacheKey = `${unitFirst}-${unitSecond}-${rangeValue}`;
 
     // Only update the data array if rangeValue has changed
-    if (!cachedData[cacheKey]) {
+    if (!cachedData[cacheKey]  || weatherData.isNewData) {
         cachedData[cacheKey] = [];
         for (let i = 0; i <= parsedSize; i++) {
             let totalHours = currentTime + i + (hoursValue * 10);
