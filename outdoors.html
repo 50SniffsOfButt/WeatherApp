@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="css/uikit.css">
+    <link rel="JsonData" href="WeatherAPI.json">
+    <script src="js/uikit.js"></script>
+    <script src="js/uikit-icons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    <style>
+        .debug-border {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="uk-background-primary" style="background-color: #2d497d; padding-bottom: 50px;"> <!-- Background -->
+        <!-- Sidebar -->
+        <div class=""
+            style="height:100%;width: 160px; background-color:#0C2D48; position:fixed!important; z-index:1; overflow:auto">
+            <h2 class="uk-text-center" style="margin: 25px; color: white">Sidebar</h2>
+            <div>
+                <ul class="uk-list uk-list-large uk-list-divider">
+                    <a class="uk-button" style="width: 160px; color: white" href="index.html">Weather</a>
+                    <a class="uk-button" style="width: 160px; color: white" href="outdoors.html">Outdoors</a>
+                    <a class="uk-button" style="width: 160px; color: white" href="gardening.html">Gardening</a>
+                    <a class="uk-button" style="width: 160px; color: white" href="Mon.html">Mon</a>
+                </ul>
+            </div>
+        </div>
+        <div class="uk-container"> <!-- Main Box -->
+            <h1 class="uk-heading-line uk-text-center uk-padding-small" style="color: white"><span>Outdoors</span></h1> <!-- Header -->
+            <h1 id="Error" style="color: white" class="uk-text-center"></h1>
+            <div class="uk-margin uk-flex-column"> <!-- Search Button -->
+                <form id="SearchbarTop" class="uk-search uk-search-default rounded">
+                    <input id="Searchbar" class="uk-search-input" minlength="2" tabindex="1" type="search"
+                        placeholder="Search" aria-label="Search" style="background-color: #C3E0E5;">
+                    <span class="uk-search-icon-flip" uk-search-icon></span>
+                </form>
+                <div style="background-color: #fff;" uk-form-custom="target: > * > span:first-child">
+                    <select id="languageInput" aria-label="Custom controls">
+                        <option value="English">English</option>
+                        <option value="Deutsch">Deutsch</option>
+                        <option value="Suaheli">Suaheli</option>
+                        <option value="4">Option 04</option>
+                    </select>
+                    <button class="uk-button uk-button-default" type="button" tabindex="2">
+                        <span></span>
+                        <span uk-icon="icon: chevron-down"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="uk-section-xsmall uk-width-expand uk-flex uk-flex-row"> <!-- Container for two divs next to each other -->
+                <!-- First div with a list of 6 items, each containing 2 items next to each other -->
+                <div class="uk-width-1-2">
+                    <div class="uk-card uk-card-default uk-border-rounded uk-flex-column">
+                        <div class="uk-flex uk-flex-row uk-flex-between">
+                            <div class="debug-border">Hiking</div>
+                            <div class="debug-border" id="hikingConditionCurrent">CurrentCond</div>
+                        </div>
+                        <div class="uk-flex uk-flex-row uk-flex-between">
+                            <div class="debug-border">Running</div>
+                            <div class="debug-border" id="runningConditionCurrent">CurrentCond</div>
+                        </div>
+                        <div class="uk-flex uk-flex-row uk-flex-between">
+                            <div class="debug-border">Picnic</div>
+                            <div class="debug-border" id="picnicConditionCurrent">CurrentCond</div>
+                        </div>
+                        <div class="uk-flex uk-flex-row uk-flex-between">
+                            <div class="debug-border">Cycling</div>
+                            <div class="debug-border" id="cyclingConditionCurrent">CurrentCond</div>
+                        </div>
+                        <div class="uk-flex uk-flex-row uk-flex-between">
+                            <div class="debug-border">Swimming</div>
+                            <div class="debug-border" id="swimmingConditionCurrent">CurrentCond</div>
+                        </div>
+                        <div class="uk-flex uk-flex-row uk-flex-between">
+                            <div class="debug-border">Gardening</div>
+                            <div class="debug-border" id="gardeningConditionCurrent">CurrentCond</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Second div -->
+                <div class="uk-width-1-2">
+                    <div class="uk-card uk-card-default uk-border-rounded uk-flex-column">
+                        <!-- Add content for the second div here -->
+                        <div class="uk-card uk-card-default uk-border-rounded">Additional Content</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="outdoors.js"></script>
+</body>
+
+
+
+

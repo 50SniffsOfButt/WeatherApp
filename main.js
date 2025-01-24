@@ -19,6 +19,7 @@ function getCookie() {;
 
 function setCookie(location) {
     localStorage.setItem('lastSearch', location);
+    localStorage.setItem('lastLanguage', getLanguage());
 }
 
 function getSearchWithCookie() {
@@ -26,11 +27,17 @@ function getSearchWithCookie() {
     if (cookieValue && cookieValue !== 'null') {
         document.getElementById('Searchbar').value = cookieValue;
         fetchWeatherData(cookieValue);
-    }
+    };
+    const languageValue = localStorage.getItem('lastLanguage');
+    document.getElementById('languageInput').value = languageValue;
+    if (languageValue && languageValue !== 'null') {
+    const event = new Event('change', { bubbles: true });
+    languageInput.dispatchEvent(event);
+    };
 }
 
 
-// Start the site with the last search
+// Start the site with the last search and language selected
 getSearchWithCookie();
 
 // Event listener for the location search input
@@ -46,7 +53,6 @@ document.querySelector('#SearchbarTop').addEventListener('submit', function (eve
         }
     }
     document.getElementById('dayInput').value = 0;
-    setCookie(searchQuery);
 
     console.log(searchQuery); // Debugging: Log the search query
     fetchWeatherData(searchQuery);
@@ -60,6 +66,7 @@ function fetchWeatherData(location) {
         .then(response => response.json())
         .then(weatherData => {
             processWeatherData(weatherData)
+            setCookie(location);
         })
     .catch(error => {
         handleError(error)
