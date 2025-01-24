@@ -4,30 +4,52 @@
 //                      //
 //////////////////////////
 
-document.cookie = "name=test";
-const allCookies = document.cookie;
-console.log(allCookies); 
 
 function getElement(id) { return document.getElementById(id)}
 function getLanguage() {let languageValue = document.getElementById('languageInput').value;return languageValue}
 
+/////////////////////
+// Site Initiation //
+/////////////////////
 
-/////////////////////
-// Size Initiation //
-/////////////////////
+function getCookie() {;
+    const lastSearch = localStorage.getItem('lastSearch');
+    return lastSearch;
+}
+
+function setCookie(location) {
+    localStorage.setItem('lastSearch', location);
+}
+
+function getSearchWithCookie() {
+    const cookieValue = getCookie();
+    if (cookieValue && cookieValue !== 'null') {
+        document.getElementById('Searchbar').value = cookieValue;
+        fetchWeatherData(cookieValue);
+    }
+}
+
+
+// Start the site with the last search
+getSearchWithCookie();
 
 // Event listener for the location search input
 document.querySelector('#SearchbarTop').addEventListener('submit', function (event) {
     event.preventDefault();
     let searchQuery = document.querySelector('#Searchbar').value.trim();
     if (!searchQuery) {
-       searchQuery = 'Nakakpiripirit';
-    };
+        const cookieValue = getCookie();
+        if (cookieValue && cookieValue !== 'null') {
+            searchQuery = cookieValue;
+        } else {
+            searchQuery = 'Nakakpiripirit';
+        }
+    }
     document.getElementById('dayInput').value = 0;
+    setCookie(searchQuery);
 
     console.log(searchQuery); // Debugging: Log the search query
     fetchWeatherData(searchQuery);
-    setLastSearchAsCookie(searchQuery);
 });
 
 // Takes the location and fetches the weather data via API Call
@@ -287,7 +309,7 @@ function getUVProtectionRecommendation(uvindex) {
     },
 };
 
-const selectedUVIndex = uvIndex[languageValue] || clothingType['English'];
+const selectedUVIndex = uvIndex[languageValue] || uvIndex['English'];
 
     if (uvindex < 3) {
         return selectedUVIndex.low;
@@ -451,18 +473,20 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
             day: 'Siku',
             today: 'Leo',
         },
-    }
+    };
     
     const languageValue = getLanguage();
-    const selectedLanguage = dataTypeDisplayNames[languageValue] || dataTypeDisplayNames['English'];
+    const selectedLanguageUnit = dataTypeDisplayNames[languageValue] || dataTypeDisplayNames['English'];
+    const selectedLanguageLabel = dataLanguageDisplay[languageValue] || dataLanguageDisplay['English'];
 
-    const graphTypeDisplay = selectedLanguage[unitFirst] || 'Error';
-    const graphTypeDisplay2 = selectedLanguage[unitSecond] || 'Error';
-    const graphLanguageDisplayDay = dataLanguageDisplay[languageValue].day || 'Error';
-    const graphLanguageDisplayToday = dataLanguageDisplay[languageValue].today || 'Error';
+    const graphTypeDisplay = selectedLanguageUnit[unitFirst] || 'Error';
+    const graphTypeDisplay2 = selectedLanguageUnit[unitSecond] || 'Error';
+    const graphLanguageDisplayDay = selectedLanguageLabel.day || 'Error';
+    const graphLanguageDisplayToday = selectedLanguageLabel.today || 'Error';
 
     const hoursUntilMidnight = 24 - currentTime;
 
+    // unused code might need it later, also i like looking at it
     const parsedSize = (size === 'day') ? (hoursUntilMidnight > 16 ? 16 : (hoursUntilMidnight < 8 ? 8 : hoursUntilMidnight)) : size;
     // Sets the parsedSize to max 16  or min 8 but only if the value of size is 'day', otherwise it sets it to the value of size
 
