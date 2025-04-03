@@ -493,7 +493,6 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
 
     const hoursUntilMidnight = 24 - currentTime;
 
-    // unused code might need it later, also i like looking at it
     const parsedSize = (size === 'day') ? (hoursUntilMidnight > 16 ? 16 : (hoursUntilMidnight < 8 ? 8 : hoursUntilMidnight)) : size;
     // Sets the parsedSize to max 16  or min 8 but only if the value of size is 'day', otherwise it sets it to the value of size
 
@@ -509,7 +508,13 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
         if (i === 0 && hoursValue === 0) {
             timeLabel = `${graphLanguageDisplayToday}: ${hour}`;
         } else {
-            timeLabel = (hour === 0) ? `${graphLanguageDisplayDay} ${day + 1}: ${hour}` : `${hour}`;
+            const locale = languageValue === 'Deutsch' ? 'de-DE' : languageValue === 'Suaheli' ? 'sw-KE' : 'en-US';
+            const readableDate = new Date(weatherData.days[day].datetime).toLocaleDateString(locale, {
+                weekday: 'short',
+                month: 'long',
+                day: 'numeric'
+            });
+            timeLabel = (hour === 0) ? `${readableDate} ${hour}` : `${hour}`;
         }
         let value1, value2;
         value1 = weatherData.days[day].hours[hour][unitFirst];
