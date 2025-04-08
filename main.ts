@@ -3,20 +3,21 @@
 // Main JavaScript File //
 //                      //
 //////////////////////////
-//@ts-check
 
-function getElement<T extends HTMLElement>(id: string): T {
-    const element = document.getElementById(id);
-    if (!element) {
-        throw new Error(`Element with ID "${id}" not found.`);
-    }
-    return element as T;
+function getElement(id: string): HTMLElement | null {
+    return document.getElementById(id);
 }
 
-function getLanguage() :string {
-    const languageValue = document.getElementById('languageInput') as HTMLInputElement;
-    return languageValue?.value || 'English';
+function getLanguage(): string {
+    const languageInput = document.getElementById('languageInput') as HTMLInputElement | null;
+    return languageInput?.value || 'English';
 }
+
+/*
+function getLanguage():string {let languageInput = document.getElementById('languageInput') as HTMLInputElement;
+    return languageInput?.value || 'English';
+}*/
+
 
 /////////////////////
 // Site Initiation //
@@ -27,53 +28,94 @@ function getCookie() {
     return lastSearch;
 }
 
-function setCookie(location) {
+function setCookie(location: string) {
     localStorage.setItem('lastSearch', location);
     localStorage.setItem('lastLanguage', getLanguage());
 }
 
 function getSearchWithCookie() {
     const cookieValue = getCookie();
-    if (cookieValue && cookieValue !== 'null') {
-        (getElement('Searchbar') as HTMLInputElement).value = cookieValue;
+    const searchbar = document.getElementById('Searchbar') as HTMLInputElement | null;
+    if (cookieValue && cookieValue !== 'null' && searchbar) {
+        searchbar.value = cookieValue;
         fetchWeatherData(cookieValue);
     }
-
     const languageValue = localStorage.getItem('lastLanguage');
-    (getElement('languageInput') as HTMLInputElement).value = languageValue || 'English';
-    if (languageValue && languageValue !== 'null') {
-        const event = new Event('change', { bubbles: true });
-        const languageInput = getElement<HTMLInputElement>('languageInput');
-        languageInput.dispatchEvent(event);
+    const languageInput = document.getElementById('languageInput') as HTMLInputElement | null;
+    if (languageInput) {
+        languageInput.value = languageValue || '';
+        if (languageValue && languageValue !== 'null') {
+            const event = new Event('change', { bubbles: true });
+            languageInput.dispatchEvent(event);
+        }
     }
 }
+
+/*
+function getSearchWithCookie() {
+    const cookieValue = getCookie();
+    if (cookieValue && cookieValue !== 'null') {
+        document.getElementById('Searchbar').value = cookieValue;
+        fetchWeatherData(cookieValue);
+    };
+    const languageValue = localStorage.getItem('lastLanguage');
+    document.getElementById('languageInput').value = languageValue;
+    if (languageValue && languageValue !== 'null') {
+    const event = new Event('change', { bubbles: true });
+    languageInput.dispatchEvent(event);
+    };
+}
+*/
+
 
 
 // Start the site with the last search and language selected
 getSearchWithCookie();
 
-
 // Event listener for the location search input
-const searchbarTop = document.querySelector('#SearchbarTop');
-if (searchbarTop) {
-    searchbarTop.addEventListener('submit', function (event) {
-        event.preventDefault();
-        const searchQuery = document.querySelector('#Searchbar') as HTMLInputElement;
-        if (searchQuery) {
-            const cookieValue = getCookie();
-            if (cookieValue && cookieValue !== 'null') {
-                searchQuery.value = cookieValue;
-            }
+document.querySelector('#SearchbarTop')?.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const searchbar = document.querySelector('#Searchbar') as HTMLInputElement | null;
+    let searchQuery = searchbar?.value.trim() || '';
+    if (!searchQuery) {
+        const cookieValue = getCookie();
+        if (cookieValue && cookieValue !== 'null') {
+            searchQuery = cookieValue;
+        } else {
+            searchQuery = 'Nakakpiripirit';
         }
-        (getElement('dayInput') as HTMLInputElement).value = '0'; // resets UserInterface for showing different data to 0 (beginning of weather data)
+    }
+    const dayInput = document.getElementById('dayInput') as HTMLInputElement | null;
+    if (dayInput) {
+        dayInput.value = '0';
+    }
 
-        console.log(searchQuery); // Debugging: Log the search query
-        fetchWeatherData(searchQuery);
-    });
-}
+    console.log(searchQuery); // Debugging: Log the search query
+    fetchWeatherData(searchQuery);
+});
+
+/*
+document.querySelector('#SearchbarTop').addEventListener('submit', function (event) {
+    event.preventDefault();
+    let searchQuery = document.querySelector('#Searchbar').value.trim();
+    if (!searchQuery) {
+        const cookieValue = getCookie();
+        if (cookieValue && cookieValue !== 'null') {
+            searchQuery = cookieValue;
+        } else {
+            searchQuery = 'Nakakpiripirit';
+        }
+    }
+    document.getElementById('dayInput').value = 0;
+
+    console.log(searchQuery); // Debugging: Log the search query
+    fetchWeatherData(searchQuery);
+});
+*/
+
 
 // Takes the location and fetches the weather data via API Call
-function fetchWeatherData(location) {
+function fetchWeatherData(location: string) {
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&include=days%2Ccurrent%2Chours%2Calerts&key=JML37MDXVH3FAJWLAJ5M98YCP&contentType=json`;
 
     fetch(url)
@@ -88,28 +130,46 @@ function fetchWeatherData(location) {
 }
 
 // Takes the weatherData from API and splits it up for different functions
-function processWeatherData(weatherData) {
+function processWeatherData(weatherData: any) {
     const firstDayData = weatherData.days[0];
     const currentConditions = weatherData.currentConditions;
     const address = weatherData.resolvedAddress;
-    const languageValue = getLanguage();
 
     console.log(weatherData); // Debugging: Json in console
-    getElement('Error', languageValue).innerHTML = ''; // Clear the error message
+
+
+    const errorElement = getElement('Error');
+    if (errorElement) {
+        errorElement.innerHTML = ''; // Clear the error message
+    };
 
     updateGraphs(weatherData);
+
+    updateCurrentWeather(currentConditions, firstDayData, address);
+    const dayInput = document.getElementById('dayInput') as HTMLInputElement | null;
+    if (dayInput) {
+        dayInput.addEventListener('input', function(event) {
+            const target = event.target as HTMLInputElement | null;
+            if (target) {
+                const rangeValue = parseFloat(target.value);
+                updateGraphs(weatherData, rangeValue);
+            }
+        });
+    }
+    /*
     updateCurrentWeather(currentConditions, firstDayData, address);
     document.getElementById('dayInput').addEventListener('input', function(event) {
         let rangeValue = event.target.value;
         updateGraphs(weatherData, rangeValue);
     } );
+    */
     updateWeatherIcon(currentConditions.icon);
 }
 
 
 
 // Function to update the current weather data and translations
-function updateCurrentWeather(currentConditions, firstDayData, address) {
+function updateCurrentWeather(currentConditions: any, firstDayData: any, address: any) {
     const dateParts = firstDayData.datetime.split('-'); // Makes Year-Month-Day into Day-Month-Year
     const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
     const currentTimestamp = new Date(currentConditions.datetimeEpoch * 1000).toLocaleString();
@@ -240,6 +300,32 @@ function updateCurrentWeather(currentConditions, firstDayData, address) {
     const selectedShortWeatherTranslations = shortWeatherTranslations[languageValue] || shortWeatherTranslations['English'];
     const selectedLongWeatherTranslations = longWeatherTranslations[languageValue] || longWeatherTranslations['English'];
 
+    // there has to be a better way
+    const currentWeatherElement = getElement('currentWeather'); if (currentWeatherElement) {currentWeatherElement.innerHTML = selectedTranslations.currentWeather;}
+    const addressElement = getElement('Address'); if (addressElement) {addressElement.innerHTML = address;
+    const currentConditionsElement = getElement('currentConditions'); if (currentConditionsElement) {currentConditionsElement.innerHTML = selectedShortWeatherTranslations[currentConditions.conditions] || currentConditions.conditions;}}
+    const currentTimestampElement = getElement('currentTimestamp'); if (currentTimestampElement) {currentTimestampElement.innerHTML = `${selectedTranslations.dataFrom}: ${currentTimestamp};`}
+    const clothingRecElement = getElement('clothingRec'); if (clothingRecElement) {clothingRecElement.innerHTML = `${selectedTranslations.clothingRecommendation}: ${getClothingRecommendation(currentConditions.feelslike)}`;}
+    const UVProtecionRecElement = getElement('UVProtecionRec'); if (UVProtecionRecElement) {UVProtecionRecElement.innerHTML = `${selectedTranslations.UVProtectionRecommendation}: ${getUVProtectionRecommendation(currentConditions.uvindex)}`;}
+    const datetimeElement = getElement('datetime'); if (datetimeElement) {datetimeElement.innerHTML = `${selectedTranslations.date}: ${formattedDate}`;}
+    const currentTimeElement = getElement('currentTime'); if (currentTimeElement) {currentTimeElement.innerHTML = `${selectedTranslations.time}: ${currentConditions.datetime}`;}
+    const currentFeelslikeElement = getElement('currentFeelslike'); if (currentFeelslikeElement) {currentFeelslikeElement.innerHTML = `${selectedTranslations.feelsLike}: ${currentConditions.feelslike}°C`;}
+    const longDescriptionElement = getElement('longDescription'); if (longDescriptionElement) {longDescriptionElement.innerHTML = selectedLongWeatherTranslations[currentConditions.conditions] || currentConditions.conditions;}
+    const currentTempElement = getElement('currentTemp'); if (currentTempElement) {currentTempElement.innerHTML = `${selectedTranslations.temperature}: ${currentConditions.temp}°C`;}
+    const currentHumidityElement = getElement('currentHumidity'); if (currentHumidityElement) {currentHumidityElement.innerHTML = `${selectedTranslations.humidity}: ${currentConditions.humidity}%`;}
+    const currentPrecipprobElement = getElement('currentPrecipprob'); if (currentPrecipprobElement) {currentPrecipprobElement.innerHTML = `${selectedTranslations.precipitationChance}: ${currentConditions.precipprob}%`;}
+    const currentWindspeedElement = getElement('currentWindspeed'); if (currentWindspeedElement) {currentWindspeedElement.innerHTML = `${selectedTranslations.windSpeed}: ${currentConditions.windspeed} km/h`;}
+    const currentUVIndexElement = getElement('currentUVIndex'); if (currentUVIndexElement) {currentUVIndexElement.innerHTML = `${selectedTranslations.uvIndex}: ${currentConditions.uvindex}`;}
+    const temperatureElement = getElement('temperature'); if (temperatureElement) {temperatureElement.innerHTML = `${selectedTranslations.temperature}`;}
+    const preciptiationElement = getElement('preciptiation'); if (preciptiationElement) {preciptiationElement.innerHTML = `${selectedTranslations.precipitationChance}`;}
+    const windspeedElement = getElement('windspeed'); if (windspeedElement) {windspeedElement.innerHTML = `${selectedTranslations.windSpeed}`;}
+    const visibilityElement = getElement('visibility'); if (visibilityElement) {visibilityElement.innerHTML = `${selectedTranslations.visibility}`;}
+    const humidityElement = getElement('humidity'); if (humidityElement) {humidityElement.innerHTML = `${selectedTranslations.humidity}`;}
+    const uvIndexElement = getElement('uvIndex'); if (uvIndexElement) {uvIndexElement.innerHTML = `${selectedTranslations.uvIndex}`;}
+    const solarRadElement = getElement('solarRad'); if (solarRadElement) {solarRadElement.innerHTML = `${selectedTranslations.solarRad}`;}
+    const cloudCoverElement = getElement('cloudCover'); if (cloudCoverElement) {cloudCoverElement.innerHTML = `${selectedTranslations.cloudCover}`;}
+    const pressureElement = getElement('pressure'); if (pressureElement) {pressureElement.innerHTML = `${selectedTranslations.pressure}`;}
+    /*
     getElement('currentWeather').innerHTML = selectedTranslations.currentWeather;
     getElement('Address').innerHTML = address;
     getElement('currentConditions').innerHTML = selectedShortWeatherTranslations[currentConditions.conditions] || currentConditions.conditions;
@@ -263,7 +349,8 @@ function updateCurrentWeather(currentConditions, firstDayData, address) {
     getElement('uvIndex').innerHTML = `${selectedTranslations.uvIndex}`;
     getElement('solarRad').innerHTML = `${selectedTranslations.solarRad}`;
     getElement('cloudCover').innerHTML = `${selectedTranslations.cloudCover}`;
-    getElement('pressure').innerHTML = `${selectedTranslations.pressure}`;
+    getElement('pressure').innerHTML = `${selectedTranslations.pressure}`; 
+    */
 }
 
 function getClothingRecommendation(feelslike) {
@@ -362,8 +449,7 @@ const topCloudGraph = createGraph('topCloudGraph');
 const topPressureGraph = createGraph('topPressureGraph');
 
 // Creates the Graph, doesn't add any data to them
-function createGraph(divElement) {
-    //for beginAtZero
+function createGraph(divElement: string) {
     const dataTypeDisplayNames = {
         topTempGraph: false,
         topPrecipGraph: true,
@@ -413,7 +499,7 @@ function createGraph(divElement) {
 }
 
 // Container Function for Graph Updating
-function updateGraphs(weatherData, rangeValue=0) {
+function updateGraphs(weatherData: any, rangeValue=0) {
     const currentConditions = weatherData.currentConditions;
     updateCurrentGraph(currentConditions.datetime, weatherData, topTempGraph, 'temp', 'feelslike', 47, rangeValue);
     updateCurrentGraph(currentConditions.datetime, weatherData, topPrecipGraph, 'precipprob', 'precip', 47, rangeValue);
@@ -502,7 +588,7 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
 
     const graphTypeDisplay = selectedLanguageUnit[unitFirst] || 'Error';
     const graphTypeDisplay2 = selectedLanguageUnit[unitSecond] || 'Error';
-    //const graphLanguageDisplayDay = selectedLanguageLabel.day || 'Error'; // Not used anymore
+    const graphLanguageDisplayDay = selectedLanguageLabel.day || 'Error';
     const graphLanguageDisplayToday = selectedLanguageLabel.today || 'Error';
 
     const hoursUntilMidnight = 24 - currentTime;
@@ -513,7 +599,7 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
     let hoursValue = 0.0;
     hoursValue = parseFloat(rangeValue);
 
-    let data = [];
+    data = [];
     for (let i = 0; i <= parsedSize; i++) {
         let totalHours = currentTime + i + (hoursValue * 10);
         let day = Math.floor(totalHours / 24) ;
@@ -563,22 +649,24 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
     chart.update()
 }
 
-function updateWeatherIcon(iconData) {
-    const weatherIcon = document.getElementById('weatherIcon');
-    if (iconData === 'sunny') {
-        weatherIcon.src = 'icons/clear_day.svg';
-    } else if (iconData === 'rain') {
-        weatherIcon.src = 'icons/drizzle.svg';
-    } else if (iconData === 'snow') {
-        weatherIcon.src = 'icons/showers_snow.svg';
-    } else if (iconData === 'cloudy') {
-        weatherIcon.src = 'icons/cloudy.svg';
-    } else {
-        weatherIcon.src = 'icons/clear_day.svg';
+function updateWeatherIcon(iconData: string) {
+    const weatherIcon = document.getElementById('weatherIcon') as HTMLImageElement | null;
+    if (weatherIcon) {
+        if (iconData === 'sunny') {
+            weatherIcon.src = 'icons/clear_day.svg';
+        } else if (iconData === 'rain') {
+            weatherIcon.src = 'icons/drizzle.svg';
+        } else if (iconData === 'snow') {
+            weatherIcon.src = 'icons/showers_snow.svg';
+        } else if (iconData === 'cloudy') {
+            weatherIcon.src = 'icons/cloudy.svg';
+        } else {
+            weatherIcon.src = 'icons/clear_day.svg';
+        }
     }
 }
 
-function handleError(error) {
+function handleError(error: Error) {
     console.error(error);
     const languageValue = getLanguage();
     
@@ -599,9 +687,12 @@ function handleError(error) {
 
     const selectedErrorMessages = errorMessages[languageValue] || errorMessages['English'];
 
-    if (error.message.includes('Bad API Re')) {
-        getElement('Error').innerHTML = selectedErrorMessages.badAPI;
-    } else {
-        getElement('Error').innerHTML = `${selectedErrorMessages.default} ${error.message}`;
+    const errorElement = getElement('Error');
+    if (errorElement) {
+        if (error.message.includes('Bad API Re')) {
+            errorElement.innerHTML = selectedErrorMessages.badAPI;
+        } else {
+            errorElement.innerHTML = `${selectedErrorMessages.error} ${error.message}`;
+        }
     }
 }
