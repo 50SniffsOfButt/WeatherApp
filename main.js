@@ -59,18 +59,33 @@ document.querySelector('#SearchbarTop').addEventListener('submit', function (eve
 });
 
 // Takes the location and fetches the weather data via API Call
+
 function fetchWeatherData(location) {
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&include=days%2Ccurrent%2Chours%2Calerts&key=JML37MDXVH3FAJWLAJ5M98YCP&contentType=json`;
 
     fetch(url)
-        .then(response => response.json())
+        .then(response => {
+            // Log the raw response for debugging
+            console.log('Raw Response:', response);
+
+            // Check if the response is OK (status code 200-299)
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            // Parse the response as JSON
+            return response.json();
+        })
         .then(weatherData => {
-            processWeatherData(weatherData)
+            processWeatherData(weatherData);
             setCookie(location);
         })
-    .catch(error => {
-        handleError(error)
-    });
+        .catch(error => {
+            console.error('Error fetching weather data:', error);
+
+            // Log the error and create a user-friendly error message
+            handleError(error);
+        });
 }
 
 // Takes the weatherData from API and splits it up for different functions
@@ -98,6 +113,7 @@ function processWeatherData(weatherData) {
 function updateCurrentWeather(currentConditions, firstDayData, address) {
     const dateParts = firstDayData.datetime.split('-'); // Makes Year-Month-Day into Day-Month-Year
     const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+    
     const currentTimestamp = new Date(currentConditions.datetimeEpoch * 1000).toLocaleString();
 
     const translations = {
@@ -585,7 +601,7 @@ function handleError(error) {
 
     const selectedErrorMessages = errorMessages[languageValue] || errorMessages['English'];
 
-    if (error.message.includes('Bad API Re')) {
+    if (error.message.includes('Status: 400')) {
         getElement('Error').innerHTML = selectedErrorMessages.badAPI;
     } else {
         getElement('Error').innerHTML = `${selectedErrorMessages.default} ${error.message}`;
