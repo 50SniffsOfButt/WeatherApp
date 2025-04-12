@@ -4,30 +4,30 @@
 //                      //
 //////////////////////////
 
+
 function getElement(id: string): HTMLElement | null {
     return document.getElementById(id);
 }
 
-function getLanguage(): string {
-    const languageInput = document.getElementById('languageInput') as HTMLInputElement | null;
-    return languageInput?.value || 'English';
-}
-
-/*
-function getLanguage():string {let languageInput = document.getElementById('languageInput') as HTMLInputElement;
-    return languageInput?.value || 'English';
-}*/
 
 
 /////////////////////
 // Site Initiation //
 /////////////////////
 
-function getCookie() {
+
+// get last selected language from localStorage
+function getLanguage(): string | null {
+    const languageInput = document.getElementById('languageInput') as HTMLInputElement | null;
+    return languageInput?.value || 'English';
+}
+// get last search from localStorage
+function getCookie(): string | null {
     const lastSearch = localStorage.getItem('lastSearch');
     return lastSearch;
 }
 
+// creates localStorage of last search and selected language
 function setCookie(location: string) {
     localStorage.setItem('lastSearch', location);
     localStorage.setItem('lastLanguage', getLanguage());
@@ -36,7 +36,7 @@ function setCookie(location: string) {
 function getSearchWithCookie() {
     const cookieValue = getCookie();
     const searchbar = document.getElementById('Searchbar') as HTMLInputElement | null;
-    if (cookieValue && cookieValue !== 'null' && searchbar) {
+    if (cookieValue && searchbar) {
         searchbar.value = cookieValue;
         fetchWeatherData(cookieValue);
     }
@@ -300,57 +300,39 @@ function updateCurrentWeather(currentConditions: any, firstDayData: any, address
     const selectedShortWeatherTranslations = shortWeatherTranslations[languageValue] || shortWeatherTranslations['English'];
     const selectedLongWeatherTranslations = longWeatherTranslations[languageValue] || longWeatherTranslations['English'];
 
-    // there has to be a better way
-    const currentWeatherElement = getElement('currentWeather'); if (currentWeatherElement) {currentWeatherElement.innerHTML = selectedTranslations.currentWeather;}
-    const addressElement = getElement('Address'); if (addressElement) {addressElement.innerHTML = address;
-    const currentConditionsElement = getElement('currentConditions'); if (currentConditionsElement) {currentConditionsElement.innerHTML = selectedShortWeatherTranslations[currentConditions.conditions] || currentConditions.conditions;}}
-    const currentTimestampElement = getElement('currentTimestamp'); if (currentTimestampElement) {currentTimestampElement.innerHTML = `${selectedTranslations.dataFrom}: ${currentTimestamp};`}
-    const clothingRecElement = getElement('clothingRec'); if (clothingRecElement) {clothingRecElement.innerHTML = `${selectedTranslations.clothingRecommendation}: ${getClothingRecommendation(currentConditions.feelslike)}`;}
-    const UVProtecionRecElement = getElement('UVProtecionRec'); if (UVProtecionRecElement) {UVProtecionRecElement.innerHTML = `${selectedTranslations.UVProtectionRecommendation}: ${getUVProtectionRecommendation(currentConditions.uvindex)}`;}
-    const datetimeElement = getElement('datetime'); if (datetimeElement) {datetimeElement.innerHTML = `${selectedTranslations.date}: ${formattedDate}`;}
-    const currentTimeElement = getElement('currentTime'); if (currentTimeElement) {currentTimeElement.innerHTML = `${selectedTranslations.time}: ${currentConditions.datetime}`;}
-    const currentFeelslikeElement = getElement('currentFeelslike'); if (currentFeelslikeElement) {currentFeelslikeElement.innerHTML = `${selectedTranslations.feelsLike}: ${currentConditions.feelslike}°C`;}
-    const longDescriptionElement = getElement('longDescription'); if (longDescriptionElement) {longDescriptionElement.innerHTML = selectedLongWeatherTranslations[currentConditions.conditions] || currentConditions.conditions;}
-    const currentTempElement = getElement('currentTemp'); if (currentTempElement) {currentTempElement.innerHTML = `${selectedTranslations.temperature}: ${currentConditions.temp}°C`;}
-    const currentHumidityElement = getElement('currentHumidity'); if (currentHumidityElement) {currentHumidityElement.innerHTML = `${selectedTranslations.humidity}: ${currentConditions.humidity}%`;}
-    const currentPrecipprobElement = getElement('currentPrecipprob'); if (currentPrecipprobElement) {currentPrecipprobElement.innerHTML = `${selectedTranslations.precipitationChance}: ${currentConditions.precipprob}%`;}
-    const currentWindspeedElement = getElement('currentWindspeed'); if (currentWindspeedElement) {currentWindspeedElement.innerHTML = `${selectedTranslations.windSpeed}: ${currentConditions.windspeed} km/h`;}
-    const currentUVIndexElement = getElement('currentUVIndex'); if (currentUVIndexElement) {currentUVIndexElement.innerHTML = `${selectedTranslations.uvIndex}: ${currentConditions.uvindex}`;}
-    const temperatureElement = getElement('temperature'); if (temperatureElement) {temperatureElement.innerHTML = `${selectedTranslations.temperature}`;}
-    const preciptiationElement = getElement('preciptiation'); if (preciptiationElement) {preciptiationElement.innerHTML = `${selectedTranslations.precipitationChance}`;}
-    const windspeedElement = getElement('windspeed'); if (windspeedElement) {windspeedElement.innerHTML = `${selectedTranslations.windSpeed}`;}
-    const visibilityElement = getElement('visibility'); if (visibilityElement) {visibilityElement.innerHTML = `${selectedTranslations.visibility}`;}
-    const humidityElement = getElement('humidity'); if (humidityElement) {humidityElement.innerHTML = `${selectedTranslations.humidity}`;}
-    const uvIndexElement = getElement('uvIndex'); if (uvIndexElement) {uvIndexElement.innerHTML = `${selectedTranslations.uvIndex}`;}
-    const solarRadElement = getElement('solarRad'); if (solarRadElement) {solarRadElement.innerHTML = `${selectedTranslations.solarRad}`;}
-    const cloudCoverElement = getElement('cloudCover'); if (cloudCoverElement) {cloudCoverElement.innerHTML = `${selectedTranslations.cloudCover}`;}
-    const pressureElement = getElement('pressure'); if (pressureElement) {pressureElement.innerHTML = `${selectedTranslations.pressure}`;}
-    /*
-    getElement('currentWeather').innerHTML = selectedTranslations.currentWeather;
-    getElement('Address').innerHTML = address;
-    getElement('currentConditions').innerHTML = selectedShortWeatherTranslations[currentConditions.conditions] || currentConditions.conditions;
-    getElement('currentTimestamp').innerHTML = `${selectedTranslations.dataFrom}: ${currentTimestamp}`;
-    getElement('clothingRec').innerHTML = `${selectedTranslations.clothingRecommendation}: ${getClothingRecommendation(currentConditions.feelslike)}`;
-    getElement('UVProtecionRec').innerHTML = `${selectedTranslations.UVProtectionRecommendation}: ${getUVProtectionRecommendation(currentConditions.uvindex)}`;
-    getElement('datetime').innerHTML = `${selectedTranslations.date}: ${formattedDate}`;
-    getElement('currentTime').innerHTML = `${selectedTranslations.time}: ${currentConditions.datetime}`;
-    getElement('currentFeelslike').innerHTML = `${selectedTranslations.feelsLike}: ${currentConditions.feelslike}°C`;
-    getElement('longDescription').innerHTML = selectedLongWeatherTranslations[currentConditions.conditions] || currentConditions.conditions;
-    getElement('currentTemp').innerHTML = `${selectedTranslations.temperature}: ${currentConditions.temp}°C`;
-    getElement('currentHumidity').innerHTML = `${selectedTranslations.humidity}: ${currentConditions.humidity}%`;
-    getElement('currentPrecipprob').innerHTML = `${selectedTranslations.precipitationChance}: ${currentConditions.precipprob}%`;
-    getElement('currentWindspeed').innerHTML = `${selectedTranslations.windSpeed}: ${currentConditions.windspeed} km/h`;
-    getElement('currentUVIndex').innerHTML = `${selectedTranslations.uvIndex}: ${currentConditions.uvindex}`;
-    getElement('temperature').innerHTML = `${selectedTranslations.temperature}`;
-    getElement('preciptiation').innerHTML = `${selectedTranslations.precipitationChance}`;
-    getElement('windspeed').innerHTML = `${selectedTranslations.windSpeed}`;
-    getElement('visibility').innerHTML = `${selectedTranslations.visibility}`;
-    getElement('humidity').innerHTML = `${selectedTranslations.humidity}`;
-    getElement('uvIndex').innerHTML = `${selectedTranslations.uvIndex}`;
-    getElement('solarRad').innerHTML = `${selectedTranslations.solarRad}`;
-    getElement('cloudCover').innerHTML = `${selectedTranslations.cloudCover}`;
-    getElement('pressure').innerHTML = `${selectedTranslations.pressure}`; 
-    */
+    const elementsToUpdate = [
+        { id: 'currentWeather', content: selectedTranslations.currentWeather },
+        { id: 'Address', content: address },
+        { id: 'currentConditions', content: selectedShortWeatherTranslations[currentConditions.conditions] || currentConditions.conditions },
+        { id: 'currentTimestamp', content: `${selectedTranslations.dataFrom}: ${currentTimestamp};` },
+        { id: 'clothingRec', content: `${selectedTranslations.clothingRecommendation}: ${getClothingRecommendation(currentConditions.feelslike)}` },
+        { id: 'UVProtecionRec', content: `${selectedTranslations.UVProtectionRecommendation}: ${getUVProtectionRecommendation(currentConditions.uvindex)}` },
+        { id: 'datetime', content: `${selectedTranslations.date}: ${formattedDate}` },
+        { id: 'currentTime', content: `${selectedTranslations.time}: ${currentConditions.datetime}` },
+        { id: 'currentFeelslike', content: `${selectedTranslations.feelsLike}: ${currentConditions.feelslike}°C` },
+        { id: 'longDescription', content: selectedLongWeatherTranslations[currentConditions.conditions] || currentConditions.conditions },
+        { id: 'currentTemp', content: `${selectedTranslations.temperature}: ${currentConditions.temp}°C` },
+        { id: 'currentHumidity', content: `${selectedTranslations.humidity}: ${currentConditions.humidity}%` },
+        { id: 'currentPrecipprob', content: `${selectedTranslations.precipitationChance}: ${currentConditions.precipprob}%` },
+        { id: 'currentWindspeed', content: `${selectedTranslations.windSpeed}: ${currentConditions.windspeed} km/h` },
+        { id: 'currentUVIndex', content: `${selectedTranslations.uvIndex}: ${currentConditions.uvindex}` },
+        { id: 'temperature', content: `${selectedTranslations.temperature}` },
+        { id: 'preciptiation', content: `${selectedTranslations.precipitationChance}` },
+        { id: 'windspeed', content: `${selectedTranslations.windSpeed}` },
+        { id: 'visibility', content: `${selectedTranslations.visibility}` },
+        { id: 'humidity', content: `${selectedTranslations.humidity}` },
+        { id: 'uvIndex', content: `${selectedTranslations.uvIndex}` },
+        { id: 'solarRad', content: `${selectedTranslations.solarRad}` },
+        { id: 'cloudCover', content: `${selectedTranslations.cloudCover}` },
+        { id: 'pressure', content: `${selectedTranslations.pressure}` },
+    ];
+
+    elementsToUpdate.forEach(({ id, content }) => {
+        const element = getElement(id);
+        if (element) {
+            element.innerHTML = content;
+        }
+    });
 }
 
 function getClothingRecommendation(feelslike) {
