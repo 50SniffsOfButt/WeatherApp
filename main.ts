@@ -4,7 +4,6 @@
 //                      //
 //////////////////////////
 
-
 function getElement(id: string): HTMLElement | null {
     return document.getElementById(id);
 }
@@ -17,20 +16,20 @@ function getElement(id: string): HTMLElement | null {
 
 
 // get last selected language from localStorage
-function getLanguage(): string | null {
+function getLanguage(): string | 'English' {
     const languageInput = document.getElementById('languageInput') as HTMLInputElement | null;
     return languageInput?.value || 'English';
 }
 // get last search from localStorage
-function getCookie(): string | null {
+function getCookie(): string | 'English' {
     const lastSearch = localStorage.getItem('lastSearch');
-    return lastSearch;
+    return lastSearch || 'English';
 }
 
 // creates localStorage of last search and selected language
 function setCookie(location: string) {
     localStorage.setItem('lastSearch', location);
-    localStorage.setItem('lastLanguage', getLanguage());
+    localStorage.setItem('lastLanguage', getLanguage() || 'English');
 }
 
 function getSearchWithCookie() {
@@ -50,24 +49,6 @@ function getSearchWithCookie() {
         }
     }
 }
-
-/*
-function getSearchWithCookie() {
-    const cookieValue = getCookie();
-    if (cookieValue && cookieValue !== 'null') {
-        document.getElementById('Searchbar').value = cookieValue;
-        fetchWeatherData(cookieValue);
-    };
-    const languageValue = localStorage.getItem('lastLanguage');
-    document.getElementById('languageInput').value = languageValue;
-    if (languageValue && languageValue !== 'null') {
-    const event = new Event('change', { bubbles: true });
-    languageInput.dispatchEvent(event);
-    };
-}
-*/
-
-
 
 // Start the site with the last search and language selected
 getSearchWithCookie();
@@ -94,38 +75,22 @@ document.querySelector('#SearchbarTop')?.addEventListener('submit', function (ev
     fetchWeatherData(searchQuery);
 });
 
-/*
-document.querySelector('#SearchbarTop').addEventListener('submit', function (event) {
-    event.preventDefault();
-    let searchQuery = document.querySelector('#Searchbar').value.trim();
-    if (!searchQuery) {
-        const cookieValue = getCookie();
-        if (cookieValue && cookieValue !== 'null') {
-            searchQuery = cookieValue;
-        } else {
-            searchQuery = 'Nakakpiripirit';
-        }
-    }
-    document.getElementById('dayInput').value = 0;
-
-    console.log(searchQuery); // Debugging: Log the search query
-    fetchWeatherData(searchQuery);
-});
-*/
-
-
 // Takes the location and fetches the weather data via API Call
 function fetchWeatherData(location: string) {
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&include=days%2Ccurrent%2Chours%2Calerts&key=JML37MDXVH3FAJWLAJ5M98YCP&contentType=json`;
 
     fetch(url)
+        .then((response: Response) => {
+            console.log(response);
+            return response; // Return the response if further chaining is needed
+        })
         .then(response => response.json())
         .then(weatherData => {
             processWeatherData(weatherData)
             setCookie(location);
         })
     .catch(error => {
-        handleError(error)
+        handleError(error);
     });
 }
 
@@ -165,8 +130,6 @@ function processWeatherData(weatherData: any) {
     */
     updateWeatherIcon(currentConditions.icon);
 }
-
-
 
 // Function to update the current weather data and translations
 function updateCurrentWeather(currentConditions: any, firstDayData: any, address: any) {
@@ -296,21 +259,21 @@ function updateCurrentWeather(currentConditions: any, firstDayData: any, address
     };
     
     const languageValue = getLanguage();
-    const selectedTranslations = translations[languageValue] || translations['English'];
-    const selectedShortWeatherTranslations = shortWeatherTranslations[languageValue] || shortWeatherTranslations['English'];
-    const selectedLongWeatherTranslations = longWeatherTranslations[languageValue] || longWeatherTranslations['English'];
+    const selectedTranslations = translations[languageValue as keyof typeof translations] || translations['English'];
+    const selectedShortWeatherTranslations = shortWeatherTranslations[languageValue as keyof typeof translations] || shortWeatherTranslations['English'];
+    const selectedLongWeatherTranslations = longWeatherTranslations[languageValue as keyof typeof translations] || longWeatherTranslations['English'];
 
     const elementsToUpdate = [
         { id: 'currentWeather', content: selectedTranslations.currentWeather },
         { id: 'Address', content: address },
-        { id: 'currentConditions', content: selectedShortWeatherTranslations[currentConditions.conditions] || currentConditions.conditions },
+        { id: 'currentConditions', content: selectedShortWeatherTranslations[currentConditions.conditions as keyof typeof selectedShortWeatherTranslations] || currentConditions.conditions },
         { id: 'currentTimestamp', content: `${selectedTranslations.dataFrom}: ${currentTimestamp};` },
         { id: 'clothingRec', content: `${selectedTranslations.clothingRecommendation}: ${getClothingRecommendation(currentConditions.feelslike)}` },
         { id: 'UVProtecionRec', content: `${selectedTranslations.UVProtectionRecommendation}: ${getUVProtectionRecommendation(currentConditions.uvindex)}` },
         { id: 'datetime', content: `${selectedTranslations.date}: ${formattedDate}` },
         { id: 'currentTime', content: `${selectedTranslations.time}: ${currentConditions.datetime}` },
         { id: 'currentFeelslike', content: `${selectedTranslations.feelsLike}: ${currentConditions.feelslike}°C` },
-        { id: 'longDescription', content: selectedLongWeatherTranslations[currentConditions.conditions] || currentConditions.conditions },
+        { id: 'longDescription', content: selectedLongWeatherTranslations[currentConditions.conditions as keyof typeof selectedLongWeatherTranslations] || currentConditions.conditions },
         { id: 'currentTemp', content: `${selectedTranslations.temperature}: ${currentConditions.temp}°C` },
         { id: 'currentHumidity', content: `${selectedTranslations.humidity}: ${currentConditions.humidity}%` },
         { id: 'currentPrecipprob', content: `${selectedTranslations.precipitationChance}: ${currentConditions.precipprob}%` },
@@ -335,7 +298,7 @@ function updateCurrentWeather(currentConditions: any, firstDayData: any, address
     });
 }
 
-function getClothingRecommendation(feelslike) {
+function getClothingRecommendation(feelslike: number) {
     const languageValue = getLanguage();
     const clothingType = {
         English: {
@@ -358,7 +321,7 @@ function getClothingRecommendation(feelslike) {
         },
     };
 
-    const selectedClothingType = clothingType[languageValue] || clothingType['English'];
+    const selectedClothingType = clothingType[languageValue as keyof typeof clothingType] || clothingType['English'];
 
     if (feelslike > 18) {
         return selectedClothingType.Tshirt;
@@ -373,7 +336,7 @@ function getClothingRecommendation(feelslike) {
     }
 }
 
-function getUVProtectionRecommendation(uvindex) {
+function getUVProtectionRecommendation(uvindex: number) {
     const languageValue = getLanguage();
     const uvIndex = {
     English: {
@@ -399,7 +362,7 @@ function getUVProtectionRecommendation(uvindex) {
     },
 };
 
-const selectedUVIndex = uvIndex[languageValue] || uvIndex['English'];
+const selectedUVIndex = uvIndex[languageValue as keyof typeof uvIndex] || uvIndex['English'];
 
     if (uvindex < 3) {
         return selectedUVIndex.low;
@@ -451,15 +414,18 @@ function createGraph(divElement: string) {
         bigWindSpeedGraph: false,
         bigUVIndexGraph: true
     };
-    const graphStyle = dataTypeDisplayNames[divElement];
+    const graphStyle = dataTypeDisplayNames[divElement as keyof typeof dataTypeDisplayNames] || false;
     
     return new Chart(divElement, {
         type: 'line',
+        data: {
+            labels: [],
+            datasets: [],
+        },
         options: {
             animation: {
-                easing : false,
                 duration : 0,
-              },
+            },
             plugins: {
                 legend: {
                     display: false
@@ -470,12 +436,18 @@ function createGraph(divElement: string) {
                     radius: 1,
                     hitRadius: 15,
                     hoverRadius: 8
+                },
+                line: {
+                    tension: 0.45,
                 }
             },
             scales: {
-                y: {
-                    beginAtZero: graphStyle,
-            }}
+                y: [{
+                    ticks: {
+                        beginAtZero: graphStyle,
+                    }
+                }]
+            },
     }}
     );
 }
@@ -496,7 +468,7 @@ function updateGraphs(weatherData: any, rangeValue=0) {
 
 // Updates the Graphs if ValueData gets changed (Userinput to see differnt Data)
 // Also called once to initialize the Graphs
-function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond, size, rangeValue=0) {
+function updateCurrentGraph(timeData: string, weatherData: any, chart: Chart, unitFirst: string, unitSecond: string | null, size: number | 'day', rangeValue: number=0) {
     const currentTime = parseInt(timeData.split(':')[0], 10);
     const dataTypeDisplayNames = {
         English: {
@@ -565,11 +537,11 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
     };
     
     const languageValue = getLanguage();
-    const selectedLanguageUnit = dataTypeDisplayNames[languageValue] || dataTypeDisplayNames['English'];
-    const selectedLanguageLabel = dataLanguageDisplay[languageValue] || dataLanguageDisplay['English'];
+    const selectedLanguageUnit = dataTypeDisplayNames[languageValue as keyof typeof dataLanguageDisplay] || dataTypeDisplayNames['English'];
+    const selectedLanguageLabel = dataLanguageDisplay[languageValue as keyof typeof dataLanguageDisplay] || dataLanguageDisplay['English'];
 
-    const graphTypeDisplay = selectedLanguageUnit[unitFirst] || 'Error';
-    const graphTypeDisplay2 = selectedLanguageUnit[unitSecond] || 'Error';
+    const graphTypeDisplay = selectedLanguageUnit[unitFirst as keyof typeof selectedLanguageUnit] || 'Error';
+    const graphTypeDisplay2 = selectedLanguageUnit[unitSecond as keyof typeof selectedLanguageUnit] || 'Error';
     const graphLanguageDisplayDay = selectedLanguageLabel.day || 'Error';
     const graphLanguageDisplayToday = selectedLanguageLabel.today || 'Error';
 
@@ -579,9 +551,9 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
     // Sets the parsedSize to max 16  or min 8 but only if the value of size is 'day', otherwise it sets it to the value of size
 
     let hoursValue = 0.0;
-    hoursValue = parseFloat(rangeValue);
+    hoursValue = (rangeValue);
 
-    data = [];
+    const data: { time: string; value1: number; value2: number | null }[] = [];
     for (let i = 0; i <= parsedSize; i++) {
         let totalHours = currentTime + i + (hoursValue * 10);
         let day = Math.floor(totalHours / 24) ;
@@ -600,8 +572,7 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
         }
         let value1, value2;
         value1 = weatherData.days[day].hours[hour][unitFirst];
-        value2 = weatherData.days[day].hours[hour][unitSecond];
-
+        value2 = weatherData.days[day].hours[hour][unitSecond || ''] ; // this might break if unitSecond is not defined
     
         data.push({
             time: timeLabel,
@@ -618,13 +589,11 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
             label: graphTypeDisplay,
             data: data.map(row => row.value1),
             borderWidth: 3,
-            tension: 0.45,
             borderColor: '#5a6fb0',
         },{
             label: graphTypeDisplay2,
             data: data.map(row => row.value2),
             borderWidth: 3,
-            tension: 0.45,
             borderColor: '#19b8d1',
         }]
     }
@@ -648,31 +617,31 @@ function updateWeatherIcon(iconData: string) {
     }
 }
 
-function handleError(error: Error) {
+function handleError(error: any) {
     console.error(error);
     const languageValue = getLanguage();
     
     const errorMessages = {
         English: {
-            badAPI: 'No data found for that location',
+            invalidAddress: 'No data found for that location',
             error: 'Error: ',
         },
         Deutsch: {
-            badAPI: 'Keine Daten für diesen Ort gefunden',
+            invalidAddress: 'Keine Daten für diesen Ort gefunden',
             error: 'Fehler: ',
         },
         Suaheli: {
-            badAPI: 'Hakuna data iliyopatikana kwa eneo hilo',
+            invalidAddress: 'Hakuna data iliyopatikana kwa eneo hilo',
             error: 'Kosa: ',
         },
     };
 
-    const selectedErrorMessages = errorMessages[languageValue] || errorMessages['English'];
+    const selectedErrorMessages = errorMessages[languageValue as keyof typeof errorMessages] || errorMessages['English'];
 
     const errorElement = getElement('Error');
     if (errorElement) {
-        if (error.message.includes('Bad API Re')) {
-            errorElement.innerHTML = selectedErrorMessages.badAPI;
+        if (error.message.includes('unexpected character at line 1 column 1 of the JSON data')) {
+            errorElement.innerHTML = selectedErrorMessages.invalidAddress;
         } else {
             errorElement.innerHTML = `${selectedErrorMessages.error} ${error.message}`;
         }
