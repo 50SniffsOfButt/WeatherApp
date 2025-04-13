@@ -419,11 +419,9 @@ function createGraph(divElement) {
                 }
             },
             scales: {
-                y: [{
-                        ticks: {
-                            beginAtZero: graphStyle,
-                        }
-                    }]
+                y: {
+                    beginAtZero: graphStyle,
+                },
             },
         }
     });
@@ -441,7 +439,7 @@ function updateGraphs(weatherData, rangeValue = 0) {
     updateCurrentGraph(currentConditions.datetime, weatherData, topCloudGraph, 'cloudcover', null, 47, rangeValue);
     updateCurrentGraph(currentConditions.datetime, weatherData, topPressureGraph, 'pressure', null, 47, rangeValue);
 }
-// Updates the Graphs if ValueData gets changed (Userinput to see differnt Data)
+// Updates the Graphs with new Data if User starts a new search
 // Also called once to initialize the Graphs
 function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond, size, rangeValue = 0) {
     const currentTime = parseInt(timeData.split(':')[0], 10);
