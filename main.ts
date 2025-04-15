@@ -15,6 +15,39 @@ function getElement(id: string): HTMLElement | null {
 /////////////////////
 
 
+// Event listener for the location search input
+document.querySelector('#SearchbarTop')?.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const searchbar = document.querySelector('#Searchbar') as HTMLInputElement | null;
+    let searchQuery = searchbar?.value.trim();
+
+    if (!searchQuery) {
+        searchQuery = getCookie();
+    }
+
+    const dayInput = document.getElementById('dayInput') as HTMLInputElement | null;
+    if (dayInput) {
+        dayInput.value = '0';
+    }
+
+    console.log(searchQuery); // Debugging: Log the search query
+    fetchWeatherData(searchQuery);
+});
+
+// Event listener for the language selection input
+const languageInput = document.getElementById('languageInput') as HTMLInputElement | null;
+
+if (languageInput) {
+    languageInput.addEventListener('change', () => {
+        const searchbar = document.getElementById('Searchbar') as HTMLInputElement | null;
+        const searchQuery = searchbar?.value.trim() || getCookie(); // Use the current search query or the last search
+        if (searchQuery) {
+            fetchWeatherData(searchQuery); // Fetch weather data for the current search query
+        }
+    });
+}
+
+
 // get last selected language from dropdown User input
 function getLanguage(): string | 'English' {
     const languageInput = document.getElementById('languageInput') as HTMLInputElement | null;
@@ -52,40 +85,6 @@ function getSearchWithCookie() {
 
 // Start the site with the last search and language selected
 getSearchWithCookie();
-
-// Event listener for the location search input
-document.querySelector('#SearchbarTop')?.addEventListener('submit', function (event) {
-    event.preventDefault();
-    const searchbar = document.querySelector('#Searchbar') as HTMLInputElement | null;
-    let searchQuery = searchbar?.value.trim();
-
-    if (!searchQuery) {
-        searchQuery = getCookie();
-    }
-
-    const dayInput = document.getElementById('dayInput') as HTMLInputElement | null;
-    if (dayInput) {
-        dayInput.value = '0';
-    }
-
-    console.log(searchQuery); // Debugging: Log the search query
-    fetchWeatherData(searchQuery);
-});
-
-document.querySelector('#languageInput')?.addEventListener('change', function () {
-    const languageInput = document.getElementById('languageInput') as HTMLInputElement | null;
-    let languageValue = languageInput?.value || 'English';
-
-    if (languageInput) {
-        languageInput.addEventListener('change', () => {
-            const searchbar = document.getElementById('Searchbar') as HTMLInputElement | null;
-            const searchQuery = searchbar?.value.trim() || getCookie(); // Use the current search query or the last search
-            if (searchQuery) {
-                fetchWeatherData(searchQuery); // Fetch weather data for the current search query
-            }
-        });
-    }
-});
 
 // Takes the location and fetches the weather data via API Call
 function fetchWeatherData(location: string) {

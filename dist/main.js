@@ -4,13 +4,39 @@
 // Main JavaScript File //
 //                      //
 //////////////////////////
-var _a, _b;
+var _a;
 function getElement(id) {
     return document.getElementById(id);
 }
 /////////////////////
 // Site Initiation //
 /////////////////////
+// Event listener for the location search input
+(_a = document.querySelector('#SearchbarTop')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const searchbar = document.querySelector('#Searchbar');
+    let searchQuery = searchbar === null || searchbar === void 0 ? void 0 : searchbar.value.trim();
+    if (!searchQuery) {
+        searchQuery = getCookie();
+    }
+    const dayInput = document.getElementById('dayInput');
+    if (dayInput) {
+        dayInput.value = '0';
+    }
+    console.log(searchQuery); // Debugging: Log the search query
+    fetchWeatherData(searchQuery);
+});
+// Event listener for the language selection input
+const languageInput = document.getElementById('languageInput');
+if (languageInput) {
+    languageInput.addEventListener('change', () => {
+        const searchbar = document.getElementById('Searchbar');
+        const searchQuery = (searchbar === null || searchbar === void 0 ? void 0 : searchbar.value.trim()) || getCookie(); // Use the current search query or the last search
+        if (searchQuery) {
+            fetchWeatherData(searchQuery); // Fetch weather data for the current search query
+        }
+    });
+}
 // get last selected language from dropdown User input
 function getLanguage() {
     const languageInput = document.getElementById('languageInput');
@@ -44,34 +70,6 @@ function getSearchWithCookie() {
 }
 // Start the site with the last search and language selected
 getSearchWithCookie();
-// Event listener for the location search input
-(_a = document.querySelector('#SearchbarTop')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', function (event) {
-    event.preventDefault();
-    const searchbar = document.querySelector('#Searchbar');
-    let searchQuery = searchbar === null || searchbar === void 0 ? void 0 : searchbar.value.trim();
-    if (!searchQuery) {
-        searchQuery = getCookie();
-    }
-    const dayInput = document.getElementById('dayInput');
-    if (dayInput) {
-        dayInput.value = '0';
-    }
-    console.log(searchQuery); // Debugging: Log the search query
-    fetchWeatherData(searchQuery);
-});
-(_b = document.querySelector('#languageInput')) === null || _b === void 0 ? void 0 : _b.addEventListener('change', function () {
-    const languageInput = document.getElementById('languageInput');
-    let languageValue = (languageInput === null || languageInput === void 0 ? void 0 : languageInput.value) || 'English';
-    if (languageInput) {
-        languageInput.addEventListener('change', () => {
-            const searchbar = document.getElementById('Searchbar');
-            const searchQuery = (searchbar === null || searchbar === void 0 ? void 0 : searchbar.value.trim()) || getCookie(); // Use the current search query or the last search
-            if (searchQuery) {
-                fetchWeatherData(searchQuery); // Fetch weather data for the current search query
-            }
-        });
-    }
-});
 // Takes the location and fetches the weather data via API Call
 function fetchWeatherData(location) {
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&include=days%2Ccurrent%2Chours%2Calerts&key=JML37MDXVH3FAJWLAJ5M98YCP&contentType=json`;
