@@ -16,10 +16,9 @@ function getLanguage() {
     const languageInput = document.getElementById('languageInput');
     return (languageInput === null || languageInput === void 0 ? void 0 : languageInput.value) || 'English';
 }
-// get last search from localStorage
 function getCookie() {
     const lastSearch = localStorage.getItem('lastSearch');
-    return lastSearch || 'English';
+    return lastSearch || '';
 }
 // creates localStorage of last search and selected language
 function setCookie(location) {
@@ -49,15 +48,9 @@ getSearchWithCookie();
 (_a = document.querySelector('#SearchbarTop')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', function (event) {
     event.preventDefault();
     const searchbar = document.querySelector('#Searchbar');
-    let searchQuery = (searchbar === null || searchbar === void 0 ? void 0 : searchbar.value.trim()) || '';
+    let searchQuery = searchbar === null || searchbar === void 0 ? void 0 : searchbar.value.trim();
     if (!searchQuery) {
-        const cookieValue = getCookie();
-        if (cookieValue && cookieValue !== 'null') {
-            searchQuery = cookieValue;
-        }
-        else {
-            searchQuery = 'Nakakpiripirit';
-        }
+        searchQuery = getCookie();
     }
     const dayInput = document.getElementById('dayInput');
     if (dayInput) {

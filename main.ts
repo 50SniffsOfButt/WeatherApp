@@ -20,10 +20,10 @@ function getLanguage(): string | 'English' {
     const languageInput = document.getElementById('languageInput') as HTMLInputElement | null;
     return languageInput?.value || 'English';
 }
-// get last search from localStorage
-function getCookie(): string | 'English' {
+
+function getCookie(): string | '' {
     const lastSearch = localStorage.getItem('lastSearch');
-    return lastSearch || 'English';
+    return lastSearch || '';
 }
 
 // creates localStorage of last search and selected language
@@ -57,15 +57,12 @@ getSearchWithCookie();
 document.querySelector('#SearchbarTop')?.addEventListener('submit', function (event) {
     event.preventDefault();
     const searchbar = document.querySelector('#Searchbar') as HTMLInputElement | null;
-    let searchQuery = searchbar?.value.trim() || '';
+    let searchQuery = searchbar?.value.trim();
+
     if (!searchQuery) {
-        const cookieValue = getCookie();
-        if (cookieValue && cookieValue !== 'null') {
-            searchQuery = cookieValue;
-        } else {
-            searchQuery = 'Nakakpiripirit';
-        }
+        searchQuery = getCookie();
     }
+
     const dayInput = document.getElementById('dayInput') as HTMLInputElement | null;
     if (dayInput) {
         dayInput.value = '0';
