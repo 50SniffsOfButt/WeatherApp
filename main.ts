@@ -80,10 +80,6 @@ function fetchWeatherData(location: string) {
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&include=days%2Ccurrent%2Chours%2Calerts&key=JML37MDXVH3FAJWLAJ5M98YCP&contentType=json`;
 
     fetch(url)
-        .then((response: Response) => {
-            console.log(response);
-            return response; // Return the response if further chaining is needed
-        })
         .then(response => response.json())
         .then(weatherData => {
             processWeatherData(weatherData)
@@ -110,10 +106,12 @@ function processWeatherData(weatherData: any) {
 
     updateGraphs(weatherData);
 
-    updateCurrentWeather(currentConditions, firstDayData, address);
     const dayInput = document.getElementById('dayInput') as HTMLInputElement | null;
     if (dayInput) {
-        dayInput.addEventListener('input', function(event) {
+        const newDayInput = dayInput.cloneNode(true) as HTMLInputElement;
+        dayInput.parentNode?.replaceChild(newDayInput, dayInput);
+
+        newDayInput.addEventListener('input', function (event) {
             const target = event.target as HTMLInputElement | null;
             if (target) {
                 const rangeValue = parseFloat(target.value);
@@ -121,13 +119,7 @@ function processWeatherData(weatherData: any) {
             }
         });
     }
-    /*
-    updateCurrentWeather(currentConditions, firstDayData, address);
-    document.getElementById('dayInput').addEventListener('input', function(event) {
-        let rangeValue = event.target.value;
-        updateGraphs(weatherData, rangeValue);
-    } );
-    */
+
     updateWeatherIcon(currentConditions.icon);
 }
 
@@ -594,8 +586,8 @@ function updateCurrentGraph(timeData: string, weatherData: any, chart: Chart, un
             borderWidth: 3,
             borderColor: '#19b8d1',
         }]
-    }
-    chart.update()
+    };
+    chart.update();
 }
 
 function updateWeatherIcon(iconData: string) {

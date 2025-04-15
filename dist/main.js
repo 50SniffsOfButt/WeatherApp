@@ -70,10 +70,6 @@ getSearchWithCookie();
 function fetchWeatherData(location) {
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&include=days%2Ccurrent%2Chours%2Calerts&key=JML37MDXVH3FAJWLAJ5M98YCP&contentType=json`;
     fetch(url)
-        .then((response) => {
-        console.log(response);
-        return response; // Return the response if further chaining is needed
-    })
         .then(response => response.json())
         .then(weatherData => {
         processWeatherData(weatherData);
@@ -85,6 +81,7 @@ function fetchWeatherData(location) {
 }
 // Takes the weatherData from API and splits it up for different functions
 function processWeatherData(weatherData) {
+    var _a;
     const firstDayData = weatherData.days[0];
     const currentConditions = weatherData.currentConditions;
     const address = weatherData.resolvedAddress;
@@ -95,10 +92,11 @@ function processWeatherData(weatherData) {
     }
     ;
     updateGraphs(weatherData);
-    updateCurrentWeather(currentConditions, firstDayData, address);
     const dayInput = document.getElementById('dayInput');
     if (dayInput) {
-        dayInput.addEventListener('input', function (event) {
+        const newDayInput = dayInput.cloneNode(true);
+        (_a = dayInput.parentNode) === null || _a === void 0 ? void 0 : _a.replaceChild(newDayInput, dayInput);
+        newDayInput.addEventListener('input', function (event) {
             const target = event.target;
             if (target) {
                 const rangeValue = parseFloat(target.value);
@@ -106,13 +104,6 @@ function processWeatherData(weatherData) {
             }
         });
     }
-    /*
-    updateCurrentWeather(currentConditions, firstDayData, address);
-    document.getElementById('dayInput').addEventListener('input', function(event) {
-        let rangeValue = event.target.value;
-        updateGraphs(weatherData, rangeValue);
-    } );
-    */
     updateWeatherIcon(currentConditions.icon);
 }
 // Function to update the current weather data and translations
