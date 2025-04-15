@@ -15,7 +15,7 @@ function getElement(id: string): HTMLElement | null {
 /////////////////////
 
 
-// get last selected language from localStorage
+// get last selected language from dropdown User input
 function getLanguage(): string | 'English' {
     const languageInput = document.getElementById('languageInput') as HTMLInputElement | null;
     return languageInput?.value || 'English';
@@ -105,6 +105,7 @@ function processWeatherData(weatherData: any) {
     };
 
     updateGraphs(weatherData);
+    updateCurrentWeather(currentConditions, firstDayData, address);
 
     const dayInput = document.getElementById('dayInput') as HTMLInputElement | null;
     if (dayInput) {
@@ -119,7 +120,7 @@ function processWeatherData(weatherData: any) {
             }
         });
     }
-
+    
     updateWeatherIcon(currentConditions.icon);
 }
 

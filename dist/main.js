@@ -11,7 +11,7 @@ function getElement(id) {
 /////////////////////
 // Site Initiation //
 /////////////////////
-// get last selected language from localStorage
+// get last selected language from dropdown User input
 function getLanguage() {
     const languageInput = document.getElementById('languageInput');
     return (languageInput === null || languageInput === void 0 ? void 0 : languageInput.value) || 'English';
@@ -92,6 +92,7 @@ function processWeatherData(weatherData) {
     }
     ;
     updateGraphs(weatherData);
+    updateCurrentWeather(currentConditions, firstDayData, address);
     const dayInput = document.getElementById('dayInput');
     if (dayInput) {
         const newDayInput = dayInput.cloneNode(true);
