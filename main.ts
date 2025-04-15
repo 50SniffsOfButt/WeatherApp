@@ -72,6 +72,21 @@ document.querySelector('#SearchbarTop')?.addEventListener('submit', function (ev
     fetchWeatherData(searchQuery);
 });
 
+document.querySelector('#languageInput')?.addEventListener('change', function () {
+    const languageInput = document.getElementById('languageInput') as HTMLInputElement | null;
+    let languageValue = languageInput?.value || 'English';
+
+    if (languageInput) {
+        languageInput.addEventListener('change', () => {
+            const searchbar = document.getElementById('Searchbar') as HTMLInputElement | null;
+            const searchQuery = searchbar?.value.trim() || getCookie(); // Use the current search query or the last search
+            if (searchQuery) {
+                fetchWeatherData(searchQuery); // Fetch weather data for the current search query
+            }
+        });
+    }
+});
+
 // Takes the location and fetches the weather data via API Call
 function fetchWeatherData(location: string) {
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&include=days%2Ccurrent%2Chours%2Calerts&key=JML37MDXVH3FAJWLAJ5M98YCP&contentType=json`;

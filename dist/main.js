@@ -4,7 +4,7 @@
 // Main JavaScript File //
 //                      //
 //////////////////////////
-var _a;
+var _a, _b;
 function getElement(id) {
     return document.getElementById(id);
 }
@@ -58,6 +58,19 @@ getSearchWithCookie();
     }
     console.log(searchQuery); // Debugging: Log the search query
     fetchWeatherData(searchQuery);
+});
+(_b = document.querySelector('#languageInput')) === null || _b === void 0 ? void 0 : _b.addEventListener('change', function () {
+    const languageInput = document.getElementById('languageInput');
+    let languageValue = (languageInput === null || languageInput === void 0 ? void 0 : languageInput.value) || 'English';
+    if (languageInput) {
+        languageInput.addEventListener('change', () => {
+            const searchbar = document.getElementById('Searchbar');
+            const searchQuery = (searchbar === null || searchbar === void 0 ? void 0 : searchbar.value.trim()) || getCookie(); // Use the current search query or the last search
+            if (searchQuery) {
+                fetchWeatherData(searchQuery); // Fetch weather data for the current search query
+            }
+        });
+    }
 });
 // Takes the location and fetches the weather data via API Call
 function fetchWeatherData(location) {
