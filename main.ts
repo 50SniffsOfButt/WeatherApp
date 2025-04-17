@@ -8,8 +8,6 @@ function getElement(id: string): HTMLElement | null {
     return document.getElementById(id);
 }
 
-
-
 /////////////////////
 // Site Initiation //
 /////////////////////
@@ -428,7 +426,7 @@ function createGraph(divElement: string) {
         },
         options: {
             animation: {
-                duration : 0,
+                duration: 0,
             },
             plugins: {
                 legend: {
@@ -446,11 +444,22 @@ function createGraph(divElement: string) {
                 }
             },
             scales: {
+                x: {
+                    ticks: {
+                        autoSkip: false,
+                    },
+                },
                 y: {
                     beginAtZero: graphStyle,
                 },
             },
-    }}
+            layout: {
+                padding: {
+                    left: 42,
+                },
+            },
+        }
+    }
     );
 }
 
@@ -570,11 +579,11 @@ function updateCurrentGraph(timeData: string, weatherData: any, chart: Chart, un
                 month: 'long',
                 day: 'numeric'
             });
-            timeLabel = (hour === 0) ? `${readableDate} ${hour}` : `${hour}`;
+            timeLabel = (hour === 0) ? `${readableDate} | ${hour}` : `${hour}`;
         }
         let value1, value2;
         value1 = weatherData.days[day].hours[hour][unitFirst];
-        value2 = weatherData.days[day].hours[hour][unitSecond || ''] ; // this might break if unitSecond is not defined
+        value2 = weatherData.days[day].hours[hour][unitSecond || ''];
     
         data.push({
             time: timeLabel,
