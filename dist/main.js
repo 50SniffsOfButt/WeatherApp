@@ -447,8 +447,8 @@ function updateGraphs(weatherData, rangeValue = 0) {
     updateCurrentGraph(currentConditions.datetime, weatherData, topPressureGraph, 'pressure', null, 47, rangeValue);
 }
 function getMinMaxValues(weatherData, unitFirst, unitSecond) {
-    let maxValue = Infinity;
-    let minValue = -Infinity;
+    let maxValue = -Infinity;
+    let minValue = Infinity;
     for (const day of weatherData.days) {
         for (const hour of day.hours) {
             const value1 = hour[unitFirst];
@@ -590,6 +590,8 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
                 borderColor: '#19b8d1',
             }],
     };
+    chart.options.scales.y.max = getMinMaxValues(weatherData, unitFirst, unitSecond).max;
+    chart.options.scales.y.min = getMinMaxValues(weatherData, unitFirst, unitSecond).min;
     chart.update();
 }
 function updateWeatherIcon(iconData) {

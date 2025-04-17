@@ -479,8 +479,8 @@ function updateGraphs(weatherData: any, rangeValue=0) {
 }
 
 function getMinMaxValues(weatherData: any, unitFirst: string, unitSecond: string | null) : { max: number; min: number } {
-    let maxValue = Infinity;
-    let minValue = -Infinity;
+    let maxValue = -Infinity;
+    let minValue = Infinity;
 
     for (const day of weatherData.days) {
         for (const hour of day.hours) {
@@ -636,6 +636,9 @@ function updateCurrentGraph(timeData: string, weatherData: any, chart: Chart, un
             borderColor: '#19b8d1',
         }],
     };
+    
+    chart.options.scales.y.max = getMinMaxValues(weatherData, unitFirst, unitSecond).max;
+    chart.options.scales.y.min = getMinMaxValues(weatherData, unitFirst, unitSecond).min;
 
     chart.update();
 }
