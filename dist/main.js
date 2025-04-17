@@ -1,10 +1,10 @@
 "use strict";
 //////////////////////////
 //                      //
-// Main JavaScript File //
+// Main TypeScript File //
 //                      //
 //////////////////////////
-var _a;
+var _a, _b;
 function getElement(id) {
     return document.getElementById(id);
 }
@@ -12,34 +12,35 @@ function getElement(id) {
 // Site Initiation //
 /////////////////////
 // Event listener for the location search input
-(_a = document.querySelector('#SearchbarTop')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', function (event) {
-    event.preventDefault();
-    const searchbar = document.querySelector('#Searchbar');
-    let searchQuery = searchbar === null || searchbar === void 0 ? void 0 : searchbar.value.trim();
-    if (!searchQuery) {
-        searchQuery = getCookie();
+(_a = document.querySelector('#SearchbarTop')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', function () {
+    event === null || event === void 0 ? void 0 : event.preventDefault();
+    const searchQuery = document.querySelector('#Searchbar');
+    if (searchQuery) {
+        const dayInput = getElement('dayInput');
+        if (dayInput) {
+            dayInput.value = '0';
+        }
+        const searchbar = document.getElementById('Searchbar');
+        const searchQuery = (searchbar === null || searchbar === void 0 ? void 0 : searchbar.value.trim()) || getCookie();
+        fetchWeatherData(searchQuery);
     }
-    const dayInput = document.getElementById('dayInput');
-    if (dayInput) {
-        dayInput.value = '0';
-    }
-    console.log(searchQuery); // Debugging: Log the search query
-    fetchWeatherData(searchQuery);
 });
 // Event listener for the language selection input
-const languageInput = document.getElementById('languageInput');
-if (languageInput) {
-    languageInput.addEventListener('change', () => {
-        const searchbar = document.getElementById('Searchbar');
-        const searchQuery = (searchbar === null || searchbar === void 0 ? void 0 : searchbar.value.trim()) || getCookie(); // Use the current search query or the last search
-        if (searchQuery) {
-            fetchWeatherData(searchQuery); // Fetch weather data for the current search query
+(_b = document.querySelector('#languageInput')) === null || _b === void 0 ? void 0 : _b.addEventListener('change', function () {
+    const languageInput = document.querySelector('#languageInput');
+    if (languageInput) {
+        const dayInput = getElement('dayInput');
+        if (dayInput) {
+            dayInput.value = '0';
         }
-    });
-}
+        const searchbar = document.getElementById('Searchbar');
+        const searchQuery = (searchbar === null || searchbar === void 0 ? void 0 : searchbar.value.trim()) || getCookie();
+        fetchWeatherData(searchQuery);
+    }
+});
 // get last selected language from dropdown User input
 function getLanguage() {
-    const languageInput = document.getElementById('languageInput');
+    const languageInput = getElement('languageInput');
     return (languageInput === null || languageInput === void 0 ? void 0 : languageInput.value) || 'English';
 }
 function getCookie() {
@@ -53,13 +54,13 @@ function setCookie(location) {
 }
 function getSearchWithCookie() {
     const cookieValue = getCookie();
-    const searchbar = document.getElementById('Searchbar');
+    const searchbar = getElement('Searchbar');
     if (cookieValue && searchbar) {
         searchbar.value = cookieValue;
         fetchWeatherData(cookieValue);
     }
     const languageValue = localStorage.getItem('lastLanguage');
-    const languageInput = document.getElementById('languageInput');
+    const languageInput = getElement('languageInput');
     if (languageInput) {
         languageInput.value = languageValue || '';
         if (languageValue && languageValue !== 'null') {
@@ -97,7 +98,7 @@ function processWeatherData(weatherData) {
     ;
     updateGraphs(weatherData);
     updateCurrentWeather(currentConditions, firstDayData, address);
-    const dayInput = document.getElementById('dayInput');
+    const dayInput = getElement('dayInput');
     if (dayInput) {
         const newDayInput = dayInput.cloneNode(true);
         (_a = dayInput.parentNode) === null || _a === void 0 ? void 0 : _a.replaceChild(newDayInput, dayInput);
@@ -445,6 +446,29 @@ function updateGraphs(weatherData, rangeValue = 0) {
     updateCurrentGraph(currentConditions.datetime, weatherData, topCloudGraph, 'cloudcover', null, 47, rangeValue);
     updateCurrentGraph(currentConditions.datetime, weatherData, topPressureGraph, 'pressure', null, 47, rangeValue);
 }
+function getMinMaxValues(weatherData, unitFirst, unitSecond) {
+    let maxValue = Infinity;
+    let minValue = -Infinity;
+    for (const day of weatherData.days) {
+        for (const hour of day.hours) {
+            const value1 = hour[unitFirst];
+            const value2 = unitSecond ? hour[unitSecond] : null;
+            if (value1 < minValue) {
+                minValue = value1;
+            }
+            if (value1 > maxValue) {
+                maxValue = value1;
+            }
+            if (value2 !== null && value2 < minValue) {
+                minValue = value2;
+            }
+            if (value2 !== null && value2 > maxValue) {
+                maxValue = value2;
+            }
+        }
+    }
+    return { max: maxValue, min: minValue };
+}
 // Updates the Graphs with new Data if User starts a new search
 // Also called once to initialize the Graphs
 function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond, size, rangeValue = 0) {
@@ -518,7 +542,6 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
     const selectedLanguageLabel = dataLanguageDisplay[languageValue] || dataLanguageDisplay['English'];
     const graphTypeDisplay = selectedLanguageUnit[unitFirst] || 'Error';
     const graphTypeDisplay2 = selectedLanguageUnit[unitSecond] || 'Error';
-    const graphLanguageDisplayDay = selectedLanguageLabel.day || 'Error';
     const graphLanguageDisplayToday = selectedLanguageLabel.today || 'Error';
     const hoursUntilMidnight = 24 - currentTime;
     const parsedSize = (size === 'day') ? (hoursUntilMidnight > 16 ? 16 : (hoursUntilMidnight < 8 ? 8 : hoursUntilMidnight)) : size;
@@ -565,7 +588,7 @@ function updateCurrentGraph(timeData, weatherData, chart, unitFirst, unitSecond,
                 data: data.map(row => row.value2),
                 borderWidth: 3,
                 borderColor: '#19b8d1',
-            }]
+            }],
     };
     chart.update();
 }

@@ -1,6 +1,6 @@
 //////////////////////////
 //                      //
-// Main JavaScript File //
+// Main TypeScript File //
 //                      //
 //////////////////////////
 
@@ -14,41 +14,42 @@ function getElement(id: string): HTMLElement | null {
 
 
 // Event listener for the location search input
-document.querySelector('#SearchbarTop')?.addEventListener('submit', function (event) {
-    event.preventDefault();
-    const searchbar = document.querySelector('#Searchbar') as HTMLInputElement | null;
-    let searchQuery = searchbar?.value.trim();
-
-    if (!searchQuery) {
-        searchQuery = getCookie();
+document.querySelector('#SearchbarTop')?.addEventListener('submit', function () {
+    event?.preventDefault();
+    const searchQuery = document.querySelector('#Searchbar') as HTMLInputElement | null;
+    if (searchQuery) {
+        const dayInput = getElement('dayInput') as HTMLInputElement | null
+        if (dayInput) {
+            dayInput.value = '0';
+        }
+        
+        const searchbar = document.getElementById('Searchbar') as HTMLInputElement | null;
+        const searchQuery = searchbar?.value.trim() || getCookie();
+        fetchWeatherData(searchQuery);
     }
-
-    const dayInput = document.getElementById('dayInput') as HTMLInputElement | null;
-    if (dayInput) {
-        dayInput.value = '0';
-    }
-
-    console.log(searchQuery); // Debugging: Log the search query
-    fetchWeatherData(searchQuery);
 });
 
-// Event listener for the language selection input
-const languageInput = document.getElementById('languageInput') as HTMLInputElement | null;
 
-if (languageInput) {
-    languageInput.addEventListener('change', () => {
-        const searchbar = document.getElementById('Searchbar') as HTMLInputElement | null;
-        const searchQuery = searchbar?.value.trim() || getCookie(); // Use the current search query or the last search
-        if (searchQuery) {
-            fetchWeatherData(searchQuery); // Fetch weather data for the current search query
+// Event listener for the language selection input
+document.querySelector('#languageInput')?.addEventListener('change', function () {
+    const languageInput = document.querySelector('#languageInput') as HTMLInputElement | 'English';
+    if (languageInput) {
+        const dayInput = getElement('dayInput') as HTMLInputElement | null
+        if (dayInput) {
+            dayInput.value = '0';
         }
-    });
-}
+
+        const searchbar = document.getElementById('Searchbar') as HTMLInputElement | null;
+        const searchQuery = searchbar?.value.trim() || getCookie();
+        fetchWeatherData(searchQuery);
+    }
+});
+
 
 
 // get last selected language from dropdown User input
 function getLanguage(): string | 'English' {
-    const languageInput = document.getElementById('languageInput') as HTMLInputElement | null;
+    const languageInput = getElement('languageInput') as HTMLInputElement | null;
     return languageInput?.value || 'English';
 }
 
@@ -65,13 +66,13 @@ function setCookie(location: string) {
 
 function getSearchWithCookie() {
     const cookieValue = getCookie();
-    const searchbar = document.getElementById('Searchbar') as HTMLInputElement | null;
+    const searchbar = getElement('Searchbar') as HTMLInputElement | null;
     if (cookieValue && searchbar) {
         searchbar.value = cookieValue;
         fetchWeatherData(cookieValue);
     }
     const languageValue = localStorage.getItem('lastLanguage');
-    const languageInput = document.getElementById('languageInput') as HTMLInputElement | null;
+    const languageInput = getElement('languageInput') as HTMLInputElement | null;
     if (languageInput) {
         languageInput.value = languageValue || '';
         if (languageValue && languageValue !== 'null') {
@@ -116,7 +117,7 @@ function processWeatherData(weatherData: any) {
     updateGraphs(weatherData);
     updateCurrentWeather(currentConditions, firstDayData, address);
 
-    const dayInput = document.getElementById('dayInput') as HTMLInputElement | null;
+    const dayInput = getElement('dayInput') as HTMLInputElement | null;
     if (dayInput) {
         const newDayInput = dayInput.cloneNode(true) as HTMLInputElement;
         dayInput.parentNode?.replaceChild(newDayInput, dayInput);
@@ -477,6 +478,34 @@ function updateGraphs(weatherData: any, rangeValue=0) {
     updateCurrentGraph(currentConditions.datetime, weatherData, topPressureGraph, 'pressure', null, 47, rangeValue);
 }
 
+function getMinMaxValues(weatherData: any, unitFirst: string, unitSecond: string | null) : { max: number; min: number } {
+    let maxValue = Infinity;
+    let minValue = -Infinity;
+
+    for (const day of weatherData.days) {
+        for (const hour of day.hours) {
+            const value1 = hour[unitFirst];
+            const value2 = unitSecond ? hour[unitSecond] : null;
+
+            if (value1 < minValue) {
+                minValue = value1;
+            }
+            if (value1 > maxValue) {
+                maxValue = value1;
+            }
+            if (value2 !== null && value2 < minValue) {
+                minValue = value2;
+            }
+            if (value2 !== null && value2 > maxValue) {
+                maxValue = value2;
+            }
+        }
+    }
+
+    return { max: maxValue, min: minValue };
+
+}
+
 // Updates the Graphs with new Data if User starts a new search
 // Also called once to initialize the Graphs
 function updateCurrentGraph(timeData: string, weatherData: any, chart: Chart, unitFirst: string, unitSecond: string | null, size: number | 'day', rangeValue: number=0) {
@@ -553,7 +582,6 @@ function updateCurrentGraph(timeData: string, weatherData: any, chart: Chart, un
 
     const graphTypeDisplay = selectedLanguageUnit[unitFirst as keyof typeof selectedLanguageUnit] || 'Error';
     const graphTypeDisplay2 = selectedLanguageUnit[unitSecond as keyof typeof selectedLanguageUnit] || 'Error';
-    const graphLanguageDisplayDay = selectedLanguageLabel.day || 'Error';
     const graphLanguageDisplayToday = selectedLanguageLabel.today || 'Error';
 
     const hoursUntilMidnight = 24 - currentTime;
@@ -606,8 +634,9 @@ function updateCurrentGraph(timeData: string, weatherData: any, chart: Chart, un
             data: data.map(row => row.value2),
             borderWidth: 3,
             borderColor: '#19b8d1',
-        }]
+        }],
     };
+
     chart.update();
 }
 
